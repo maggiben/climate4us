@@ -10,8 +10,10 @@ Just use the Github URL when creating a Cloud9 project, npm install and you are 
 ## Includes
 
 * Express framework
-* Jade template engine
+* Mustache template engine with consolidate.JS
 * Stylus CSS engine
 * jQuery and jQuery UI
+* mongodb with mongoose
+* passport with passport-facebook & passport-local-mongoose
 
 nice and simple ...
