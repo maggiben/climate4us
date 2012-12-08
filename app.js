@@ -72,7 +72,6 @@ app.post('/station', function(request, response){
 
 app.get('/setup', function(request, response) {
     response.contentType('application/json');
-    
     /*
     var conn_db = mongo.db('admin:12345@alex.mongohq.com:10062/cloud-db');
     var collection = conn_db.collection('ladies');
