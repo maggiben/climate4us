@@ -1,5 +1,4 @@
-
-c9-node-express-boilerplate
+Climate4US
 ===========================
 
 A very simple Node.js + Express boilerplate for Cloud9 projects.
