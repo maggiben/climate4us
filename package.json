@@ -1,0 +1,18 @@
+{
+    "name": "c9-node-express-boilerplate",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "express": "3.0.0",
+        "stylus": ">= 0.27.2",
+        "jade": ">= 0.26.1",
+        "passport": ">= 0.1.6",
+        "passport-facebook": ">=0.1.4",
+        "connect" : ">=1.6.0",
+        "connect-assetmanager" : ">=0.0.21",
+        "connect-assetmanager-handlers" : ">=0.0.17",
+        "socket.io" : ">=0.7.8",
+        "consolidate": ">=0.5",
+        "mustache": ">=0"
+  }
+}

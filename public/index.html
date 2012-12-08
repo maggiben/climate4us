@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<!-- saved from url=(0103)https://secure.gaug.es/dashboard#/gauges/50a94b2af5a1f5407500015f/technology/browser_support/2012-11-19 -->
+<html lang="en" class="no-js live"><!--<![endif]-->
+    <head>
+        <title>climate4us</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />        
+        <meta charset="utf-8">
+        <meta property="og:title"  name="title" content="laboratory">
+        <meta property="og:url" content="http://html5.laboratory.com/">
+        <meta property="og:image" content="http://laboratory.com/workspace/widget/100.png">
+        <meta property="og:site_name" content="laboratory">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:type" content="website">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">        
+        <!-- INCLUDE SCRIPTS -->    
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
+        
+        <!-- jQuery Masonry -->
+        
+        <!-- DEV VERSION -->
+        <!--
+        
+        Notes:
+        vimeo tuts on node: http://vimeo.com/52691590
+        
+        -->
+        <!-- INCLUDE SCRIPTS / -->
+        
+        <!-- USER SCRIPTS -->
+        <script type="text/javascript">
+            // when the dom's ready
+            $(document).ready(function () {
+                // add a simple click handler for the "add user" button.
+                //$('#add_user').click(function () {
+                    var user_data, user;
+                    // build a simple user object, in a real app this 
+                    // would probably come from a server somewhere. 
+                    // Otherwise hardcoding here is just silly.
+                    user_data = {
+                        trial_days_left_text: new Date(),
+                    };                
+                    // Here's all the magic.
+                    //trial_template = ich.trial_template(user_data);
+                    // append it to the list, tada! 
+                    //Now go do something more useful with this.
+                    //$('#sites').append(trial_template);
+                //});
+                $("#sites").sortable({
+                    axis: "y",
+                    container: "#sites",
+                    opacity: .5,
+                    delay: 200,
+                    items: "div.site",
+                    start: function () {
+                        $("#sites").removeClass("meld")
+                    },
+                    stop: function () {
+                        /*
+                        $.ajax({
+                            url: "/gauges/reorder",
+                            dataType: "json",
+                            type: "put",
+                            data: {
+                                ids: _.map($(this).sortable("toArray"), function (a) {
+                                    return a.replace(/^s/, "")
+                                })
+                            }
+                        }), Gauges.meldSidebar()
+                        */
+                        MyApp.meldSidebar();
+                    }
+                });                
+                var TZ = {
+                    selected: "Eastern Time (US & Canada)",
+                    zones: [
+                        ["International Date Line West", "(GMT-11:00) International Date Line West"],
+                        ["Midway Island", "(GMT-11:00) Midway Island"],
+                        ["Samoa", "(GMT-11:00) Samoa"],
+                        ["Hawaii", "(GMT-10:00) Hawaii"],
+                        ["Alaska", "(GMT-09:00) Alaska"],
+                    ],
+                    select: function (a, b) {
+                        var b = b || TZ.selected,
+                        c = '<select id="' + a + '" name="tz">';
+                        return $.each(TZ.zones, function (a) {
+                            c += '<option value="' + a[0] + '"' + (a[0] == b ? " selected" : "") + ">" + a[1] + "</option>"
+                        }), 
+                        c += "</select>", c
+                    }
+                };
+                $("#new_site .tz").append(TZ.select("new_tz"));
+            });
+        </script>
+        <!-- SAMMY APP -->
+        <script type="text/javascript" charset="utf-8">
+            ;(function($) {
+                
+                this.element_selector = '#main';                
+                var app = $.sammy(function() {
+                
+                this.bind('newSensor', function(e, data) {
+                    alert(data['my_data']);
+                    var server = "http://climate4us.aws.af.cm";
+                    var api = "/setup";
+                    $.ajax({
+                            url: server + api, //"/gauges/" + this.params.id,
+                            dataType: "json",
+                            type: "get",
+                            success: function (a) {
+                                alert("data back: " + JSON.stringify(a));
+                            }
+                    });
+                });
+                this.bind('showSite', function(e, data) {
+                    var a = this;
+                        b = $("#s" + data['my_data'].id);
+                    if (b.hasClass("current")) return !0;
+                    $("div.site.current").removeClass("current");
+                    b.addClass("current");
+                    //$("#data").html(ich.site_data_template(this)), 
+                    //$("body").addClass("view-nav");
+                    //alert(data['my_data'].id);
+                });
+                this.bind("show_panel.g", function (a) {
+                    var b = this;
+                    var c = $("#s" + b.id);
+                    d = a == c.data("panel") ? $("#site_content div.display").scrollTop() : 0;
+                    //b.trigger("show_site.g"), c.data("panel", a), 
+                    $("#data div.nav li.current").removeClass("current"); 
+                    $('#data div.nav a[href="#/gauges/' + b.id + "/" + a + '"]').closest("li").addClass("current");
+                });
+                this.get('#/', function() {
+                    alert("index");
+                });
+                
+                this.get('#/temp', function() {
+                    $("body").addClass("adding");
+                });
+                this.get('#/map', function() {
+                    //alert("maposi");
+                    this.trigger('newSensor', {my_data: this.id});
+                });
+                this.get('#/gauges/new', function() {
+                    MyApp.start(this);
+                    var user_data, user;
+                    user_data = {
+                        trial_days_left_text: new Date()
+                    };                
+                    trial_template = ich.trial_template(user_data);
+                    $('#sites').append(trial_template);
+                    window.location.hash = "/";
+                });
+                this.get('#/sign_out', function()
+                {
+                    var obj = {
+                        id: Math.floor(Math.random() * 99999999999999),
+                        weekend: 'test',
+                        title: 'pepe',
+                        views: '12',
+                        people: 16,
+                        overview: true,
+                        date: new Date(),
+                        last_7_days: [
+                            { views_size: '05px', people_size: '25px' },
+                            { views_size: '10px', people_size: '20px' },
+                            { views_size: '15px', people_size: '15px' },
+                            { views_size: '20px', people_size: '10px' },
+                            { views_size: '25px', people_size: '05px' },
+                            { views_size: '20px', people_size: '00px' },
+                            { views_size: '10px', people_size: '10px' },
+                            ],
+                        };
+                        /*
+                        $.ajax({
+                            url: "/account",
+                            dataType: "json",
+                            success: function (a) {
+                                //Gauges.subscription = new Subscription(a.subscription)
+                            }
+                        });
+                        */
+                    $("#sites").append(ich.site_template(obj));
+                    $("#s" + obj.id).html(ich.site_preview_template(obj)); 
+                });
+                this.get("#/gauges/:id/:path", function () {
+                    //var a = Gauges.sites[this.params.id];
+                    //this.params.path == "overview" && a.setRecentTraffic(), a.trigger("show_panel.g", [this.params.path]), Gauges.meldSidebar()
+                    //alert("id: " + this.params.id + " path: " + this.params.path);
+                    this.trigger('showSite', {my_data: this.params});
+                });
+                this.del("#/gauges/:id", function () {
+                    var a = $(this.target).removeErrors();
+                    b = a.find(".submit button span");
+                    b.text("Deleting...");
+                    window.location.hash = "/deleting";
+                    /*
+                    $.ajax({
+                        url: "/gauges/" + this.params.id,
+                        dataType: "json",
+                        type: "delete",
+                        success: function (a) {
+                            var b = a.gauge,
+                            c = Gauges.sites[b.id];
+                            c.trigger("teardown.g"), $("#data").html(ich.deleted_site_template(b)), window.location.hash = "/"
+                        }
+                    });
+                    */
+                    $("#data").html(ich.deleted_site_template(b));
+                    window.location.hash = "/";
+                });
+                this.get("#/account", function () {
+                    var server = "http://climate4us.aws.af.cm";
+                    var apiKey = "/subscription";
+                    $("body").removeClass("adding"), $.ajax({
+                        url: server + apiKey,
+                        dataType: "json",
+                        success: function (a) {
+                            //Gauges.subscription = new Subscription(a.subscription)
+                        }
+                    }), 
+                    $("#sites div.current").removeClass("current"), 
+                    $("#data").html(ich.account_template(Gauges.user)), 
+                    $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
+                    $("#site_content").html(ich.my_info_template(Gauges.user))
+                });
+                /*
+                this.get('#/test', function() {
+                    $('#main').text('Hello World');
+                });
+                this.get("#/map", function () {
+                    //Gauges.showScreenMap()
+                    alert("map");
+                }); 
+                this.get("#/account", function () {
+                    $("body").removeClass("adding");
+                    $.ajax({
+                        url: "/account",
+                        dataType: "json",
+                        success: function (a) {
+                            //Gauges.subscription = new Subscription(a.subscription)
+                        }
+                    }); 
+                    //$("#sites div.current").removeClass("current"), 
+                    //$("#data").html(ich.account_template(Gauges.user)), 
+                    //$('div.nav a[href="#/account"]').closest("li").addClass("current"), 
+                    //$("#site_content").html(ich.my_info_template(Gauges.user))
+                });
+                */
+            });
+            $(function() {
+                app.run();
+            });
+            })(jQuery);
+        </script>        
+        <!-- SAMMY APP -->
+        <!-- MAIN OBJECT -->
+        <script type="text/javascript">
+            // Station
+            ;(function($) {
+                var Station = function(arg) {
+                    this.setup(arg);
+                };
+                $.extend(Station.prototype, {
+                    name: '',
+                    id: 0,
+                    type: '',
+                    country: '',
+                    state: '',
+                    city: '',
+                    latitude: 0,
+                    longitude: 0,
+                    magic: 1234,
+                    sensors: [],
+                    created: null,
+                    temperature: {
+                        value: 0, 
+                        unit: 'C'
+                    },
+                    feelslike: {},
+                    humidity: { 
+                        value: 0, 
+                        dewpoint: 0, 
+                        unit: 'RH' 
+                    },
+                    wind: { 
+                        value: 0, 
+                        direction: 'SE', 
+                        degrees: 150, 
+                        unit: 'KMH' 
+                    },
+                    rainfall: { 
+                        value: 0, 
+                        unit: 'MM' 
+                    },
+                    pressure: { 
+                        value: 0, 
+                        unit: 'INHG', 
+                        type: 'relative' 
+                    }, 
+                    visibility: { 
+                        value: 0, 
+                        unit: 'KM' 
+                    },
+                    lastUpdate: new Date(),
+                    forecast: [],
+                    
+                    setup: function (a) {
+                        var server = "http://climate4us.aws.af.cm";
+                        var api = "/station";
+                        $.ajax({
+                            url: server + api,
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                station: {
+                                    id: Math.floor(Math.random() * 9999),
+                                    type: this.type,
+                                    created: new Date()
+                                }
+                            },
+                            success: function (b) {
+                                //alert("data back: " + JSON.stringify(b));
+                            },
+                            error: function (b) {
+                                var c = $.parseJSON(b.responseText);
+                                alert(c.errors)
+                            },
+                            complete: function () {                                
+                            }
+                        });
+                    },
+                });
+                var st1 = new Station();
+            })(jQuery);
+        </script>
+        <script type="text/javascript">
+        ;(function($) {
+                var Subscription = function(a) {
+                    this.setup(a);
+                };
+                $.extend(Subscription.prototype, {
+                    latitude: 0,
+                    longitude: 0,
+                    temperature: { value: 0, unit: 'C' },
+                    feelslike: {},
+                    
+                    humidity: { value: 0, dewpoint: 0, unit: 'RH' },
+                    wind: { value: 0, direction: 'SE', degrees: 150, unit: 'KMH' },
+                    rainfall: { value: 0, unit: 'MM' },
+                    pressure: { value: 0, unit: 'INHG', type: 'relative' }, 
+                    visibility: { value: 0, unit: 'KM' },
+                    astronomy: { sunrise: "08:01", sunset: "16:42" },
+                    lastUpdate: new Date(),
+                    forecast:[
+                        {
+                            day:"Today",
+                            condition:"Mostly Clear",
+                            high_temperature:7.00,
+                            low_temperature:2.00
+                        },
+                        {
+                            day:"Tomorrow",
+                            condition:"Partly Cloudy",
+                            high_temperature:8.00,
+                            low_temperature:2.00
+                        },
+                        {
+                            day:"Friday",
+                            condition:"Sunny",
+                            high_temperature:8.00,
+                            low_temperature:3.00
+                        }
+                    ],
+                    setup: function (a) {
+                        //this.getData();
+                    },
+                    getData: function() {                       
+                       $.ajax({
+                            url: 'http://openweathermap.org/data/2.1/find/station?lat=' + this.latitude + '&lon=' + this.longitude + '&cnt=10',
+                            type: 'GET',
+                            dataType: "json",
+                            success: function (data) {
+                                //alert($.parseJSON(data.responseText));
+                                //alert("lat: " + data.latitude + " long: " + data.longitude + " temp: " + data.temperature);
+                                //alert(data);
+                                return data;
+                            },
+                            complete: function () {
+                            
+                            },
+                            error: function () {
+                                //c.removeClass("loading")
+                            }
+                        });
+                    },
+                    // getters
+                    getTemperature: function () { 
+                        return this.temperature; 
+                    },
+                    getPressure: function () { 
+                        return this.pressure; 
+                    },
+                    getHumidity: function () { 
+                        return this.humidity; 
+                    },
+                    getWind:  function () { 
+                        return this.wind; 
+                    },
+                    getWindDirection:  function () { 
+                        return this.wind.direction; 
+                    },
+                    // setters
+                    setTemperature: function (temperature) {
+                        this.temperature = temperature; 
+                    },
+                    setPressure: function (pressure) { 
+                        this.pressure = pressure; 
+                    },
+                    setHumidity: function (humidity) { 
+                        this.humidity = humidity; 
+                    },
+                    setWind:  function (wind) { 
+                        this.wind = wind; 
+                    },           
+                });
+                var p = new Subscription();
+                p.setTemperature({value: 100, unit: 'C' });
+                //alert(p.getTemperature().value);
+        })(jQuery);
+        </script>
+        <script type="text/javascript">
+        var MyApp = {
+                plants: {},
+                clients: null,
+                subscription: null,
+                user: null,
+                timeout: null,
+                hit_timeout: null,
+                connection_count: 0,
+                a: 0,
+                start: function (a) {
+                    //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
+                    //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
+                        $.ajax({
+                            url: 'http://climate4us.aws.af.cm',
+                            type: 'GET',
+                            dataType: "json",
+                            success: function (data) {
+                                //alert($.parseJSON(data.responseText));
+                                //alert("lat: " + data.latitude + " long: " + data.longitude + " temp: " + data.temperature);
+                                //alert(data);
+                            },
+                            complete: function () {
+                            
+                            },
+                            error: function () {
+                                //c.removeClass("loading")
+                            }
+                        });
+                },
+                getTemperature: function(a)
+                {
+                    var server = "http://c9-node-express-boilerplate.bmaggi.c9.io";
+                    var apiKey = "/start";
+                    $.ajax({
+                            url: server + apiKey,
+                            type: 'GET',
+                            dataType: "json",
+                            success: function (data) {
+                                //alert($.parseJSON(data.responseText));
+                                //alert("lat: " + data.latitude + " long: " + data.longitude + " temp: " + data.temperature);
+                                alert(data);
+                                return data;
+                            },
+                            complete: function () {
+                            
+                            },
+                            error: function () {
+                                //c.removeClass("loading")
+                            }
+                        });
+                    
+                },
+                reset: function () {},
+                setUser: function (a) {
+                    //this.user = a.user, a.subscription && (this.subscription = new Subscription(a.subscription))
+                },
+                getSettings: function(a) {
+                        /*
+                        $("#sites div.current").removeClass("current"), 
+                        $("#data").html(ich.account_template(Gauges.user)), 
+                        $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
+                        $("#site_content").html(ich.my_info_template(Gauges.user))  
+                        */
+                },
+                meldSidebar: function () {
+                    var a = $("#sites div.current"),
+                        b = $("#data");
+                    $(window).scrollTop() == 0 ? $("#sites").removeClass("topcut") : $("#sites").addClass("topcut"), $("#sites").height() > b.outerHeight() ? $("#sites").addClass("bottomcut") : $("#sites").removeClass("bottomcut");
+                    if (a.length > 0) {
+                        var c = a.offset().top,
+                            d = c + a.outerHeight(),
+                            e = b.offset().top,
+                            f = e + b.outerHeight(),
+                            g = a.attr("id") == $("#sites > div:first").attr("id") ? 0 : 10;
+                        a.length > 0 && c >= e + g && d < f - 10 ? $("#sites").addClass("meld") : $("#sites").removeClass("meld")
+                        }
+                },
+                newSensor: function (site) {
+                    $("#sites div.current").removeClass("current");
+                    b.addClass("current")
+                },
+                formatNumber: function (a) {
+                    a += "";
+                    var b = /(\d+)(\d{3})/;
+                    while (b.test(a)) a = a.replace(b, "$1,$2");  // ',' thousand separator
+                    return a
+                },
+                parseQueryString: function (a) {
+                    if (a.indexOf("?") == -1) return {
+                        date: "recent"
+                    };
+                    var b = {};
+                    return _.each(a.split("?")[1].split("&"), function (a) {
+                        var c = a.split("=");
+                        b[c[0]] = c[1]
+                    }), b
+                },
+                overview: function () {
+                    return {
+                        views: this.formatNumber(this.today.views),
+                        people: this.formatNumber(this.today.people)
+                    }
+                },
+            };
+        </script>
+        <!-- MAIN OBJECT -->        
+        <!-- USER SCRIPTS -->
+    
+        <!-- <link type="text/css" rel="stylesheet" media="all" href="css/test.css" /> -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/lionbars.css" />
+        
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/gauges.css" />
+    </head>
+
+    <body class="loaded view-nav view-panel" style="height: 899px;">
+        <!-- HEADER -->
+        <header>
+    		<h1><a href="https://secure.gaug.es/dashboard">Gauges</a></h1>
+			<p><a href="#/gauges/new" class="button new"><i></i> New Gauge</a></p>
+			<ul>
+				<li><a href="#/account">My Account</a></li>
+                <li><a href="#/temp">temp</a></li>
+				<li><a href="#" id="feedback_link" style="visibility: visible;">Feedback</a></li>
+				<li><a href="#/sign_out">Sign Out</a></li>
+				<li class="live">Live: <span class="status">on</span> <span class="indicator"><span></span></span></li>
+			</ul>
+			<a href="#/map" class="button map_view">MAP</a>
+			<a href="https://secure.gaug.es/dashboard#" class="back">Back</a>
+		</header>
+        <!-- MAIN -->
+        <div id="main"></div>
+		<div id="wrapper">
+			<div id="phone">
+			    <div id="sites" class="meld" style="">
+				</div>
+				<div id="data">
+					<div id="site_nav" class="nav">
+                        <h2>cloud9</h2>
+                        <ul>
+                            <li class="current"><a href="#/gauges/50a94b2af5a1f5407500015f/overview">Overview</a></li>
+                            <li class=""><a href="#/gauges/50a94b2af5a1f5407500015f/live">Live Data</a></li>
+                            <li class=""><a href="#/gauges/50a94b2af5a1f5407500015f/traffic" class="traffic">Views and People</a></li>
+                            <li class=""><a href="#/gauges/50a94b2af5a1f5407500015f/referrers" class="referrers">Referring Sites</a></li>
+                            <li class=""><a href="#/gauges/50a94b2af5a1f5407500015f/contents" class="contents">Top Content</a></li>
+                            <li class=""><a href="#/gauges/50a94b2af5a1f5407500015f/searches" class="searches">Search Terms</a></li>
+                        </ul>
+                        <h2>Demographics</h2>
+                        <ul>
+                            <li><a href="https://secure.gaug.es/dashboard#/gauges/50a94b2af5a1f5407500015f/locations" class="locations">GeoLocation</a></li>
+                            <li><a href="https://secure.gaug.es/dashboard#/gauges/50a94b2af5a1f5407500015f/technology" class="technology">Technology</a></li>
+                            <li><a href="https://secure.gaug.es/dashboard#/gauges/50a94b2af5a1f5407500015f/resolutions" class="resolutions">Screen Sizes</a></li>
+                        </ul>
+                        <h2>Management</h2>
+                        <ul>
+                            <li><a href="https://secure.gaug.es/dashboard#/gauges/50a94b2af5a1f5407500015f/settings">Gauge Settings</a></li>
+                            <li><a href="https://secure.gaug.es/dashboard#/gauges/50a94b2af5a1f5407500015f/sharing" class="sharing unloaded">Sharing</a></li>
+                            <li><a href="https://secure.gaug.es/dashboard#/gauges/50a94b2af5a1f5407500015f/code">Tracking Code</a></li>
+                        </ul>
+                    </div>
+				</div>
+			</div>
+		</div>
+        <!-- FOOTER -->
+        <footer>
+            <p>Copyright 2011-2012 <a href="http://github.com/">GitHub</a> All Rights Reserved</p>
+            <ul>
+                <li><a href="http://twitter.com/#!/gaugesapp">Twitter</a></li>
+                <li><a href="http://get.gaug.es/tos/">Terms &amp; Conditions</a></li>
+                <li><a href="http://get.gaug.es/privacy/">Privacy Policy</a></li>
+            </ul>
+        </footer>
+        <!-- DIALOGS -->
+        <div id="new_site">
+            <div class="overlay"></div>
+            <div class="dialog">
+                <form action="#/station" method="post">
+                    <input type="hidden" name="_id" value="TW5UZo6WsQHLhi4eu16KtExsx5mJ+IPBp9xNrP1lAlo=" />
+                    <div class="toolbar top">Track a weather station</div>
+                    <div class="display">
+                        <p class="text">
+                            <label for="new_title">Name</label>
+                            <input type="text" name="title" id="new_title" />
+                        </p>
+                        <p class="text tz">
+                            <label for="new_tz">Timezone</label>
+                        </p>
+                    </div>
+                    <div class="toolbar bottom">
+                        <button><span>Add this Station</span></button>
+                        <a href="#" class="button cancel">Cancel</a>
+                    </div>
+                </form>
+                <div class="upgrade">
+                    <div class="toolbar top">Track a New Station</div>
+                    <div class="display">
+                        <p>To <strong>add a gauge</strong>, you must be subscribed to a plan.</p>
+                    </div>
+                    <div class="toolbar bottom">
+                        <a href="#/account/plan" class="button">Sign Up for a Plan</a>
+                        <a href="#" class="button cancel">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- DIALOGS -->
+        <!-- LOADING -->
+        <div id="loading" class="loading_indicator">
+            <div></div>
+            <em>Loading</em>
+        </div>
+        <!-- TEMPLATES -->
+        <script id="deleted_site_template" type="text/html">
+            <div class="deleted">
+                <strong>{{title}}</strong> was successfully deleted.
+            </div>
+        </script>        
+        <script type="text/html" id="trial_template">
+            <div class="notice">
+                <a href="#/account/plan">You have <strong>{{ trial_days_left_text }}</strong> remaining in your free trial. Select a plan.</a>
+            </div>
+        </script>
+        <script type="text/html" id="account_template">
+            <div class="nav">
+                <h2>My Account</h2>
+                <ul>
+                    <li><a href="#/account">My Profile</a></li>
+                    <li><a href="#/account/plan">Plan &amp; Billing</a></li>
+                    <li><a href="#/account/clients">API Keys</a></li>
+                    <li><a href="#/account/summaries">Email Summaries</a></li>        
+                </ul>
+                </div>
+            <div id="site_content"></div>
+        </script>
+        <script type="text/html" id="my_info_template">
+            <div class="toolbar top">My Profile Information</div>
+            <form action="#/users" method="put">
+                <input type="hidden" name="_csrf" value="" />
+                <div id="display_panel" class="display">
+                    <div class="details">
+                        <p class="text">
+                            <label for="user_email">Email</label>
+                            <input type="text" name="email" id="user_email" value="{{ email }}" />
+                        </p>
+                        <p class="text">
+                            <label for="user_first_name">First Name</label>
+                            <input type="text" name="first_name" id="user_first_name" value="{{ first_name }}" />
+                        </p>
+                        <p class="text">
+                            <label for="user_last_name">Last Name</label>
+                            <input type="text" name="last_name" id="user_last_name" value="{{ last_name }}" />
+                        </p>
+                        <div class="state">
+                            <div class="show">
+                                <p class="support"><a href="#" class="state_toggler">Change my Password</a></p>
+                            </div>
+                            <div class="edit">
+                                <p class="text">
+                                    <label for="user_password">New Password</label>
+                                    <input type="password" name="password" id="user_password" />
+                                </p>
+                            </div>
+                        </div>
+                        <p class="submit">
+                            <button><span>Save my Information</span></button>
+                        </p>
+                    </div>
+                </div>
+            </form>
+            <div class="toolbar bottom"></div>
+        </script>
+        <script type="text/html" id="disabled_site_template">
+            <div id="s{{ id }}" class="site disabled">
+                <h2>{{ title }}</h2>
+                <p>This Gauge has been disabled.</p>
+            </div>
+        </script>
+        <script type="text/html" id="site_template">
+            <div id="s{{ id }}" class="site">
+            </div>
+        </script>
+        <script type="text/html" id="station_preview_template">
+            <h2>{{ name }}</h2>
+            {{#overview}}
+            <p class="temperature"><strong>{{ temperature }}</strong> temperature</p>
+            <p class="humidity"><strong>{{ humidity }}</strong> humidity</p>
+            {{/overview}}
+            <div class="graph">
+                <ul>
+                    {{#last_7_days}}
+                    <li {{#weekend}} class="weekend"{{/weekend}} data-views="{{temperature}}" data-people="{{humidity}}" data-date="{{date}}">
+                    <span class="temperature" style="height:{{temperature_size}};">{{views}}</span>
+                    <span class="humidity" style="height:{{humidity_size}};">{{people}}</span>
+                    </li>
+                    {{/last_7_days}}
+                </ul>
+                <a href="#/gauges/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
+            </div>
+        </script>        
+        <script type="text/html" id="site_preview_template">
+            <h2>{{ title }}</h2>
+            {{#overview}}
+            <p class="views"><strong>{{ views }}</strong> views</p>
+            <p class="people"><strong>{{ people }}</strong> people</p>
+            {{/overview}}
+            <div class="graph">
+                <ul>
+                    {{#last_7_days}}
+                    <li {{#weekend}} class="weekend"{{/weekend}} data-views="{{views}}" data-people="{{people}}" data-date="{{date}}">
+                    <span class="views" style="height:{{views_size}};">{{views}}</span>
+                    <span class="people" style="height:{{people_size}};">{{people}}</span>
+                    </li>
+                    {{/last_7_days}}
+                </ul>
+                <a href="#/gauges/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
+            </div>
+        </script>
+        <script id="site_data_template" type="text/html">
+            <div id="site_nav" class="nav">
+                <h2>{{title}}</h2>
+                <ul>
+                  <li><a href="#/gauges/{{ id }}/overview">Overview</a></li>
+                  <li><a href="#/gauges/{{ id }}/live">Live Data</a></li>
+                  <li><a href="#/gauges/{{ id }}/traffic" class="traffic">Views and People</a></li>
+                  <li><a href="#/gauges/{{ id }}/referrers" class="referrers">Referring Sites</a></li>
+                  <li><a href="#/gauges/{{ id }}/contents" class="contents">Top Content</a></li>
+                  <li><a href="#/gauges/{{ id }}/searches" class="searches">Search Terms</a></li>
+                </ul>
+                <h2>Demographics</h2>
+                <ul>
+                  <li><a href="#/gauges/{{ id }}/locations" class="locations">GeoLocation</a></li>
+                  <li><a href="#/gauges/{{ id }}/technology" class="technology">Technology</a></li>
+                  <li><a href="#/gauges/{{ id }}/resolutions" class="resolutions">Screen Sizes</a></li>
+                </ul>
+                <h2>Management</h2>
+                <ul>
+                  {{#mine}}
+                  <li><a href="#/gauges/{{ id }}/settings">Gauge Settings</a></li>
+                  <li><a href="#/gauges/{{ id }}/sharing" class="sharing unloaded">Sharing</a></li>
+                  {{/mine}}
+                  <li><a href="#/gauges/{{ id }}/code">Tracking Code</a></li>
+                </ul>
+            </div>
+            <div id="site_content"></div>
+        </script>
+        
+        <!-- GRAPH TMPL -->
+        <script id="technology_template" type="text/html">
+            {{#technology_data}}
+                <div class="toolbar top options">
+                    <ul class="group_options">
+                        <li{{#browsers}} class="current"{{/browsers}}><a href="#/gauges/{{site_id}}/technology/browsers/{{date}}">Browsers</a></li>
+                        <li{{#browser_support}} class="current"{{/browser_support}}><a href="#/gauges/{{site_id}}/technology/browser_support/{{date}}">Browser Support</a></li>
+                        <li{{#platforms}} class="current"{{/platforms}}><a href="#/gauges/{{site_id}}/technology/platforms/{{date}}">Platforms</a></li>
+                    </ul>
+                    <ul class="pagination">
+                        {{#has_prev_url}}<li class="previous"><a href="{{prev_url}}" title="Previous Month">Previous</a></li>{{/has_prev_url}}
+                        {{#has_next_url}}<li class="next"><a href="{{next_url}}" title="Next Month">Next</a></li>{{/has_next_url}}
+                    </ul>
+                </div>
+                <div id="display_panel" class="display">
+                    {{#browsers}}{{>technology_list_template}}{{/browsers}}
+                    {{#platforms}}{{>technology_list_template}}{{/platforms}}
+                    {{#browser_support}}{{>browser_support_template}}{{/browser_support}}
+                </div>
+                <div class="toolbar bottom"></div>
+            {{/technology_data}}
+        </script>        
+        <script id="browser_support_template" class="partial" type="text/html">
+            <div class="wrapper">
+                <div class="info">
+                    <h2>{{headline}}</h2>
+                    <p>Browser Support</p>
+                </div>
+                <div class="totals">
+                    <h2>{{views}}</h2>
+                    <p>Total Data Points</p>
+                </div>
+                {{#entries}}
+                    <table>
+                        <tr>
+                            <th class="text">{{title}}</th>
+                            <th>Support</th>
+                            <th width="220"></th>
+                        </tr>
+                        {{#items}}
+                            <tr>
+                                <td class="text focus">{{title}}</td>
+                                <td>{{total}}%</td>
+                                <td class="vertical-bar-holder">
+                                    <div class="vertical-bar {{klass}}" title="{{#has_full}}Full Support: {{full}}%{{/has_full}}{{#has_partial}} Partial Support: {{partial}}%{{/has_partial}}">
+                                        {{#has_full}}
+                                            <div class="full{{#has_partial}} incomplete{{/has_partial}}" style="opacity:{{full_opacity}}; width:{{full_width}}px"></div>
+                                        {{/has_full}}
+                                        {{#has_partial}}
+                                            <div class="partial{{^has_full}} incomplete{{/has_full}}" style="width:{{partial_width}}px; left:{{partial_left}}px;"></div>
+                                        {{/has_partial}}
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/items}}
+                    </table>
+                {{/entries}}
+            </div>
+        </script>
+        <!-- GRAPH TMPL -->
+        <!-- TEMPLATES -->
+    </body>
+    <!-- ANALITICS -->
+    <script type="text/javascript">
+    var _gauges = _gauges || [];
+    (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '50bc04e9613f5d6105000005');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+    })();
+    </script>
+</html>
