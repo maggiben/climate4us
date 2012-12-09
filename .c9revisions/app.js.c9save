@@ -59,3 +59,11 @@
 {"ts":1355013718897,"patch":[[{"diffs":[[0,"});    \n"],[-1,"    "],[0,"\n    \nap"]],"start1":7070,"start2":7070,"length1":20,"length2":16}]],"length":7229,"saved":false}
 {"ts":1355013722896,"patch":[[{"diffs":[[0,"/');\n});"],[-1,"    "],[0,"\n\n    \na"]],"start1":7065,"start2":7065,"length1":20,"length2":16}]],"length":7225,"saved":false}
 {"ts":1355013724970,"patch":[[{"diffs":[[0,"t('/');\n});\n"],[-1,"\n"],[0,"app.get('/lo"]],"start1":6976,"start2":6976,"length1":25,"length2":24}]],"length":7224,"saved":false}
+{"ts":1355014076438,"patch":[[{"diffs":[[0,"username"],[-1," "],[1,", e"],[0,"});\n    "]],"start1":6326,"start2":6326,"length1":17,"length2":19}]],"length":7226,"saved":false}
+{"ts":1355014078325,"patch":[[{"diffs":[[0,"rname, e"],[1,"mail"],[0,"});\n    "]],"start1":6329,"start2":6329,"length1":16,"length2":20}]],"length":7230,"saved":false}
+{"ts":1355014079774,"patch":[[{"diffs":[[0,"e, email"],[1,": "],[0,"});\n    "]],"start1":6333,"start2":6333,"length1":16,"length2":18}]],"length":7232,"saved":false}
+{"ts":1355014080953,"patch":[[{"diffs":[[0," email: "],[1,"''"],[0,"});\n    "]],"start1":6335,"start2":6335,"length1":16,"length2":18}]],"length":7234,"saved":false}
+{"ts":1355014082096,"patch":[[{"diffs":[[0,"email: '"],[1,"benj"],[0,"'});\n   "]],"start1":6336,"start2":6336,"length1":16,"length2":20}]],"length":7238,"saved":false}
+{"ts":1355014083552,"patch":[[{"diffs":[[0,"l: 'benj"],[1,"a"],[0,"'});\n   "]],"start1":6340,"start2":6340,"length1":16,"length2":17}]],"length":7239,"saved":false}
+{"ts":1355014085324,"patch":[[{"diffs":[[0,": 'benja"],[1,"@benj"],[0,"'});\n   "]],"start1":6341,"start2":6341,"length1":16,"length2":21}]],"length":7244,"saved":false}
+{"ts":1355014088181,"patch":[[{"diffs":[[0,"nja@benj"],[1,"a.com"],[0,"'});\n   "]],"start1":6346,"start2":6346,"length1":16,"length2":21}]],"length":7249,"saved":false}

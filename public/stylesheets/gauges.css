@@ -102,7 +102,7 @@ body {
 }
 header h1 a,#signin form h2,#signup form h2,#forgot_password h2,#password_reset_sent h2,#full_map h1 {
 	display:block;
-	background:url("../images/logo-aec21b6ecb6e35471a686b10012429c4.png") no-repeat 0 50%;
+	background:url("../images/logo.png") no-repeat 0 50%;
 	text-indent:-9999px;
 	overflow:hidden;
 	height:34px

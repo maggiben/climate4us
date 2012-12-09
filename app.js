@@ -185,7 +185,7 @@ app.post('/register', function(req, res) {
                 console.log("existingUser");
                 return res.render('register', { account : account });
             }
-            var account = new Account({ username : req.body.username });
+            var account = new Account({ username : req.body.username, email: 'benja@benja.com'});
             account.setPassword(req.body.password, function(err) {
                 if (err) {
                     return res.render('register', { account : account });
