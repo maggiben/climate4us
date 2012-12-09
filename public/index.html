@@ -119,7 +119,9 @@
                     });
                 });
                 this.bind('getSubscription', function(e, data) {
-                    
+                    window.application = new window.myApplication();
+                    $("#sites").append(ich.site_template(obj));
+                    $("#s" + obj.id).html(ich.station_preview_template(obj)); 
                 });
                 this.bind('showSite', function(e, data) {
                     var a = this;
@@ -173,7 +175,7 @@
                         humidity: '66%',
                         overview: true,
                         date: new Date(),
-                        last_7_days: [
+                        last_7_dayss: [
                             { temperature_size: '05px', humidity_size: '25px' },
                             { temperature_size: '10px', humidity_size: '20px' },
                             { temperature_size: '15px', humidity_size: '15px' },
