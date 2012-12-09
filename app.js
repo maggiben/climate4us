@@ -97,7 +97,7 @@ passport.deserializeUser(Account.deserializeUser());
 mongoose.connect(mongourl);
 //var conn_db = mongo.db('admin:12345@alex.mongohq.com:10062/cloud-db');
 mongoose.connection.on("open", function(){
-  console.log("mongodb is connected!!");
+  console.log("mongodb connected at: %s", mongourl);
 });
 
 // Routes
