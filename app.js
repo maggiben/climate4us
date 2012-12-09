@@ -15,7 +15,34 @@ var express = require('express'),
     LocalStrategy = require('passport-local').Strategy;
 
 
-//console.log(cons);
+if(process.env.VCAP_SERVICES){
+    var env = JSON.parse(process.env.VCAP_SERVICES);
+    var mongo = env['mongodb-1.8'][0]['credentials'];
+}
+else{
+    var mongo = {
+        "hostname":"alex.mongohq.com",
+        "port":10062,
+        "username":"admin",
+        "password":"12345",
+        "name":"",
+        "db":"cloud-db"
+    }
+}
+//mongodb://admin:12345@alex.mongohq.com:10062/cloud-db
+var generate_mongo_url = function(obj){
+    obj.hostname = (obj.hostname || 'localhost');
+    obj.port = (obj.port || 27017);
+    obj.db = (obj.db || 'test');
+    if(obj.username && obj.password){
+        return "mongodb://" + obj.username + ":" + obj.password + "@" + obj.hostname + ":" + obj.port + "/" + obj.db;
+    }
+    else{
+        return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
+    }
+}
+var mongourl = generate_mongo_url(mongo);
+
 
 var app = express();
 
@@ -65,8 +92,9 @@ passport.use(new LocalStrategy(Account.authenticate()));
 
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
-// Connect mongoose
-mongoose.connect('mongodb://admin:12345@alex.mongohq.com:10062/cloud-db');
+// Connect mongoose 
+//mongoose.connect('mongodb://admin:12345@alex.mongohq.com:10062/cloud-db');
+mongoose.connect(mongourl);
 //var conn_db = mongo.db('admin:12345@alex.mongohq.com:10062/cloud-db');
 mongoose.connection.on("open", function(){
   console.log("mongodb is connected!!");
