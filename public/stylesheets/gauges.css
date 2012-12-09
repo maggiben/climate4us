@@ -93,7 +93,7 @@ abbr {
 	cursor:default
 }
 html {
-	background:url("../images/grey-f91e62ac46f17008ef7f734651b7b6a6.jpg") fixed
+	background:url("../images/fondo.png") fixed
 }
 body {
 	color:#fff;
@@ -117,7 +117,7 @@ header {
 	height:53px;
 	width:960px;
 	padding:0 2px;
-	background:url("../images/grey-f91e62ac46f17008ef7f734651b7b6a6.jpg")
+	background:url("../images/fondo.png")
 }
 header h1 {
 	width:100px;
@@ -729,7 +729,7 @@ div.deleted:before {
 	top:-5px;
 	width:5px;
 	height:5px;
-	background:url("../images/grey-f91e62ac46f17008ef7f734651b7b6a6.jpg");
+	background:url("../images/fondo.png");
 	border-bottom-right-radius:5px;
 	-webkit-border-bottom-right-radius:5px;
 	-moz-border-radius-bottomright:5px;
@@ -755,7 +755,7 @@ div.deleted:before {
 	bottom:-5px;
 	width:5px;
 	height:5px;
-	background:url("../images/grey-f91e62ac46f17008ef7f734651b7b6a6.jpg");
+	background:url("../images/fondo.png");
 	-webkit-border-top-right-radius:5px;
 	-moz-border-radius-topright:5px;
 	border-top-right-radius:5px;
@@ -1107,7 +1107,7 @@ div.pin div.info:after {
 	background:url("../images/tag-86e132b6caab84c43e4abd219ac3322b.png") no-repeat
 }
 div.pin div.info div.site {
-	background:#545454 url("../images/grey-f91e62ac46f17008ef7f734651b7b6a6.jpg");
+	background:#545454 url("../images/fondo.png");
 	-webkit-border-top-left-radius:5px;
 	-webkit-border-top-right-radius:5px;
 	border-top-right-radius:5px;
@@ -1230,7 +1230,7 @@ div.pin.showinfo div.info {
 	-moz-background-clip:padding;
 	-webkit-background-clip:padding-box;
 	background-clip:padding-box;
-	background:url("../images/grey-f91e62ac46f17008ef7f734651b7b6a6.jpg");
+	background:url("../images/fondo.png");
 	color:#ccc;
 	height:53px;
 	line-height:53px;
@@ -2844,7 +2844,7 @@ footer:before {
 	bottom:0;
 	height:35px;
 	width:246px;
-	background:url("../images/grey-f91e62ac46f17008ef7f734651b7b6a6.jpg")
+	background:url("../images/fondo.png")
 }
 #sites div.disabled {
 	opacity:0.4;

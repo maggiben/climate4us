@@ -18,3 +18,10 @@ exports.register = function(req, res){
         css: 'style.css',
     });
 };
+exports.signin = function(req, res){
+    console.log("signin");
+    res.render('signin', {
+        title: 'signin',
+        css: 'style.css',
+    });
+};

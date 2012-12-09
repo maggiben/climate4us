@@ -3,7 +3,7 @@
  * Module dependencies.
  */
 
-var express = require('express'), 
+var express = require('express'),
     routes = require('./routes'),
     conf = require('./config'),
     cons = require('consolidate');
@@ -72,6 +72,10 @@ app.configure(function(){
     app.use(allowCrossDomain);
     app.use(express.cookieParser());
     app.use(express.session({ secret: conf.sessionSecret }));
+    
+    app.use(passport.initialize());
+    app.use(passport.session());
+    
     app.use(require('stylus').middleware({ src: __dirname + '/public' }));
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
@@ -86,7 +90,7 @@ app.configure('production', function(){
 });
 
 // Configure passport
-var Account = require('./models/account');
+//var Account = require('./models/account');
 
 passport.use(new LocalStrategy(Account.authenticate()));
 
@@ -204,6 +208,58 @@ app.get('/subscription', function(request, response) {
     response.send(userJSON);
 });
 // User validation 
+
+app.get('/signin', function(req, res) {
+        res.render('signin', { title: 'signin', locale: 'en_US', user: req.user });
+});
+/*
+app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin' }), function(req, res) {
+    res.redirect('/');
+});
+*/
+app.post('/signin', function(req,res,next) {
+    passport.authenticate('local', function(err,user) {
+            if(!user) res.render('signin', { title: 'bad login', locale: 'en_US', user: req.user });;
+            if(user) res.redirect('/');
+    })(req,res,next);
+});
+app.get('/signup', function(req, res) {
+        res.render('signup', { title: 'signin', locale: 'en_US', user: req.user });
+});
+
+app.post('/forgot', function(req, res) {
+
+    var email = req.body.email;
+    console.log("forgot: email", email);
+    //res.writeHead(401, {"Content-Type": "application/json"});
+    res.contentType('application/json');
+
+    Account.findOne({email : email }, function(err, existingUser) {
+            if (err) {
+                var ret = {"message":"Error","status":"fail"}
+                res.statusCode = 401;
+                var retJSON = JSON.stringify(ret);
+                return res.send(retJSON);
+            }
+            else if (existingUser) {
+                console.log("sending email with new password to: %s", email);
+                var ret = {"message":"Sucess found email sent","status":"ok"}
+                var retJSON = JSON.stringify(ret);
+                return res.send(retJSON);
+            }
+            else {
+                // Invalid login/password
+                //res.writeHead(401, {"Content-Type": "application/json"});
+                //res.end(JSON.stringify({error:{type:"Unauthorized",message:"Wrong username and/or password.", code:"401"}}));
+                res.statusCode = 401;
+                var ret = {error:{type:"Unauthorized",message:"Wrong username and/or password.", code:"401"}};
+                var retJSON = JSON.stringify(ret);
+                return res.send(retJSON);
+            }
+    });
+});
+
+
 app.get('/register', routes.register);
 app.post('/register', function(req, res) {
         
@@ -228,7 +284,7 @@ app.post('/register', function(req, res) {
                 });
             });
         });
-    });
+});
 app.get('/login', function(req, res) {
         res.render('login', { user : req.user });
 });
