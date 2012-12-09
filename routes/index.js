@@ -11,3 +11,10 @@ exports.index = function(req, res){
         content: 'Hello Wold Express 3.x'
     });
 };
+exports.register = function(req, res){
+    console.log("register");
+    res.render('register', {
+        title: 'register',
+        css: 'style.css',
+    });
+};

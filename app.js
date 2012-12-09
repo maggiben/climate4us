@@ -7,7 +7,11 @@ var express = require('express'),
     routes = require('./routes'),
     conf = require('./config'),
     cons = require('consolidate');
-//var mongo = require('mongoskin');
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    Account = require('./models/account');
+    LocalStrategy = require('passport-local').Strategy;
+
 
 //console.log(cons);
 
@@ -52,6 +56,20 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
+// Configure passport
+var Account = require('./models/account');
+
+passport.use(new LocalStrategy(Account.authenticate()));
+
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+// Connect mongoose
+mongoose.connect('mongodb://admin:12345@alex.mongohq.com:10062/cloud-db');
+//var conn_db = mongo.db('admin:12345@alex.mongohq.com:10062/cloud-db');
+mongoose.connection.on("open", function(){
+  console.log("mongodb is connected!!");
+});
+
 // Routes
 app.all('/', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -64,12 +82,10 @@ app.get('/', function(request, response) {
     response.sendfile(__dirname + '/public/index.html');
 })
 app.get('/app', routes.index);
-
 app.post('/station', function(request, response){
   console.log(request.body);      // your JSON
   response.send(request.body);    // echo the result back
 });
-
 app.get('/setup', function(request, response) {
     response.contentType('application/json');
     /*
@@ -102,7 +118,6 @@ app.get('/setup', function(request, response) {
     //  of people JSON back to the browser in response to this request:
     response.send(userJSON);
 });
-
 app.get('/start', function(request, response) {
     // We want to set the content-type header so that the browser understands
     //  the content of the response.
@@ -128,7 +143,6 @@ app.get('/start', function(request, response) {
   //  of people JSON back to the browser in response to this request:
   response.send(last_7_daysJSON);
 });
-
 app.get('/subscription', function(request, response) {
     // We want to set the content-type header so that the browser understands
     //  the content of the response.
@@ -159,6 +173,44 @@ app.get('/subscription', function(request, response) {
     //  of people JSON back to the browser in response to this request:
     response.send(userJSON);
 });
+// User validation 
+app.get('/register', routes.register);
+app.post('/register', function(req, res) {
+        
+        var username = req.body.username;
+        console.log("registering: user: %s pass: %s", req.body.username, req.body.password);
+        
+        Account.findOne({username : username }, function(err, existingUser) {
+            if (err || existingUser) {
+                console.log("existingUser");
+                return res.render('register', { account : account });
+            }
+            var account = new Account({ username : req.body.username });
+            account.setPassword(req.body.password, function(err) {
+                if (err) {
+                    return res.render('register', { account : account });
+                }
+                account.save(function(err) {
+                    if (err) {
+                        return res.render('register', { account : account });
+                    }
+                    res.redirect('/');
+                });
+            });
+        });
+    });
+app.get('/login', function(req, res) {
+        res.render('login', { user : req.user });
+});
+app.post('/login', passport.authenticate('local'), function(req, res) {
+    res.redirect('/');
+});
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
+
+    
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
 });
