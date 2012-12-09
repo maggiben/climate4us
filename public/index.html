@@ -20,6 +20,7 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
         
         <!-- jQuery Masonry -->
         
@@ -117,6 +118,9 @@
                             }
                     });
                 });
+                this.bind('getSubscription', function(e, data) {
+                    
+                });
                 this.bind('showSite', function(e, data) {
                     var a = this;
                         b = $("#s" + data['my_data'].id);
@@ -134,6 +138,9 @@
                     //b.trigger("show_site.g"), c.data("panel", a), 
                     $("#data div.nav li.current").removeClass("current"); 
                     $('#data div.nav a[href="#/gauges/' + b.id + "/" + a + '"]').closest("li").addClass("current");
+                });
+                this.get('/', function() {
+                    this.trigger('getSubscription', {time: new Date()});
                 });
                 this.get('#/', function() {
                     alert("index");
@@ -161,19 +168,19 @@
                     var obj = {
                         id: Math.floor(Math.random() * 99999999999999),
                         weekend: 'test',
-                        title: 'pepe',
-                        views: '12',
-                        people: 16,
+                        name: 'pepe',
+                        temperature: '34',
+                        humidity: '66%',
                         overview: true,
                         date: new Date(),
                         last_7_days: [
-                            { views_size: '05px', people_size: '25px' },
-                            { views_size: '10px', people_size: '20px' },
-                            { views_size: '15px', people_size: '15px' },
-                            { views_size: '20px', people_size: '10px' },
-                            { views_size: '25px', people_size: '05px' },
-                            { views_size: '20px', people_size: '00px' },
-                            { views_size: '10px', people_size: '10px' },
+                            { temperature_size: '05px', humidity_size: '25px' },
+                            { temperature_size: '10px', humidity_size: '20px' },
+                            { temperature_size: '15px', humidity_size: '15px' },
+                            { temperature_size: '20px', humidity_size: '10px' },
+                            { temperature_size: '25px', humidity_size: '05px' },
+                            { temperature_size: '20px', humidity_size: '00px' },
+                            { temperature_size: '10px', humidity_size: '10px' },
                             ],
                         };
                         /*
@@ -186,7 +193,7 @@
                         });
                         */
                     $("#sites").append(ich.site_template(obj));
-                    $("#s" + obj.id).html(ich.site_preview_template(obj)); 
+                    $("#s" + obj.id).html(ich.station_preview_template(obj)); 
                 });
                 this.get("#/gauges/:id/:path", function () {
                     //var a = Gauges.sites[this.params.id];
@@ -312,7 +319,7 @@
                     
                     setup: function (a) {
                         var server = "http://climate4us.aws.af.cm";
-                        var api = "/station";
+                        var api = "/create";
                         $.ajax({
                             url: server + api,
                             type: "post",
@@ -336,7 +343,7 @@
                         });
                     },
                 });
-                var st1 = new Station();
+                //var st1 = new Station();
             })(jQuery);
         </script>
         <script type="text/javascript">
@@ -719,7 +726,7 @@
         <script type="text/html" id="station_preview_template">
             <h2>{{ name }}</h2>
             {{#overview}}
-            <p class="temperature"><strong>{{ temperature }}</strong> temperature</p>
+            <p class="temperature"><strong>{{ temperature }}&#176;</strong> temperature</p>
             <p class="humidity"><strong>{{ humidity }}</strong> humidity</p>
             {{/overview}}
             <div class="graph">

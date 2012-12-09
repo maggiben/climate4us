@@ -571,6 +571,15 @@ span.overflow {
 #sites div.site p.people {
 	left:104px
 }
+
+/* benja */
+#sites div.site p.temperature {
+    left:20px
+}
+#sites div.site p.humidity {
+	left:104px
+}
+/* end benja */
 #sites div.site p strong {
 	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size:17px;

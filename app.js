@@ -241,8 +241,9 @@ app.get('/logout', function(req, res) {
 });
 // Mongoose
 app.get('/mongo', Station.create);
+app.get('/setupStation/:id', Station.setupStation);
 app.get('/getStations', Station.getStations);
-
+app.post('/changeStation/:id', Station.update);
 
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);

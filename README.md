@@ -17,8 +17,7 @@ Just use the Github URL when creating a Cloud9 project, npm install and you are 
 * Sammy A Small Web Framework with Class / RESTFul Evented JavaScript
 * mongodb is a scalable, high-performance, open source NoSQL database
 * mongoose object modeling tool designed to work in an asynchronous environment.
-* passport
-** Simple, unobtrusive authentication for Node.js.
+* passport Simple, unobtrusive authentication for Node.js.
 * passport-facebook & passport-local-mongoose
 
 nice and simple ...
@@ -80,5 +79,23 @@ var Station = new Schema({
 });
 
 ```
+#### MongoDB query with JSON emitter
+```js
+exports.getStations = function (req, res, next) {
 
+    res.contentType('application/json');
+    Station.find(gotStations);
 
+    function gotStations (err, stations) {
+        if (err) {
+            console.log(err)
+            return next()
+        }
+        var stationsJSON = JSON.stringify(stations);
+        return res.send(stationsJSON);
+    }
+}
+```
+
+```js
+```
