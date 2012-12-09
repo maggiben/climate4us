@@ -9,7 +9,9 @@ var express = require('express'),
     cons = require('consolidate');
     mongoose = require('mongoose'),
     passport = require('passport'),
-    Account = require('./models/account');
+    Account = require('./models/account'),
+    //Station = require('./models/station'),
+    Station = require('./controllers/station'),
     LocalStrategy = require('passport-local').Strategy;
 
 
@@ -209,7 +211,8 @@ app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
-
+// Mongoose
+app.get('/mongo', Station.create);
     
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
