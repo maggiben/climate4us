@@ -9,12 +9,17 @@ Just use the Github URL when creating a Cloud9 project, npm install and you are 
 
 ## Includes
 
-* Express framework
-* Mustache template engine with consolidate.JS
-* Stylus CSS engine
-* jQuery and jQuery UI
-* mongodb with mongoose
-* passport with passport-facebook & passport-local-mongoose
+* Express 3.x framework
+* consolidate Template engine consolidation library
+* Mustache Template engine 
+* Stylus expressive way to generate CSS.
+* jQuery and jQuery UI (JavaScript Library)
+* Sammy A Small Web Framework with Class / RESTFul Evented JavaScript
+* mongodb is a scalable, high-performance, open source NoSQL database
+* mongoose object modeling tool designed to work in an asynchronous environment.
+* passport
+** Simple, unobtrusive authentication for Node.js.
+* passport-facebook & passport-local-mongoose
 
 nice and simple ...
 
