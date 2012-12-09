@@ -1,0 +1,1 @@
+{"ts":1355022767455,"silentsave":true,"restoring":false,"patch":[[{"diffs":[[1,"var conf = {\n    \"sessionSecret\" : \"secret\",\n    \"listenPort\" : process.env.PORT,\n    \"ip\" : process.env.IP\n};\n\nmodule.exports = conf;"]],"start1":0,"start2":0,"length1":0,"length2":134}]],"length":134}
