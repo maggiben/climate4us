@@ -278,7 +278,7 @@ ver 1
     }
     // Sammy.JS application
     var app = $.sammy(function() {
-        this.element_selector = '#main';
+        //this.element_selector = '#main';
         this.bind('newSensor', function(e, data) {
             alert(data['my_data']);
             var server = "http://climate4us.aws.af.cm";
@@ -349,7 +349,7 @@ ver 1
             MyApp.meldSidebar();
         });
         this.get("/coso", function() {alert("coso");});
-        this.post("/test", function () {
+        this.post('#/test', function () {
             alert("dfasdfasdfsdfsdf");
             var a = $(this.target).removeErrors(),
             b = a.find(".submit button span");
@@ -357,7 +357,7 @@ ver 1
             b.data("text") === undefined && b.data("text", b.text()); 
             b.text("Adding...");
             $.ajax({
-                url: "/station/adxd",
+                url: "/station/add",
                 type: "post",
                 dataType: "json",
                 data: { 
@@ -366,7 +366,7 @@ ver 1
                     country: this.params.country,
                 },
                 success: function (b) {
-                    console.log(JSON.stringify(b));
+                    console.log("server respose: " + JSON.stringify(b));
                     var c = b;
                     //Gauges.sites[c.id] = new Site(c), 
                     $("#new_title").val("");
@@ -389,7 +389,7 @@ ver 1
         this.get('#/temp', function() {
             $("body").addClass("adding");
         });
-        this.get('#/map', function() {
+        this.get('#/mapxxx', function() {
             //alert("maposi");
             this.trigger('newSensor', {my_data: this.id});
         });
@@ -403,8 +403,7 @@ ver 1
             $('#sites').append(trial_template);
             window.location.hash = "/";
         });
-        this.get('#/sign_out', function()
-        {
+        this.get('#/sign_out', function() {
             $.ajax({
                     url: "/signout",
                     type: "GET",
