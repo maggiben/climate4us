@@ -118,3 +118,8 @@
 {"ts":1355163365391,"patch":[[{"diffs":[[0,"s/gauges.css\" />"],[1," --"],[0,"\n        <link t"]],"start1":26813,"start2":26813,"length1":32,"length2":35},{"diffs":[[0,"te.css\" "],[1,"/>"],[0,"\n    </h"]],"start1":26912,"start2":26912,"length1":16,"length2":18}]],"length":44891,"saved":false}
 {"ts":1355163367037,"patch":[[{"diffs":[[0,"       \n        "],[1,"<"],[0,"<link type=\"text"]],"start1":26730,"start2":26730,"length1":32,"length2":33},{"diffs":[[0,"s\" /> --"],[1,">"],[0,"\n       "]],"start1":26825,"start2":26825,"length1":16,"length2":17}]],"length":44893,"saved":false}
 {"ts":1355163368215,"patch":[[{"diffs":[[0,"       <"],[1,"!-- "],[0,"<link ty"]],"start1":26739,"start2":26739,"length1":16,"length2":20}]],"length":44897,"saved":false}
+{"ts":1355169889812,"patch":[[{"diffs":[[0,") {\n"],[-1,"                        /*\n"],[0,"    "]],"start1":3281,"start2":3281,"length1":35,"length2":8}]],"length":44870,"saved":false}
+{"ts":1355169893392,"patch":[[{"diffs":[[0,"r()\n"],[-1,"                        */\n"],[0,"    "]],"start1":3753,"start2":3753,"length1":35,"length2":8}]],"length":44843,"saved":false}
+{"ts":1355169898318,"patch":[[{"diffs":[[0," url: \"/"],[-1,"gauge"],[1,"station"],[0,"s/reorde"]],"start1":3345,"start2":3345,"length1":21,"length2":23}]],"length":44845,"saved":false}
+{"ts":1355169903696,"patch":[[{"diffs":[[0,"   ids: "],[-1,"_"],[1,"$"],[0,".map($(t"]],"start1":3524,"start2":3524,"length1":17,"length2":17}]],"length":44845,"saved":false}
+{"ts":1355169990108,"patch":[[{"diffs":[[0,"     }),"],[-1," Gauges.meldSidebar()"],[0,"\n       "]],"start1":3729,"start2":3729,"length1":37,"length2":16}]],"length":44824,"saved":false}

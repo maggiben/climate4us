@@ -63,18 +63,16 @@
                         $("#sites").removeClass("meld")
                     },
                     stop: function () {
-                        /*
                         $.ajax({
-                            url: "/gauges/reorder",
+                            url: "/stations/reorder",
                             dataType: "json",
                             type: "put",
                             data: {
-                                ids: _.map($(this).sortable("toArray"), function (a) {
+                                ids: $.map($(this).sortable("toArray"), function (a) {
                                     return a.replace(/^s/, "")
                                 })
                             }
-                        }), Gauges.meldSidebar()
-                        */
+                        }),
                         MyApp.meldSidebar();
                     }
                 });                

@@ -9,6 +9,7 @@ ver 1
     // grab jquery or zepto if it's there
     //$: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null;
     
+    // Station class
     var Station = function(arg) {
         this.setup(arg);
     };
@@ -181,7 +182,7 @@ ver 1
             this.wind = wind; 
         },
     });
-    // Subscriptions
+    // Subscription class
     var myApplication = function(a) {
         this.setup(a);
     };
@@ -202,7 +203,6 @@ ver 1
                 dataType: "json",
                 success: function (b) {
                     for (var i = 0; i < b.length; i++) {
-                        //console.log("Station[%s].temperature.value = %d", b[i]._id, b[i].temperature.value);
                         that.stations[b[i]._id] = new Station({id: b[i]._id, type: b[i].type, onLoad: onLoad})
                         console.log("Attaching station id: " + that.stations[b[i]._id].id);
                     }
@@ -234,7 +234,6 @@ ver 1
             }
         },
     });
-
     // Use CommonJS if applicable
     if (typeof require !== 'undefined') {
         module.exports = myApplication;
@@ -350,7 +349,6 @@ ver 1
         });
         this.get("/coso", function() {alert("coso");});
         this.post('#/test', function () {
-            alert("dfasdfasdfsdfsdf");
             var a = $(this.target).removeErrors(),
             b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
@@ -400,7 +398,8 @@ ver 1
                 trial_days_left_text: new Date()
             };                
             trial_template = ich.trial_template(user_data);
-            $('#sites').append(trial_template);
+            //$('#sites').append(trial_template);
+            $(trial_template).appendTo('#sites').hide().fadeIn('slow');
             window.location.hash = "/";
         });
         this.get('#/sign_out', function() {
@@ -473,7 +472,6 @@ ver 1
         timeout: null,
         hit_timeout: null,
         connection_count: 0,
-        a: 0,
         start: function (a) {
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
             //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
@@ -568,4 +566,5 @@ ver 1
             }
         },
     };
+    MyApp = MyApp || {};
 })(window.jQuery || window.Zepto);

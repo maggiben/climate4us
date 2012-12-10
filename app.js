@@ -1,8 +1,31 @@
+///////////////////////////////////////////////////////////////////////////////
+// FileName     : app.js                                                     //
+// Version      : 0.1                                                        //
+// Project      : Node.JS + Express boilerplate for cloud9 and appFog        //
+// Author       : Benjamin Maggi                                             //
+// Email        : benjaminmaggi@gmail.com                                    //
+// Date    		: 12 Dec 2012                                                //
+// ------------------------------------------------------------------------- //
+//                                                                           //
+//                                                                           //
+// License:                                                                  //
+// This program is free software; you can redistribute it                    //
+// and/or modify it under the terms of the GNU General Public                //
+// License as published by the Free Software Foundation;                     //
+// either version 2 of the License, or (at your option) any                  //
+// later version.                                                            //
+//                                                                           //
+// This program is distributed in the hope that it will be useful,           //
+// but WITHOUT ANY WARRANTY; without even the implied warranty of            //
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             //
+// GNU General Public License for more details.                              //
+//                                                                           //
+///////////////////////////////////////////////////////////////////////////////
 
-/**
- * Module dependencies.
- */
 
+///////////////////////////////////////////////////////////////////////////////
+// Module dependencies.                                                      //
+///////////////////////////////////////////////////////////////////////////////
 var express = require('express'),
     routes = require('./routes'),
     conf = require('./config'),
@@ -14,7 +37,9 @@ var express = require('express'),
     Station = require('./controllers/station'),
     LocalStrategy = require('passport-local').Strategy;
 
-
+///////////////////////////////////////////////////////////////////////////////
+// Mongo setup middleware                                                    //
+///////////////////////////////////////////////////////////////////////////////
 if(process.env.VCAP_SERVICES){
     var env = JSON.parse(process.env.VCAP_SERVICES);
     var mongo = env['mongodb-1.8'][0]['credentials'];
@@ -29,7 +54,6 @@ else{
         "db":"cloud-db"
     }
 }
-//mongodb://admin:12345@alex.mongohq.com:10062/cloud-db
 var generate_mongo_url = function(obj){
     obj.hostname = (obj.hostname || 'localhost');
     obj.port = (obj.port || 27017);
@@ -43,13 +67,17 @@ var generate_mongo_url = function(obj){
 }
 var mongourl = generate_mongo_url(mongo);
 
-
+///////////////////////////////////////////////////////////////////////////////
+// Run app                                                                   //
+///////////////////////////////////////////////////////////////////////////////
 var app = express();
 
-// ## CORS middleware
-// see: http://stackoverflow.com/questions/7067966/how-to-allow-cors-in-express-nodejs
+///////////////////////////////////////////////////////////////////////////////
+// CORS middleware (only to test on cloud9)                                  //
+///////////////////////////////////////////////////////////////////////////////
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
@@ -62,7 +90,9 @@ var allowCrossDomain = function(req, res, next) {
     }
 };
 
-// Configuration
+///////////////////////////////////////////////////////////////////////////////
+// Configuration                                                             //
+///////////////////////////////////////////////////////////////////////////////
 app.configure(function(){
     app.engine('html', cons.mustache);
     app.set('view engine', 'html');
@@ -86,29 +116,29 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-// Configure passport
-//var Account = require('./models/account');
-
+///////////////////////////////////////////////////////////////////////////////
+// passport setup & strategy                                                 //
+///////////////////////////////////////////////////////////////////////////////
 passport.use(new LocalStrategy(Account.authenticate()));
-
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 // Connect mongoose 
-//mongoose.connect('mongodb://admin:12345@alex.mongohq.com:10062/cloud-db');
 mongoose.connect(mongourl);
-//var conn_db = mongo.db('admin:12345@alex.mongohq.com:10062/cloud-db');
+// Check if connected
 mongoose.connection.on("open", function(){
   console.log("mongodb connected at: %s", mongourl);
 });
 
-// Routes
+///////////////////////////////////////////////////////////////////////////////
+// Rutes                                                                     //
+///////////////////////////////////////////////////////////////////////////////
 app.all('/', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
 // reusable middleware to test authenticated sessions
-function ensureAuthenticated(req,res,next) {
+function ensureAuthenticated(req, res, next) {
     console.log(ensureAuthenticated);
     if(req.isAuthenticated()) {
         return next();
@@ -116,107 +146,13 @@ function ensureAuthenticated(req,res,next) {
     res.redirect('/signin'); // if failed...
 }
 
-app.get('/', function(request, response) {
-    response.sendfile(__dirname + '/public/index.html');
-})
-app.get('/app', routes.index);
-app.post('/station', function(request, response){
-  console.log(request.body);      // your JSON
-  response.send(request.body);    // echo the result back
-});
-app.get('/setup', function(request, response) {
-    response.contentType('application/json');
-    /*
-    var conn_db = mongo.db('admin:12345@alex.mongohq.com:10062/cloud-db');
-    var collection = conn_db.collection('ladies');
-    collection.insert({name: 'Hollywood Rose', members: ['Axl Rose', 'Izzy Stradlin', 'Chris Weber'], year: 1984}); 
-    */
-    var user = {
-        "user":
-        {
-        	name: "MrX",
-            last_name: null,
-    		first_name: null,
-            email: "benjaminmaggi@gmail.com",
-            id: "50bc04d3613f5d6105000002",
-    		urls:
-    			{
-    				"self":"https://secure.gaug.es/me",
-    				"gauges":"https://secure.gaug.es/gauges",
-    				"clients":"https://secure.gaug.es/clients"
-    			},
-    	}
-    };
-    // Since the request is for a JSON representation of the people, we
-    //  should JSON serialize them. The built-in JSON.stringify() function
-    //  does that.
-    var userJSON = JSON.stringify(user);
-
-    // Now, we can use the response object's send method to push that string
-    //  of people JSON back to the browser in response to this request:
-    response.send(userJSON);
-});
-app.get('/start', function(request, response) {
-    // We want to set the content-type header so that the browser understands
-    //  the content of the response.
-    response.contentType('application/json');
-
-    // Normally, the would probably come from a database, but we can cheat:
-    var last_7_days = [
-    { views_size: '05px', people_size: '25px' },
-    { views_size: '10px', people_size: '20px' },
-    { views_size: '15px', people_size: '15px' },
-    { views_size: '20px', people_size: '10px' },
-    { views_size: '25px', people_size: '05px' },
-    { views_size: '20px', people_size: '00px' },
-    { views_size: '10px', people_size: '10px' },
-    ];
-    
-  // Since the request is for a JSON representation of the people, we
-  //  should JSON serialize them. The built-in JSON.stringify() function
-  //  does that.
-  var last_7_daysJSON = JSON.stringify(last_7_days);
-
-  // Now, we can use the response object's send method to push that string
-  //  of people JSON back to the browser in response to this request:
-  response.send(last_7_daysJSON);
-});
-app.get('/subscription', function(request, response) {
-    // We want to set the content-type header so that the browser understands
-    //  the content of the response.
-    response.contentType('application/json');
-
-    var user = {
-    "user":
-        {
-    		name: "MrX",
-            last_name:null,
-    		first_name:null,
-            email: "benjaminmaggi@gmail.com",
-            id: "50bc04d3613f5d6105000002",
-    		urls:
-    			{
-    				"self":"https://secure.gaug.es/me",
-    				"gauges":"https://secure.gaug.es/gauges",
-    				"clients":"https://secure.gaug.es/clients"
-    			},
-    	}
-    };
-    // Since the request is for a JSON representation of the people, we
-    //  should JSON serialize them. The built-in JSON.stringify() function
-    //  does that.
-    var userJSON = JSON.stringify(user);
-
-    // Now, we can use the response object's send method to push that string
-    //  of people JSON back to the browser in response to this request:
-    response.send(userJSON);
-});
-// User validation 
-
+///////////////////////////////////////////////////////////////////////////////
+// User authentication  rutes                                                //
+///////////////////////////////////////////////////////////////////////////////
 app.get('/signin', function(req, res) {
         res.render('signin', { title: 'signin', locale: 'en_US', user: req.user });
 });
-app.post('/signin', function(req,res,next) {
+app.post('/signin', function(req, res, next) {
     console.log("autenticating")
     passport.authenticate('local', function(err, user, info) {
         if (err) { 
@@ -262,7 +198,6 @@ app.post('/signup', function(req, res) {
             });
         });
 });
-
 app.post('/forgot', function(req, res) {
 
     var email = req.body.email;
@@ -298,6 +233,73 @@ app.get('/signout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
+
+///////////////////////////////////////////////////////////////////////////////
+// Application rutes                                                         //
+///////////////////////////////////////////////////////////////////////////////
+app.get('/', function(request, response) {
+    response.sendfile(__dirname + '/public/index.html');
+})
+app.get('/app', routes.index);
+app.post('/station', function(request, response){
+  console.log(request.body);      // your JSON
+  response.send(request.body);    // echo the result back
+});
+app.get('/start', function(request, response) {
+    // We want to set the content-type header so that the browser understands
+    //  the content of the response.
+    response.contentType('application/json');
+
+    // Normally, the would probably come from a database, but we can cheat:
+    var last_7_days = [
+    { views_size: '05px', people_size: '25px' },
+    { views_size: '10px', people_size: '20px' },
+    { views_size: '15px', people_size: '15px' },
+    { views_size: '20px', people_size: '10px' },
+    { views_size: '25px', people_size: '05px' },
+    { views_size: '20px', people_size: '00px' },
+    { views_size: '10px', people_size: '10px' },
+    ];
+    
+  // Since the request is for a JSON representation of the people, we
+  //  should JSON serialize them. The built-in JSON.stringify() function
+  //  does that.
+  var last_7_daysJSON = JSON.stringify(last_7_days);
+
+  // Now, we can use the response object's send method to push that string
+  //  of people JSON back to the browser in response to this request:
+  response.send(last_7_daysJSON);
+});
+app.get('/subscription', function(request, response) {
+    // We want to set the content-type header so that the browser understands
+    //  the content of the response.
+    response.contentType('application/json');
+
+    var user = {
+    "user":
+        {
+        	name: "MrX",
+            last_name:null,
+    		first_name:null,
+            email: "benjaminmaggi@gmail.com",
+            id: "50bc04d3613f5d6105000002",
+    		urls:
+    			{
+    				"self":"https://secure.gaug.es/me",
+    				"gauges":"https://secure.gaug.es/gauges",
+    				"clients":"https://secure.gaug.es/clients"
+    			},
+    	}
+    };
+    // Since the request is for a JSON representation of the people, we
+    //  should JSON serialize them. The built-in JSON.stringify() function
+    //  does that.
+    var userJSON = JSON.stringify(user);
+
+    // Now, we can use the response object's send method to push that string
+    //  of people JSON back to the browser in response to this request:
+    response.send(userJSON);
+});
 // test
 app.get('/test', function(request, response) {
     console.log("test"); 
@@ -316,7 +318,6 @@ app.post('/station/add', Station.create, function(req, res) {
     res.contentType('application/json');
     return res.send(JSON.stringify({ack:{type:"test",message:"received ok", code:"441"}}));
 });
-//app.post('/station/add', Station.create);
 app.get('/mongo', Station.create);
 app.get('/setupStation/:id', Station.setupStation);
 app.get('/getStations', Station.getStations);
