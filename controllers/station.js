@@ -78,13 +78,6 @@ exports.update = function (req, res, next) {
             return res.send('ID Inválida!')
         } 
         else {
-            /*
-            var station = new Station({
-            station.nombre       = nombre
-            station.descripcion  = descripcion
-            station.precio       = precio
-            station.save(onSaved)
-            */
             console.log(JSON.stringify(req.body));
         }
         var stationJSON = JSON.stringify(station);
@@ -93,8 +86,15 @@ exports.update = function (req, res, next) {
 }
 exports.create = function (req, res, next) {
     
+    var name = req.body.name;
+    console.log("name: ", name);
+
+    //console.log("para: " + JSON.stringify(req.params));
+    console.log('create-body: ' + JSON.stringify(req.body));
+    
     var station = new Station({
         name: req.body.name,
+        id: Math.floor(Math.random() * 99999999999999),
         type: req.body.type,
         country: req.body.country,
         state: 'CABA',
@@ -141,7 +141,7 @@ exports.create = function (req, res, next) {
         
     });
     
-    console.log("Creating");
+    res.contentType('application/json');
     station.save(onSaved)
 
     function onSaved (err) {
@@ -150,7 +150,7 @@ exports.create = function (req, res, next) {
             return next(err);
         }
         console.log("onSaved");
-        return res.redirect('/');
+        return res.send(JSON.stringify(station));
     }
 }
 

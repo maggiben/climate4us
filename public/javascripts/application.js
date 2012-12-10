@@ -284,6 +284,7 @@ ver 1
         var a = this.closest("section");
         return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this
     }
+
     this.element_selector = '#main';
     
     var app = $.sammy(function() {
@@ -399,23 +400,24 @@ ver 1
             b.text("Adding...");
             $.ajax({
                 url: "/station/add",
-                type: "post",
-                dataType: "json",
-                data: {
-                    station: {
-                        name: this.params.name,
-                        type: this.params.type,
-                        country: this.params.country,
-                    }
+                type: "POST",
+                dataType: "JSON",
+                data: { 
+                    name: this.params.name,
+                    type: this.params.type,
+                    country: this.params.country,
                 },
                 success: function (b) {
-                    var c = b.station;
+                    console.log(JSON.stringify(b));
+                    var c = b;
                     //Gauges.sites[c.id] = new Site(c), 
-                    $("#new_title").val(""), setTimeout(function () {
+                    $("#new_title").val("");
+                    setTimeout(function () {
                         window.location.hash = "/station/" + c.id + "/code"
-                    }, 400), $.scrollTo("#s" + c.id, {
-                        duration: 600
-                    }), $("body").removeClass("adding"), a.removeErrors()
+                    }, 400); 
+                    $.scrollTo("#s" + c.id, { duration: 600});
+                    $("body").removeClass("adding");
+                    a.removeErrors();
                 },
                 error: function (b) {
                     var c = $.parseJSON(b.responseText);
@@ -506,3 +508,76 @@ ver 1
     });
     
 })(window.jQuery || window.Zepto);
+
+(function (a) {
+    function c(a) {
+        return typeof a == "object" ? a : {
+            top: a,
+            left: a
+        }
+    }
+    var b = a.scrollTo = function (b, c, e) {
+        a(window).scrollTo(b, c, e)
+    };
+    b.defaults = {
+        axis: "xy",
+        duration: parseFloat(a.fn.jquery) >= 1.3 ? 0 : 1
+    }, b.window = function (b) {
+        return a(window)._scrollable()
+    }, a.fn._scrollable = function () {
+        return this.map(function () {
+            var b = this,
+                c = !b.nodeName || a.inArray(b.nodeName.toLowerCase(), ["iframe", "#document", "html", "body"]) != -1;
+            if (!c) return b;
+            var e = (b.contentWindow || b).document || b.ownerDocument || b;
+            return a.browser.safari || e.compatMode == "BackCompat" ? e.body : e.documentElement
+        })
+    }, a.fn.scrollTo = function (e, f, g) {
+        return typeof f == "object" && (g = f, f = 0), typeof g == "function" && (g = {
+            onAfter: g
+        }), e == "max" && (e = 9e9), g = a.extend({}, b.defaults, g), f = f || g.speed || g.duration, g.queue = g.queue && g.axis.length > 1, g.queue && (f /= 2), g.offset = c(g.offset), g.over = c(g.over), this._scrollable().each(function () {
+            function r(a) {
+                i.animate(o, f, g.easing, a && function () {
+                    a.call(this, e, g)
+                })
+            }
+            var h = this,
+                i = a(h),
+                l = e,
+                m, o = {}, q = i.is("html,body");
+            switch (typeof l) {
+                case "number":
+                case "string":
+                    if (/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(l)) {
+                        l = c(l);
+                        break
+                    }
+                    l = a(l, this);
+                case "object":
+                    if (l.is || l.style) m = (l = a(l)).offset()
+            }
+            a.each(g.axis.split(""), function (a, c) {
+                var d = c == "x" ? "Left" : "Top",
+                    e = d.toLowerCase(),
+                    f = "scroll" + d,
+                    j = h[f],
+                    n = b.max(h, c);
+                if (m) o[f] = m[e] + (q ? 0 : j - i.offset()[e]), g.margin && (o[f] -= parseInt(l.css("margin" + d)) || 0, o[f] -= parseInt(l.css("border" + d + "Width")) || 0), o[f] += g.offset[e] || 0, g.over[e] && (o[f] += l[c == "x" ? "width" : "height"]() * g.over[e]);
+                else {
+                    var p = l[e];
+                    o[f] = p.slice && p.slice(-1) == "%" ? parseFloat(p) / 100 * n : p
+                }
+                /^\d+$/.test(o[f]) && (o[f] = o[f] <= 0 ? 0 : Math.min(o[f], n)), !a && g.queue && (j != o[f] && r(g.onAfterFirst), delete o[f])
+            }), r(g.onAfter)
+        }).end()
+    }, b.max = function (b, c) {
+        var e = c == "x" ? "Width" : "Height",
+            f = "scroll" + e;
+        if (!a(b).is("html,body")) return b[f] - a(b)[e.toLowerCase()]();
+        var g = "client" + e,
+            h = b.ownerDocument.documentElement,
+            i = b.ownerDocument.body;
+        return Math.max(h[f], i[f]) - Math.min(h[g], i[g])
+    }
+})(window.jQuery);
+

@@ -102,7 +102,7 @@ mongoose.connection.on("open", function(){
 });
 
 // Routes
-app.all('/', ensureAuthenticated, function(req, res, next) {
+app.all('/', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
@@ -311,7 +311,12 @@ app.get('/test', function(request, response) {
     response.send(JSON.stringify({isAuthenticated: request.isAuthenticated(),message: "what happened"}));
 });
 // Mongoose
-app.get('/station/add', Station.create);
+app.post('/station/add', Station.create, function(req, res) {
+    console.log('body: ' + JSON.stringify(req.body));
+    res.contentType('application/json');
+    return res.send(JSON.stringify({ack:{type:"test",message:"received ok", code:"441"}}));
+});
+//app.post('/station/add', Station.create);
 app.get('/mongo', Station.create);
 app.get('/setupStation/:id', Station.setupStation);
 app.get('/getStations', Station.getStations);
