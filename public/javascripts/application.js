@@ -181,14 +181,6 @@ ver 1
             this.wind = wind; 
         },
     });
-    //var st1 = new Station({id: "50c42eae578d18086b000001", type: "Arduino"});
-    //alert("new id: " + st1.getTemperature().value);
-    //alert("temp: " + st1.getTemperature().value);
-    //st1.setTemperature({value: 100, unit: 'C' });
-    //alert("temp: " + st1.getTemperature().value);
-    //st1.change();
-    
-    
     // Subscriptions
     var myApplication = function(a) {
         this.setup(a);
@@ -198,7 +190,7 @@ ver 1
             VERSION: "0.10",
             lic: {},
         },
-        sites: [],
+        stations: [],
         onSetup: null,
         setup: function (a) {
             this.onSetup = a.onSetup;
@@ -211,8 +203,8 @@ ver 1
                 success: function (b) {
                     for (var i = 0; i < b.length; i++) {
                         //console.log("Station[%s].temperature.value = %d", b[i]._id, b[i].temperature.value);
-                        that.sites[b[i]._id] = new Station({id: b[i]._id, type: b[i].type, onLoad: onLoad})
-                        console.log("Attaching station id: " + that.sites[b[i]._id].id);
+                        that.stations[b[i]._id] = new Station({id: b[i]._id, type: b[i].type, onLoad: onLoad})
+                        console.log("Attaching station id: " + that.stations[b[i]._id].id);
                     }
                     function onLoad(station) {
                         station.isReady = true;
@@ -235,9 +227,9 @@ ver 1
             //this.onSetup(a);
         },
         listStations: function (a) {
-            for (var key in this.sites)
+            for (var key in this.stations)
             {
-                if (this.sites.hasOwnProperty(key))
+                if (this.stations.hasOwnProperty(key))
                 console.log("key: " + key);
             }
         },
@@ -250,7 +242,6 @@ ver 1
         // else attach it to the window
         window.myApplication = myApplication;
     }
-    
     if (typeof document !== 'undefined') {
         if (myApplication.$) {
             myApplication.$(function () {
@@ -262,13 +253,14 @@ ver 1
             }, true);
         }
     }
-    
+    // UI Events
     $("#new_site a.cancel").live("click", function () {
         return window.location.hash = "#/", $("body").removeClass("adding"), !1
     });
     $("a.toggle_delete").live("click", function () {
         return $("#site_content").toggleClass("delete"), !1
     });
+    // Custom jQuery Functions
     $.fn.displayErrors = function(a, b) {
         var c = this.removeErrors();
         c.parent().addClass("error");
@@ -284,10 +276,9 @@ ver 1
         var a = this.closest("section");
         return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this
     }
-
-    this.element_selector = '#main';
-    
+    // Sammy.JS application
     var app = $.sammy(function() {
+        this.element_selector = '#main';
         this.bind('newSensor', function(e, data) {
             alert(data['my_data']);
             var server = "http://climate4us.aws.af.cm";
@@ -305,54 +296,10 @@ ver 1
             console.log("getSubscription");
             
             var subscription = new myApplication({onSetup: onSetup});
-            //var a = Object.keys(subscription.sites);
-            
             function onSetup(a) {
-                console.log(a);
-                var obj = {
-                id: a.id,
-                weekend: 'test',
-                name: "a.name",
-                temperature: '44',
-                humidity: a.humidity.value,
-                overview: true,
-                date: new Date(),
-                last_7_dayss: [
-                    { temperature_size: '05px', humidity_size: '25px' },
-                    { temperature_size: '10px', humidity_size: '20px' },
-                    { temperature_size: '15px', humidity_size: '15px' },
-                    { temperature_size: '20px', humidity_size: '10px' },
-                    { temperature_size: '25px', humidity_size: '05px' },
-                    { temperature_size: '20px', humidity_size: '00px' },
-                    { temperature_size: '10px', humidity_size: '10px' },
-                    ],
-                };
-                console.log("temp: " + a.temperature.value);
                 $("#sites").append(ich.site_template(a));
                 $("#s" + a.id).html(ich.station_preview_template(a)); 
-                return;
-                for (var key in a.sites)
-                {
-                    
-                    console.log("temp: " + a.sites[key].temperature.value);
-                    $("#sites").append(ich.site_template(a.sites[key]));
-                    $("#s" + key).html(ich.station_preview_template(a.sites[key])); 
-                }
-                //$("#sites").append(ich.site_template(a));
-                //$("#s" + a.id).html(ich.station_preview_template(a)); 
             };
-            return;
-            for (var key in subscription.sites)
-            {
-                if (subscription.sites.hasOwnProperty(key))
-                {
-                    //console.log("key: " + JSON.stringify(window.application.sites[key]));
-                    console.log("key: " + key);
-                }
-            }
-            //console.log("keys: " + Object.keys(window.application.sites));
-            $("#sites").append(ich.site_template(obj));
-            $("#s" + obj.id).html(ich.station_preview_template(obj)); 
         });
         this.bind('showSite', function(e, data) {
             var a = this;
@@ -392,6 +339,15 @@ ver 1
             $("body").removeClass("no_cancel").removeClass("my_account");
             $.trim($("#data").html()) == "" && $("#sites div.site:first a").length > 0 && a.redirect($("#sites div.site:first a").attr("href"))
         });
+        this.get("#/gauges/:id/code/:tab", function () {
+            var a = MyApp.sites[this.params.id];
+            a.trigger("show_panel.g", ["code"]); 
+            $("#site_content div.panel").hide();
+            $("#site_content ul.group_options li").removeClass("current"); 
+            $("#site_content div.panel." + this.params.tab).show();
+            $("#site_content ul.group_options li." + this.params.tab).addClass("current"); 
+            MyApp.meldSidebar();
+        });
         this.post("#/station/add", function () {
             var a = $(this.target).removeErrors(),
             b = a.find(".submit button span");
@@ -415,7 +371,7 @@ ver 1
                     setTimeout(function () {
                         window.location.hash = "/station/" + c.id + "/code"
                     }, 400); 
-                    $.scrollTo("#s" + c.id, { duration: 600});
+                    $.scrollTo("#s" + c.id, 600);
                     $("body").removeClass("adding");
                     a.removeErrors();
                 },
@@ -465,7 +421,7 @@ ver 1
             //alert(this.params.path)
             this.params.path == "overview"; 
             this.trigger("show_panel.g", {params: this.params}); 
-            Gauges.meldSidebar();
+            MyApp.meldSidebar();
         });
         this.del("#/gauges/:id", function () {
             var a = $(this.target).removeErrors();
@@ -505,79 +461,110 @@ ver 1
     });
     $(function() {
         app.run();
+        app.trigger('getSubscription', {time: new Date()});
     });
-    
-})(window.jQuery || window.Zepto);
-
-(function (a) {
-    function c(a) {
-        return typeof a == "object" ? a : {
-            top: a,
-            left: a
-        }
-    }
-    var b = a.scrollTo = function (b, c, e) {
-        a(window).scrollTo(b, c, e)
-    };
-    b.defaults = {
-        axis: "xy",
-        duration: parseFloat(a.fn.jquery) >= 1.3 ? 0 : 1
-    }, b.window = function (b) {
-        return a(window)._scrollable()
-    }, a.fn._scrollable = function () {
-        return this.map(function () {
-            var b = this,
-                c = !b.nodeName || a.inArray(b.nodeName.toLowerCase(), ["iframe", "#document", "html", "body"]) != -1;
-            if (!c) return b;
-            var e = (b.contentWindow || b).document || b.ownerDocument || b;
-            return a.browser.safari || e.compatMode == "BackCompat" ? e.body : e.documentElement
-        })
-    }, a.fn.scrollTo = function (e, f, g) {
-        return typeof f == "object" && (g = f, f = 0), typeof g == "function" && (g = {
-            onAfter: g
-        }), e == "max" && (e = 9e9), g = a.extend({}, b.defaults, g), f = f || g.speed || g.duration, g.queue = g.queue && g.axis.length > 1, g.queue && (f /= 2), g.offset = c(g.offset), g.over = c(g.over), this._scrollable().each(function () {
-            function r(a) {
-                i.animate(o, f, g.easing, a && function () {
-                    a.call(this, e, g)
-                })
-            }
-            var h = this,
-                i = a(h),
-                l = e,
-                m, o = {}, q = i.is("html,body");
-            switch (typeof l) {
-                case "number":
-                case "string":
-                    if (/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(l)) {
-                        l = c(l);
-                        break
+    // Application
+    var MyApp = {
+        plants: {},
+        clients: null,
+        subscription: null,
+        user: null,
+        timeout: null,
+        hit_timeout: null,
+        connection_count: 0,
+        a: 0,
+        start: function (a) {
+            //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
+            //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
+                $.ajax({
+                    url: 'http://climate4us.aws.af.cm',
+                    type: 'GET',
+                    dataType: "json",
+                    success: function (data) {
+                        //alert($.parseJSON(data.responseText));
+                        //alert("lat: " + data.latitude + " long: " + data.longitude + " temp: " + data.temperature);
+                        //alert(data);
+                    },
+                    complete: function () {
+                    
+                    },
+                    error: function () {
+                        //c.removeClass("loading")
                     }
-                    l = a(l, this);
-                case "object":
-                    if (l.is || l.style) m = (l = a(l)).offset()
-            }
-            a.each(g.axis.split(""), function (a, c) {
-                var d = c == "x" ? "Left" : "Top",
-                    e = d.toLowerCase(),
-                    f = "scroll" + d,
-                    j = h[f],
-                    n = b.max(h, c);
-                if (m) o[f] = m[e] + (q ? 0 : j - i.offset()[e]), g.margin && (o[f] -= parseInt(l.css("margin" + d)) || 0, o[f] -= parseInt(l.css("border" + d + "Width")) || 0), o[f] += g.offset[e] || 0, g.over[e] && (o[f] += l[c == "x" ? "width" : "height"]() * g.over[e]);
-                else {
-                    var p = l[e];
-                    o[f] = p.slice && p.slice(-1) == "%" ? parseFloat(p) / 100 * n : p
+                });
+        },
+        getTemperature: function(a) {
+            var server = "http://c9-node-express-boilerplate.bmaggi.c9.io";
+            var apiKey = "/start";
+            $.ajax({
+                    url: server + apiKey,
+                    type: 'GET',
+                    dataType: "json",
+                    success: function (data) {
+                        //alert($.parseJSON(data.responseText));
+                        //alert("lat: " + data.latitude + " long: " + data.longitude + " temp: " + data.temperature);
+                        alert(data);
+                        return data;
+                    },
+                    complete: function () {
+                    
+                    },
+                    error: function () {
+                        //c.removeClass("loading")
+                    }
+                });
+            
+        },
+        reset: function () {},
+        setUser: function (a) {
+            //this.user = a.user, a.subscription && (this.subscription = new Subscription(a.subscription))
+        },
+        getSettings: function(a) {
+                /*
+                $("#sites div.current").removeClass("current"), 
+                $("#data").html(ich.account_template(Gauges.user)), 
+                $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
+                $("#site_content").html(ich.my_info_template(Gauges.user))  
+                */
+        },
+        meldSidebar: function () {
+            var a = $("#sites div.current"),
+                b = $("#data");
+            $(window).scrollTop() == 0 ? $("#sites").removeClass("topcut") : $("#sites").addClass("topcut"), $("#sites").height() > b.outerHeight() ? $("#sites").addClass("bottomcut") : $("#sites").removeClass("bottomcut");
+            if (a.length > 0) {
+                var c = a.offset().top,
+                    d = c + a.outerHeight(),
+                    e = b.offset().top,
+                    f = e + b.outerHeight(),
+                    g = a.attr("id") == $("#sites > div:first").attr("id") ? 0 : 10;
+                a.length > 0 && c >= e + g && d < f - 10 ? $("#sites").addClass("meld") : $("#sites").removeClass("meld")
                 }
-                /^\d+$/.test(o[f]) && (o[f] = o[f] <= 0 ? 0 : Math.min(o[f], n)), !a && g.queue && (j != o[f] && r(g.onAfterFirst), delete o[f])
-            }), r(g.onAfter)
-        }).end()
-    }, b.max = function (b, c) {
-        var e = c == "x" ? "Width" : "Height",
-            f = "scroll" + e;
-        if (!a(b).is("html,body")) return b[f] - a(b)[e.toLowerCase()]();
-        var g = "client" + e,
-            h = b.ownerDocument.documentElement,
-            i = b.ownerDocument.body;
-        return Math.max(h[f], i[f]) - Math.min(h[g], i[g])
-    }
-})(window.jQuery);
-
+        },
+        newSensor: function (site) {
+            $("#sites div.current").removeClass("current");
+            b.addClass("current")
+        },
+        formatNumber: function (a) {
+            a += "";
+            var b = /(\d+)(\d{3})/;
+            while (b.test(a)) a = a.replace(b, "$1,$2");  // ',' thousand separator
+            return a
+        },
+        parseQueryString: function (a) {
+            if (a.indexOf("?") == -1) return {
+                date: "recent"
+            };
+            var b = {};
+            return _.each(a.split("?")[1].split("&"), function (a) {
+                var c = a.split("=");
+                b[c[0]] = c[1]
+            }), b
+        },
+        overview: function () {
+            return {
+                views: this.formatNumber(this.today.views),
+                people: this.formatNumber(this.today.people)
+            }
+        },
+    };
+})(window.jQuery || window.Zepto);
