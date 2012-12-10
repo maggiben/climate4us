@@ -311,6 +311,7 @@ app.get('/test', function(request, response) {
     response.send(JSON.stringify({isAuthenticated: request.isAuthenticated(),message: "what happened"}));
 });
 // Mongoose
+app.get('/station/add', Station.create);
 app.get('/mongo', Station.create);
 app.get('/setupStation/:id', Station.setupStation);
 app.get('/getStations', Station.getStations);

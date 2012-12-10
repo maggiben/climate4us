@@ -263,7 +263,27 @@ ver 1
         }
     }
     
-    
+    $("#new_site a.cancel").live("click", function () {
+        return window.location.hash = "#/", $("body").removeClass("adding"), !1
+    });
+    $("a.toggle_delete").live("click", function () {
+        return $("#site_content").toggleClass("delete"), !1
+    });
+    $.fn.displayErrors = function(a, b) {
+        var c = this.removeErrors();
+        c.parent().addClass("error");
+        for (key in a) {
+            var d = b ? b + "[" + key + "]" : key, e = a[key].join(", "), f = '<strong class="error_explanation">' + e + "</strong>";
+            c.find('[name="' + d + '"]').addClass("error").closest("p").append(f)
+        }
+        var g = c.closest("section");
+        return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this
+    }
+    $.fn.removeErrors = function() {
+        this.parent().removeClass("error").find("input.error").removeClass("error"), this.find("strong.error_explanation").remove();
+        var a = this.closest("section");
+        return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this
+    }
     this.element_selector = '#main';
     
     var app = $.sammy(function() {
@@ -358,13 +378,6 @@ ver 1
                 
             }
         });
-        
-        $("#new_site a.cancel").live("click", function () {
-            return window.location.hash = "#/", $("body").removeClass("adding"), !1
-        });
-        $("a.toggle_delete").live("click", function () {
-            return $("#site_content").toggleClass("delete"), !1
-        });
         /*
         this.get('/', function() {
             this.trigger('getSubscription', {time: new Date()});
@@ -377,6 +390,41 @@ ver 1
         this.get("#/", function (a) {
             $("body").removeClass("no_cancel").removeClass("my_account");
             $.trim($("#data").html()) == "" && $("#sites div.site:first a").length > 0 && a.redirect($("#sites div.site:first a").attr("href"))
+        });
+        this.post("#/station/add", function () {
+            var a = $(this.target).removeErrors(),
+            b = a.find(".submit button span");
+            clearTimeout(b.data("timeout"));
+            b.data("text") === undefined && b.data("text", b.text()); 
+            b.text("Adding...");
+            $.ajax({
+                url: "/station/add",
+                type: "post",
+                dataType: "json",
+                data: {
+                    station: {
+                        name: this.params.name,
+                        type: this.params.type,
+                        country: this.params.country,
+                    }
+                },
+                success: function (b) {
+                    var c = b.station;
+                    //Gauges.sites[c.id] = new Site(c), 
+                    $("#new_title").val(""), setTimeout(function () {
+                        window.location.hash = "/station/" + c.id + "/code"
+                    }, 400), $.scrollTo("#s" + c.id, {
+                        duration: 600
+                    }), $("body").removeClass("adding"), a.removeErrors()
+                },
+                error: function (b) {
+                    var c = $.parseJSON(b.responseText);
+                    a.displayErrors(c.errors)
+                },
+                complete: function () {
+                    b.text(b.data("text"))
+                }
+            }), !1
         });
         this.get('#/temp', function() {
             $("body").addClass("adding");

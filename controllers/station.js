@@ -94,9 +94,9 @@ exports.update = function (req, res, next) {
 exports.create = function (req, res, next) {
     
     var station = new Station({
-        name: 'pepe',
-        type: 'Arduino',
-        country: 'ARG',
+        name: req.body.name,
+        type: req.body.type,
+        country: req.body.country,
         state: 'CABA',
         city: 'CABA',
         latitude: 38,
