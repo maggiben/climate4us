@@ -341,7 +341,7 @@ ver 1
             b.addClass("current");
             //$("#data").html(ich.site_data_template(this)), 
             //$("body").addClass("view-nav");
-            alert(data['my_data'].id);
+            //alert(data['my_data'].id);
         });
         this.bind("show_panel.g", function (e, data) {
             var b = this;
@@ -358,13 +358,26 @@ ver 1
                 
             }
         });
+        
+        $("#new_site a.cancel").live("click", function () {
+            return window.location.hash = "#/", $("body").removeClass("adding"), !1
+        });
+        $("a.toggle_delete").live("click", function () {
+            return $("#site_content").toggleClass("delete"), !1
+        });
+        /*
         this.get('/', function() {
             this.trigger('getSubscription', {time: new Date()});
         });
-        this.get('#/', function() {
-            alert("index");
+        */
+        this.get(/\#\/sites\/(.*)/, function () {
+            //this.redirect("#", "gauges", this.params.splat)
+            alert(this.params.splat);
         });
-        
+        this.get("#/", function (a) {
+            $("body").removeClass("no_cancel").removeClass("my_account");
+            $.trim($("#data").html()) == "" && $("#sites div.site:first a").length > 0 && a.redirect($("#sites div.site:first a").attr("href"))
+        });
         this.get('#/temp', function() {
             $("body").addClass("adding");
         });
@@ -392,48 +405,17 @@ ver 1
                 }
             });
             $("body").addClass("loading").removeClass("loaded");
-            return;
-            var obj = {
-                id: Math.floor(Math.random() * 99999999999999),
-                weekend: 'test',
-                name: 'pepe',
-                temperature: '34',
-                humidity: '66%',
-                overview: true,
-                date: new Date(),
-                last_7_dayss: [
-                    { temperature_size: '05px', humidity_size: '25px' },
-                    { temperature_size: '10px', humidity_size: '20px' },
-                    { temperature_size: '15px', humidity_size: '15px' },
-                    { temperature_size: '20px', humidity_size: '10px' },
-                    { temperature_size: '25px', humidity_size: '05px' },
-                    { temperature_size: '20px', humidity_size: '00px' },
-                    { temperature_size: '10px', humidity_size: '10px' },
-                    ],
-                };
-                console.log(obj.name);
-                /*
-                $.ajax({
-                    url: "/account",
-                    dataType: "json",
-                    success: function (a) {
-                        //Gauges.subscription = new Subscription(a.subscription)
-                    }
-                });
-                */
-            $("#sites").append(ich.site_template(obj));
-            $("#s" + obj.id).html(ich.station_preview_template(obj)); 
         });
         this.get("#/gauges/:id/:path", function () {
             //var a = Gauges.sites[this.params.id];
             //this.params.path == "overview" && a.setRecentTraffic(), a.trigger("show_panel.g", [this.params.path]), Gauges.meldSidebar()
             //alert("id: " + this.params.id + " path: " + this.params.path);
-            //this.trigger('showSite', {my_data: this.params});
+            this.trigger('showSite', {my_data: this.params});
             //return;
             //alert(this.params.path)
             this.params.path == "overview"; 
             this.trigger("show_panel.g", {params: this.params}); 
-            //Gauges.meldSidebar();
+            Gauges.meldSidebar();
         });
         this.del("#/gauges/:id", function () {
             var a = $(this.target).removeErrors();
