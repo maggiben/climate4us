@@ -348,16 +348,18 @@ ver 1
             $("#site_content ul.group_options li." + this.params.tab).addClass("current"); 
             MyApp.meldSidebar();
         });
-        this.post("#/station/add", function () {
+        this.get("/coso", function() {alert("coso");});
+        this.post("/test", function () {
+            alert("dfasdfasdfsdfsdf");
             var a = $(this.target).removeErrors(),
             b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
             b.data("text") === undefined && b.data("text", b.text()); 
             b.text("Adding...");
             $.ajax({
-                url: "/station/add",
-                type: "POST",
-                dataType: "JSON",
+                url: "/station/adxd",
+                type: "post",
+                dataType: "json",
                 data: { 
                     name: this.params.name,
                     type: this.params.type,
