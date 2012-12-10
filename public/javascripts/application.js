@@ -306,6 +306,7 @@ ver 1
             if (b.hasClass("current")) return !0;
             $("div.site.current").removeClass("current");
             b.addClass("current");
+            $("#data").html(ich.site_data_template({title: "hello", id: 1234, mine: false}));
             //$("#data").html(ich.site_data_template(this)), 
             //$("body").addClass("view-nav");
             //alert(data['my_data'].id);

@@ -1030,3 +1030,5 @@
 {"ts":1355166715210,"patch":[[{"diffs":[[0,"endTo('#"],[-1,"#"],[0,"sites')."]],"start1":14117,"start2":14117,"length1":17,"length2":16}]],"length":21016,"saved":false}
 {"ts":1355166802592,"patch":[[{"diffs":[[0,"      $("],[-1,"html"],[1,"trial_template"],[0,").append"]],"start1":14100,"start2":14100,"length1":20,"length2":30}]],"length":21026,"saved":false}
 {"ts":1355166982963,"patch":[[{"diffs":[[0,") {\n"],[-1,"                        //console.log(\"Station[%s].temperature.value = %d\", b[i]._id, b[i].temperature.value);\n"],[0,"    "]],"start1":5920,"start2":5920,"length1":119,"length2":8}]],"length":20915,"saved":false}
+{"ts":1355175919200,"patch":[[{"diffs":[[0,"ass(\"current\");\n"],[1,"            $(\"#data\").html(ich.site_data_template({title: \"hello\", id: 1234, mine: false})), \n"],[0,"            //$("]],"start1":10008,"start2":10008,"length1":32,"length2":127}]],"length":21010,"saved":false}
+{"ts":1355175922346,"patch":[[{"diffs":[[0,"false}))"],[-1,", "],[1,";"],[0,"\n       "]],"start1":10108,"start2":10108,"length1":18,"length2":17}]],"length":21009,"saved":false}
