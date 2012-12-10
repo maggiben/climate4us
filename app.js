@@ -102,7 +102,7 @@ mongoose.connection.on("open", function(){
 });
 
 // Routes
-app.all('/', function(req, res, next) {
+app.all('/', ensureAuthenticated, function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
@@ -238,7 +238,7 @@ app.post('/signin', function(req,res,next) {
 app.get('/signup', function(req, res) {
         res.render('signup', { title: 'signin', locale: 'en_US', user: req.user });
 });
-app.post('/register', function(req, res) {
+app.post('/signup', function(req, res) {
         
         var username = req.body.username;
         console.log("registering: user: %s pass: %s", req.body.username, req.body.password);
@@ -246,18 +246,18 @@ app.post('/register', function(req, res) {
         Account.findOne({username : username }, function(err, existingUser) {
             if (err || existingUser) {
                 console.log("existingUser");
-                return res.render('register', { account : account });
+                return res.render('signup', { account : account });
             }
-            var account = new Account({ username : req.body.username, email: 'benja@benja.com'});
+            var account = new Account({ username : req.body.username, email: req.body.username});
             account.setPassword(req.body.password, function(err) {
                 if (err) {
-                    return res.render('register', { account : account });
+                    return res.render('signup', { account : account });
                 }
                 account.save(function(err) {
                     if (err) {
-                        return res.render('register', { account : account });
+                        return res.render('signup', { account : account });
                     }
-                    res.redirect('/');
+                    return res.redirect('/');
                 });
             });
         });
@@ -294,7 +294,7 @@ app.post('/forgot', function(req, res) {
             }
     });
 });
-app.get('/logout', function(req, res) {
+app.get('/signout', function(req, res) {
     req.logout();
     res.redirect('/');
 });

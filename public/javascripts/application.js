@@ -384,6 +384,15 @@ ver 1
         });
         this.get('#/sign_out', function()
         {
+            $.ajax({
+                    url: "/signout",
+                    type: "GET",
+                    complete: function () {
+                    window.location = "/signin"
+                }
+            });
+            $("body").addClass("loading").removeClass("loaded");
+            return;
             var obj = {
                 id: Math.floor(Math.random() * 99999999999999),
                 weekend: 'test',
