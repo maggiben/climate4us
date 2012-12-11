@@ -53,6 +53,8 @@ nice and simple ...
 
 ## Installation
 
+#### Cloud9: 
+
   - Install Cloud9 IDE
 
 <!---->
@@ -60,6 +62,8 @@ nice and simple ...
     Just use the Github URL when creating a Cloud9 project, npm install and you are ready to go.
 
 > For more installation detail please see Cloud9 [faq](https://c9.io/site/category/faq/)
+
+#### Local: 
 
   - Install node.js 
 
