@@ -23,7 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // Controllers
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 
 
 // Load model
@@ -31,27 +31,27 @@ var station_schema = require('../models/station')
   , Station = mongoose.model('Station', station_schema);
   
   
-/**
-* @param {Object} req
-* @param {Object} res
-* @param {Object} next
-*
-* @api public
-*
-* @url GET /
-*/
+///////////////////////////////////////////////////////////////////////////////
+// @param {Object} req                                                       //
+// @param {Object} res                                                       //
+// @param {Object} next                                                      //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url GET /                                                                //
+///////////////////////////////////////////////////////////////////////////////
 exports.index = function (req, res, next) {
 
   Station.find(gotStations);
   function gotStations (err, stations) {
     if (err) {
       console.log(err)
-      return next()
+      return next();
     }
     console.log(stations)
     return;
   }
-}
+};
 
 exports.getStations = function (req, res, next) {
 
@@ -61,12 +61,12 @@ exports.getStations = function (req, res, next) {
     function gotStations (err, stations) {
         if (err) {
             console.log(err)
-            return next()
+            return next();
         }
         var stationsJSON = JSON.stringify(stations);
         return res.send(stationsJSON);
     }
-}
+};
 exports.setupStation = function (req, res, next) {
     res.contentType('application/json');
     var id = req.params.id;
@@ -82,7 +82,7 @@ exports.setupStation = function (req, res, next) {
         var stationJSON = JSON.stringify(station);
         return res.send(stationJSON);
     }
-}
+};
 exports.update = function (req, res, next) {
     res.contentType('application/json');
     var id = req.params.id;
@@ -97,7 +97,7 @@ exports.update = function (req, res, next) {
         }
         if (!station) {
             console.log('ERROR: ID no existe')
-            return res.send('ID Inválida!')
+            return res.send('ID Inválida!');
         } 
         else {
             console.log(JSON.stringify(req.body));
@@ -105,7 +105,7 @@ exports.update = function (req, res, next) {
         var stationJSON = JSON.stringify(station);
         return res.send(stationJSON);
     }
-}
+};
 exports.create = function (req, res, next) {
     
     var name = req.body.name;
@@ -164,7 +164,7 @@ exports.create = function (req, res, next) {
     });
     
     res.contentType('application/json');
-    station.save(onSaved)
+    station.save(onSaved);
 
     function onSaved (err) {
         if (err) {

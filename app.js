@@ -29,7 +29,7 @@
 var express = require('express'),
     routes = require('./routes'),
     conf = require('./config'),
-    cons = require('consolidate');
+    cons = require('consolidate'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     Account = require('./models/account'),

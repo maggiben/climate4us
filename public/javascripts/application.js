@@ -94,7 +94,6 @@ ver 1
                 
                 error: function (b) {
                     var c = $.parseJSON(b.responseText);
-                    alert(c.errors)
                 },
                 complete: function () {                                
                 }

@@ -9,11 +9,13 @@ Just use the Github URL when creating a Cloud9 project, npm install and you are 
 
 ## Includes
 
-* Express 3.x framework
+* [Express](http://expressjs.com/): 3.x Application Framework for Node.js
+* [Mongoose](http://mongoosejs.com/): Node.JS ORM for Mongo
+* [cluster](http://learnboost.github.com/cluster): extensible multi-core server manager
 * consolidate Template engine consolidation library
 * Mustache Template engine 
 * Stylus expressive way to generate CSS.
-* jQuery and jQuery UI (JavaScript Library)
+* [socket.io](https://github.com/learnboost/Socket.IO-node): The cross-browser WebSocket
 * Sammy A Small Web Framework with Class / RESTFul Evented JavaScript
 * mongodb is a scalable, high-performance, open source NoSQL database
 * mongoose object modeling tool designed to work in an asynchronous environment.
@@ -21,6 +23,72 @@ Just use the Github URL when creating a Cloud9 project, npm install and you are 
 * passport-facebook & passport-local-mongoose
 
 nice and simple ...
+
+## Requires
+
+### You need to manually install: 
+
+  - [Node.js](http://nodejs.org/): Amazing javascript asynchronous IO library, install manually.
+  - [MongoDB](http://www.mongodb.org): NoSQL Database, install manually.
+  - [NPM](http://npmjs.org/): Node package manager, used to install the remaining.
+
+### And then install via NPM: 
+
+  - [Express](http://expressjs.com/): Application Framework for Node.js
+  - [Mongoose](http://mongoosejs.com/): Node.JS ORM for Mongo
+  - [ejs](http://embeddedjs.com/): EmbeddedJS Templating
+  - [cluster](http://learnboost.github.com/cluster): extensible multi-core server manager
+  - log: Tiny logger with streaming reader
+  - [connect](https://github.com/senchalabs/connect): High performance middleware framework
+  - mime: A comprehensive library for mime-type mapping
+  - qs: querystring parser
+  - [expresso](https://github.com/visionmedia/expresso): TDD framework, light-weight, fast, CI-friendly
+  - should: test framework agnostic BDD-style assertions
+  - [socket.io](https://github.com/learnboost/Socket.IO-node): The cross-browser WebSocket
+
+### But I've included in this project:
+
+  - [jQuery](http://jquery.com/): Javascript Library
+  - [jQuery UI](http://jqueryui.com/): UI Library
+  - [jQuery Aristo Template](http://taitems.tumblr.com/post/482577430/introducing-aristo-a-jquery-ui-theme): Fantastic looking jQuery UI Template.
+
+## Installation
+
+  - Install node.js 
+
+<!---->
+
+      // on osx with brew
+      brew update
+      brew install node
+    
+      // build from source
+      git clone git://github.com/joyent/node.git
+      ./configure
+      make
+      make install
+  
+  - Ininstall mongodb
+  
+<!---->
+
+      // on osx with brew
+      brew update
+      brew install mongodb
+    
+      // create db folder
+      mkdir -p /usr/local/db/
+
+> For more installation detail please see [this](http://www.mongodb.org/display/DOCS/Quickstart)
+    
+  - Install npm
+
+<!---->
+
+    curl http://npmjs.org/install.sh | clean=no sh
+    
+  - Install required packages
+
 
 #### Account model
 ```js
