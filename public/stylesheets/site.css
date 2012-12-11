@@ -1,3 +1,5 @@
+/*#339966;*/
+/*#31654b;*/
 /*#393939;*/
 body {
   font: 13px/1.231 helvetica, arial, clean, sans-serif;
@@ -291,14 +293,14 @@ button span {
   display: inline-block;
   padding: 0 10px;
   margin: 0;
-  background: #396;
+  background: #cc66bc;
   background-color: #396;
-  background-image: -moz-linear-gradient(top, #396, #31654b);
-  background-image: -ms-linear-gradient(top, #396, #31654b);
-  background-image: -o-linear-gradient(top, #396, #31654b);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#396), to(#31654b));
-  background-image: -webkit-linear-gradient(top, #396, #31654b);
-  background-image: linear-gradient(top, #396, #31654b);
+  background-image: -moz-linear-gradient(top, #cc66bc, #9a338a);
+  background-image: -ms-linear-gradient(top, #cc66bc, #9a338a);
+  background-image: -o-linear-gradient(top, #cc66bc, #9a338a);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#cc66bc), to(#9a338a));
+  background-image: -webkit-linear-gradient(top, #cc66bc, #9a338a);
+  background-image: linear-gradient(top, #cc66bc, #9a338a);
   height: 27px;
   line-height: 25px;
   text-shadow: rgba(0,0,0,0.8) 0 -1px 0;
@@ -1519,7 +1521,7 @@ div.map_label strong {
   background-clip: padding-box;
 }
 #site_content div.empty a {
-  color: #396;
+  color: #cc66bc;
 }
 #site_content span.secondary {
   display: block;
@@ -1664,12 +1666,12 @@ div.map_label strong {
 }
 #site_content table div.vertical-bar div {
   background-color: #396;
-  background-image: -moz-linear-gradient(top, #396, #31654b);
-  background-image: -ms-linear-gradient(top, #396, #31654b);
-  background-image: -o-linear-gradient(top, #396, #31654b);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#396), to(#31654b));
-  background-image: -webkit-linear-gradient(top, #396, #31654b);
-  background-image: linear-gradient(top, #396, #31654b);
+  background-image: -moz-linear-gradient(top, #cc66bc, #9a338a);
+  background-image: -ms-linear-gradient(top, #cc66bc, #9a338a);
+  background-image: -o-linear-gradient(top, #cc66bc, #9a338a);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#cc66bc), to(#9a338a));
+  background-image: -webkit-linear-gradient(top, #cc66bc, #9a338a);
+  background-image: linear-gradient(top, #cc66bc, #9a338a);
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -1955,7 +1957,7 @@ span.swatch {
   color: #999;
 }
 #site_content div.toolbar h5 strong {
-  color: #396;
+  color: #cc66bc;
 }
 #site_content div.pricing table {
   width: 100%;
@@ -1991,7 +1993,7 @@ span.swatch {
   background: none;
 }
 #site_content div.pricing tr.extra strong {
-  color: #396;
+  color: #cc66bc;
   -webkit-font-smoothing: antialiased;
 }
 #site_content div.pricing a:hover {
@@ -2333,7 +2335,7 @@ body.adding #new_site.upgrade div.upgrade {
 }
 #password_reset_sent a {
   text-decoration: none;
-  color: #396;
+  color: #cc66bc;
 }
 #password_reset_sent a:hover {
   color: #222;
@@ -2561,7 +2563,7 @@ html.live li.live span.indicator span {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
   opacity: 1;
-  background: #31654b;
+  background: #9a338a;
 }
 html.live li.live.hit span.indicator span {
   background: #fee283;
@@ -2649,7 +2651,7 @@ form h2 {
 }
 form a {
   display: block;
-  color: #396;
+  color: #cc66bc;
   text-decoration: none;
 }
 form p.support {
@@ -2826,7 +2828,7 @@ div.pricing th strong {
   font-size: 50px;
   line-height: 1;
   font-weight: normal;
-  color: #396;
+  color: #cc66bc;
   position: relative;
   letter-spacing: -3px;
 }
@@ -2867,7 +2869,7 @@ div.pricing tr:nth-child(odd) td {
   background: rgba(0,102,204,0.05);
 }
 div.pricing tr.extra strong {
-  color: #396;
+  color: #cc66bc;
   -webkit-font-smoothing: antialiased;
 }
 div.pricing div.display a.button {

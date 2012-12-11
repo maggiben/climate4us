@@ -4,7 +4,7 @@
 // Project      : Node.JS + Express boilerplate for cloud9 and appFog        //
 // Author       : Benjamin Maggi                                             //
 // Email        : benjaminmaggi@gmail.com                                    //
-// Date    		: 12 Dec 2012                                                //
+// Date         : 12 Dec 2012                                                //
 // ------------------------------------------------------------------------- //
 //                                                                           //
 //                                                                           //
@@ -35,6 +35,7 @@ var express = require('express'),
     Account = require('./models/account'),
     //Station = require('./models/station'),
     Station = require('./controllers/station'),
+    Subscription = require('./controllers/subscription'),
     LocalStrategy = require('passport-local').Strategy;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,7 +53,7 @@ else{
         "password":"12345",
         "name":"",
         "db":"cloud-db"
-    }
+    };
 }
 var generate_mongo_url = function(obj){
     obj.hostname = (obj.hostname || 'localhost');
@@ -322,6 +323,13 @@ app.get('/mongo', Station.create);
 app.get('/setupStation/:id', Station.setupStation);
 app.get('/getStations', Station.getStations);
 app.post('/changeStation/:id', Station.update);
+
+///////////////////////////////////////////////////////////////////////////////
+// Subscription rutes                                                        //
+///////////////////////////////////////////////////////////////////////////////
+app.get('/subscription/getbyid/:id', Subscription.getById);
+app.get('/subscription/create', Subscription.create);
+app.get('/subscription/remove/:id', Subscription.remove);
 
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);

@@ -44,7 +44,7 @@ var subscription_schema = require('../models/subscription')
 //                                                                           //
 // @api public                                                               //
 //                                                                           //
-// @url GET /subscription/getAll                                             //
+// @url GET /subscription/getall                                             //
 ///////////////////////////////////////////////////////////////////////////////
 
 exports.getAll = function (req, res, next) {
@@ -72,7 +72,7 @@ exports.getAll = function (req, res, next) {
 //                                                                           //
 // @api public                                                               //
 //                                                                           //
-// @url GET /subscription/getById                                            //
+// @url GET /subscription/getbyid                                            //
 ///////////////////////////////////////////////////////////////////////////////
 exports.getById = function (req, res, next) {
     
@@ -89,6 +89,56 @@ exports.getById = function (req, res, next) {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+// Route to add a Subscription                                               //
+//                                                                           //
+// @param {Object} req                                                       //
+// @param {Object} res                                                       //
+// @param {Object} next                                                      //
+// @return {Object} JSON result                                              //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url GET /subscription/create                                             //
+///////////////////////////////////////////////////////////////////////////////
+exports.create = function (req, res, next) {
+    
+    var name = req.body.name;
+    console.log("name: ", name);
+
+    //console.log("para: " + JSON.stringify(req.params));
+    console.log('create-body: ' + JSON.stringify(req.body));
+    
+    var subscription = new Subscription({
+        name: "name",
+        type: "String",
+        magic: 1234,
+        created: new Date(),
+        lastUpdate: new Date(),
+        lastAccess: new Date(),
+        isReady: false,
+        stations: [],
+        humidity: { 
+            value: 5, 
+            dewpoint: 5, 
+            unit: 'A'
+        }
+    });
+    
+    res.contentType('application/json');
+    subscription.save(onSaved);
+
+    function onSaved (err) {
+        if (err) {
+            console.log(err);
+            return next(err);
+        }
+        console.log("onSaved");
+        return res.send(JSON.stringify(subscription));
+    }
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
 // Route to remove a Subscription                                            //
 //                                                                           //
 // @param {Object} req                                                       //
@@ -98,7 +148,7 @@ exports.getById = function (req, res, next) {
 //                                                                           //
 // @api public                                                               //
 //                                                                           //
-// @url GET /subscription/remove                                             //
+// @url GET /subscription/remove/:id                                         //
 ///////////////////////////////////////////////////////////////////////////////
 exports.remove = function (req, res, next) {
     
