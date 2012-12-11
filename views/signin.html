@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js live"><!--<![endif]-->
+    <head>
+        <title>{{title}}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />        
+        <meta charset="utf-8">
+        <meta property="og:title"  name="title" content="{{failureFlash}}">
+        <meta property="og:url" content="http://html5.laboratory.com/">
+        <meta property="og:image" content="http://laboratory.com/workspace/widget/100.png">
+        <meta property="og:site_name" content="{{appname}}">
+        <meta property="og:locale" content="{{locale}}">
+        <meta property="og:type" content="website">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">        
+        <!-- INCLUDE SCRIPTS -->    
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
+        <!-- INCLUDE SCRIPTS / -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/lionbars.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/site.css" />
+        <script>
+            ;(function($){
+                $.fn.displayErrors = function(a, b) {
+                    var c = this.removeErrors();
+                    c.parent().addClass("error");
+                    for (key in a) {
+                        var d = b ? b + "[" + key + "]" : key, e = a[key].join(", "), f = '<strong class="error_explanation">' + e + "</strong>";
+                        c.find('[name="' + d + '"]').addClass("error").closest("p").append(f)
+                    }
+                    var g = c.closest("section");
+                    return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this
+                }
+                $.fn.removeErrors = function() {
+                    this.parent().removeClass("error").find("input.error").removeClass("error"), this.find("strong.error_explanation").remove();
+                    var a = this.closest("section");
+                    return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this
+                }
+                var session = $.sammy(function() {
+                    this.get("#/", function() {
+                        $("body").removeClass("forgot reset_sent")
+                    }), 
+                    this.get("#/forgot", function() {
+                        $("body").addClass("forgot")
+                    }), 
+                    this.get("#/forgot/sent", function() {
+                        $("body").removeClass("forgot").addClass("reset_sent")
+                    }), 
+                    this.post("#/forgot", function() {
+                        var a = $(this.target).removeErrors(), b = a.find(".submit button span");
+                        clearTimeout(b.data("timeout")), b.data("text") === undefined && b.data("text", b.text()), b.text("Emailing"), 
+                        $.ajax({
+                            url: "/forgot",
+                            dataType: "json",
+                            type: "post",
+                            data: {email: this.params.email},
+                            success: function(a) {
+                                window.location.hash = "/forgot/sent"
+                            },
+                            error: function() {
+                                a.displayErrors({email: ["Could not find that Email"]})
+                            },
+                            complete: function() {
+                                b.text(b.data("text"))
+                            }})
+                    })
+                });
+                jQuery(function() {
+                    session.run();
+                    console.log("sammy.run()");
+                });                
+            })(window.jQuery || window.Zepto);
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="signin">
+                <form action="/signin" method="post">
+                    <input type="hidden" name="_magic" value="{{magic}}" />
+                    <p class="wrong_place">Need an account? <a href="/signup">Sign Up</a></p>
+                    <h2>Gauges</h2>
+                    <p class="text email">
+                        <label for="email">Email Address</label>
+                        <input type="email" name="username" />
+                    </p>
+                    <p class="text password">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" />
+                        <a href="#/forgot" id="initiate_pw_recovery">Forgot your password?</a>
+                    </p>
+                    <p class="submit">
+                        <button><span>Sign In</span></button>
+                    </p>
+                </form>
+                <!--
+                <div class="alternates">
+                    <h2>Sign In Using</h2>
+                    <ul>
+                        <li class="twitter"><a href="#">Twitter</a></li>
+                        <li class="github"><a href="#">Github</a></li>
+                        <li class="facebook"><a href="#">Facebook</a></li>
+                        <li class="google"><a href="#">Google</a></li>
+                        <li class="yahoo"><a href="#">Yahoo</a></li>
+                    </ul>
+                </div>
+                -->
+                </div>
+                <div id="forgot_password">
+                    <form action="#/forgot" method="post">
+                        <input type="hidden" name="_csrf" value="th03uCBMvEs8tR/OXaAySClZzJA9zyEEOQJOklDroVU=" />
+                        <h2>Climate4US</h2>
+                            <p class="instructions">To reset your password, enter your email address and we&rsquo;ll send you instructions.</p>
+                            <p class="text email">
+                                <label>Email Address</label>
+                                <input type="email" name="email" />
+                            </p>
+                            <p class="submit">
+                                <button><span>Email Me</span></button>
+                                <a href="#/">Nevermind, I Remember</a>
+                            </p>
+                    </form>
+                </div>
+                <div id="password_reset_sent">
+                    <h2>Climate4US</h2>
+                    <p class="instructions">We&rsquo;ve sent you an email with instructions on resetting your password. Go check for it. Thanks!</p>
+                    <p><a href="#/">Take me to the Login</a></p>
+                </div>     
+        </div>
+    </body>
+    <!-- ANALITICS -->
+    <script type="text/javascript">
+    var _gauges = _gauges || [];
+    (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '50bc04e9613f5d6105000005');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+    })();
+    </script>
+</html>

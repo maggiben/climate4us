@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js live"><!--<![endif]-->
+    <head>
+        <title>{{title}}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />        
+        <meta charset="utf-8">
+        <meta property="og:title"  name="title" content="{{failureFlash}}">
+        <meta property="og:url" content="http://html5.laboratory.com/">
+        <meta property="og:image" content="http://laboratory.com/workspace/widget/100.png">
+        <meta property="og:site_name" content="{{appname}}">
+        <meta property="og:locale" content="{{locale}}">
+        <meta property="og:type" content="website">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">        
+        <!-- INCLUDE SCRIPTS -->    
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
+        <!-- INCLUDE SCRIPTS / -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/lionbars.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/site.css" />
+    </head>
+    <body class="signup">
+        <div id="wrapper">
+            <div id="signup">
+                <form action="/signup" method="post">
+                    <input type="hidden" name="_csrf" value="th03uCBMvEs8tR/OXaAySClZzJA9zyEEOQJOklDroVU=" />
+                    <p class="wrong_place">Have an account? <a href="/signin">Sign In</a></p>
+                        <h2>Climate4us</h2>
+                        <p class="text email">
+                            <label>Email Address</label>
+                            <input type="text" name="username" />
+                        </p>
+                        <p class="text password">
+                            <label>Password</label>
+                            <input type="password" name="password" />
+                        </p>
+                        <p class="submit">
+                            <button><span>Start Tracking a Station</span></button>
+                        </p>
+                </form>
+            </div>
+        </div>
+    </body>
+    <!-- ANALITICS -->
+    <script type="text/javascript">
+    var _gauges = _gauges || [];
+    (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '50bc04e9613f5d6105000005');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+    })();
+    </script>
+</html>
