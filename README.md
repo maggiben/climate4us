@@ -3,10 +3,6 @@ Climate4US
 
 A very simple Node.js + Express boilerplate for Cloud9 projects.
 
-## Install
-
-Just use the Github URL when creating a Cloud9 project, npm install and you are ready to go.
-
 ## Includes
 
 * [Express](http://expressjs.com/): 3.x Application Framework for Node.js
@@ -50,9 +46,20 @@ nice and simple ...
 
   - [jQuery](http://jquery.com/): Javascript Library
   - [jQuery UI](http://jqueryui.com/): UI Library
-  - [jQuery Aristo Template](http://taitems.tumblr.com/post/482577430/introducing-aristo-a-jquery-ui-theme): Fantastic looking jQuery UI Template.
+  - [jQuery scrollTo]
+  - [ICanHaz](): Mustache template engine
+  - [sammy](): A Small Web Framework with Class / RESTFul Evented JavaScript
+  - [modernizr](): HTML5 browser feature detection
 
 ## Installation
+
+  - Install Cloud9 IDE
+
+<!---->
+
+    Just use the Github URL when creating a Cloud9 project, npm install and you are ready to go.
+
+> For more installation detail please see Cloud9 [faq](https://c9.io/site/category/faq/)
 
   - Install node.js 
 

@@ -34,3 +34,60 @@
 {"ts":1355236252943,"patch":[[{"diffs":[[0,"mongoose"],[1,"\n* [cluster](http://learnboost.github.com/cluster): extensible multi-core server manager"],[0,"\n\nnice a"]],"start1":886,"start2":886,"length1":16,"length2":104}]],"length":4491,"saved":false}
 {"ts":1355236259296,"patch":[[{"diffs":[[0,"oose"],[-1,"\n* [cluster](http://learnboost.github.com/cluster): extensible multi-core server manager"],[0,"\n\nni"]],"start1":890,"start2":890,"length1":96,"length2":8}]],"length":4403,"saved":false}
 {"ts":1355236263474,"patch":[[{"diffs":[[0,"r Mongo\n"],[1,"* [cluster](http://learnboost.github.com/cluster): extensible multi-core server manager\n"],[0,"* consol"]],"start1":351,"start2":351,"length1":16,"length2":104}]],"length":4491,"saved":false}
+{"ts":1355236418269,"patch":[[{"diffs":[[0,"s.\n\n"],[-1,"## Install\n\nJust use the Github URL when creating a Cloud9 project, npm install and you are ready to go.\n\n"],[0,"## I"]],"start1":102,"start2":102,"length1":114,"length2":8},{"diffs":[[0,"lation\n\n"],[1,"\n"],[0,"  - Inst"]],"start1":2286,"start2":2286,"length1":16,"length2":17}]],"length":4386,"saved":false}
+{"ts":1355236419360,"patch":[[{"diffs":[[0,"llation\n"],[1,"## Install\n\nJust use the Github URL when creating a Cloud9 project, npm install and you are ready to go."],[0,"\n\n  - In"]],"start1":2285,"start2":2285,"length1":16,"length2":120}]],"length":4490,"saved":false}
+{"ts":1355236422163,"patch":[[{"diffs":[[0,"allation"],[-1,"\n## Install"],[0,"\n\nJust u"]],"start1":2284,"start2":2284,"length1":27,"length2":16}]],"length":4479,"saved":false}
+{"ts":1355236423225,"patch":[[{"diffs":[[0,"lation\n\n"],[1,"    \n"],[0,"Just use"]],"start1":2286,"start2":2286,"length1":16,"length2":21}]],"length":4484,"saved":false}
+{"ts":1355236424195,"patch":[[{"diffs":[[0,"lation\n\n"],[-1,"    "],[0,"\nJust us"]],"start1":2286,"start2":2286,"length1":20,"length2":16}]],"length":4480,"saved":false}
+{"ts":1355236428760,"patch":[[{"diffs":[[0,"lation\n\n"],[1,"  - Install node.js "],[0,"\nJust us"]],"start1":2286,"start2":2286,"length1":16,"length2":36}]],"length":4500,"saved":false}
+{"ts":1355236431260,"patch":[[{"diffs":[[0,"Install "],[-1,"node.js "],[1,"Clo"],[0,"\nJust us"]],"start1":2298,"start2":2298,"length1":24,"length2":19}]],"length":4495,"saved":false}
+{"ts":1355236434270,"patch":[[{"diffs":[[0,"tall Clo"],[1,"ud9 IDE"],[0,"\nJust us"]],"start1":2301,"start2":2301,"length1":16,"length2":23}]],"length":4502,"saved":false}
+{"ts":1355236449337,"patch":[[{"diffs":[[0,"ud9 IDE\n"],[1,"  -\n"],[0,"Just use"]],"start1":2309,"start2":2309,"length1":16,"length2":20}]],"length":4506,"saved":false}
+{"ts":1355236451520,"patch":[[{"diffs":[[0,"ud9 IDE\n"],[-1,"  -"],[1,"<!---->"],[0,"\nJust us"]],"start1":2309,"start2":2309,"length1":19,"length2":23}]],"length":4510,"saved":false}
+{"ts":1355236457040,"patch":[[{"diffs":[[0,"<!---->\n"],[1,"    "],[0,"Just use"]],"start1":2317,"start2":2317,"length1":16,"length2":20}]],"length":4514,"saved":false}
+{"ts":1355236472001,"patch":[[{"diffs":[[0,"ud9 IDE\n"],[1,"  - \n"],[0,"<!---->\n"]],"start1":2309,"start2":2309,"length1":16,"length2":21}]],"length":4519,"saved":false}
+{"ts":1355236474595,"patch":[[{"diffs":[[0,"ud9 IDE\n"],[-1,"  - "],[0,"\n<!---->"]],"start1":2309,"start2":2309,"length1":20,"length2":16},{"diffs":[[0,"<!---->\n"],[1,"\n"],[0,"    Just"]],"start1":2318,"start2":2318,"length1":16,"length2":17}]],"length":4516,"saved":false}
+{"ts":1355236609530,"patch":[[{"diffs":[[0,"to go.\n\n"],[1,"https://c9.io/site/category/faq/\n\n"],[0,"  - Inst"]],"start1":2417,"start2":2417,"length1":16,"length2":50}]],"length":4550,"saved":false}
+{"ts":1355236618118,"patch":[[{"diffs":[[0,"to go.\n\n"],[1,"> For more installation detail please see [this]"],[0,"https://"]],"start1":2417,"start2":2417,"length1":16,"length2":64}]],"length":4598,"saved":false}
+{"ts":1355236622254,"patch":[[{"diffs":[[0,"e [this]"],[1,"("],[0,"https://"]],"start1":2465,"start2":2465,"length1":16,"length2":17},{"diffs":[[0,"ory/faq/"],[1,")"],[0,"\n\n  - In"]],"start1":2498,"start2":2498,"length1":16,"length2":17}]],"length":4600,"saved":false}
+{"ts":1355236632893,"patch":[[{"diffs":[[0,"n detail please "],[-1,"see"],[1,"read Cloud"],[0," [this](https://"]],"start1":2447,"start2":2447,"length1":35,"length2":42}]],"length":4607,"saved":false}
+{"ts":1355236634112,"patch":[[{"diffs":[[0,"ad Cloud"],[1,"9 "],[0," [this]("]],"start1":2465,"start2":2465,"length1":16,"length2":18}]],"length":4609,"saved":false}
+{"ts":1355236635403,"patch":[[{"diffs":[[0," Cloud9 "],[1,"fa"],[0," [this]("]],"start1":2467,"start2":2467,"length1":16,"length2":18}]],"length":4611,"saved":false}
+{"ts":1355236636436,"patch":[[{"diffs":[[0,"Cloud9 f"],[-1,"a"],[0," [this]("]],"start1":2468,"start2":2468,"length1":17,"length2":16}]],"length":4610,"saved":false}
+{"ts":1355236637484,"patch":[[{"diffs":[[0,"Cloud9 f"],[1,"a"],[0," [this]("]],"start1":2468,"start2":2468,"length1":16,"length2":17}]],"length":4611,"saved":false}
+{"ts":1355236639049,"patch":[[{"diffs":[[0,"loud9 fa"],[1,"q"],[0," ["],[-1,"thi"],[0,"s](https"]],"start1":2469,"start2":2469,"length1":21,"length2":19}]],"length":4609,"saved":false}
+{"ts":1355236640627,"patch":[[{"diffs":[[0,"d9 faq ["],[-1,"s"],[1,"her"],[0,"](https:"]],"start1":2472,"start2":2472,"length1":17,"length2":19}]],"length":4611,"saved":false}
+{"ts":1355236641787,"patch":[[{"diffs":[[0,"aq ["],[-1,"her"],[1,"fa"],[0,"](ht"]],"start1":2476,"start2":2476,"length1":11,"length2":10}]],"length":4610,"saved":false}
+{"ts":1355236642908,"patch":[[{"diffs":[[0," faq [fa"],[1,"q"],[0,"](https:"]],"start1":2474,"start2":2474,"length1":16,"length2":17}]],"length":4611,"saved":false}
+{"ts":1355236644115,"patch":[[{"diffs":[[0,"oud9 faq"],[-1," "],[0,"[faq](ht"]],"start1":2470,"start2":2470,"length1":17,"length2":16}]],"length":4610,"saved":false}
+{"ts":1355236646058,"patch":[[{"diffs":[[0," Cloud9 "],[-1,"faq"],[0,"[faq](ht"]],"start1":2467,"start2":2467,"length1":19,"length2":16}]],"length":4607,"saved":false}
+{"ts":1355236651711,"patch":[[{"diffs":[[0," please "],[-1,"read"],[1,"check the"],[0," Cloud9 "]],"start1":2455,"start2":2455,"length1":20,"length2":25}]],"length":4612,"saved":false}
+{"ts":1355236658010,"patch":[[{"diffs":[[0,"ase "],[-1,"check"],[1,"see"],[0," the"]],"start1":2459,"start2":2459,"length1":13,"length2":11}]],"length":4610,"saved":false}
+{"ts":1355236661725,"patch":[[{"diffs":[[0,"ase see "],[-1,"the "],[0,"Cloud9 ["]],"start1":2459,"start2":2459,"length1":20,"length2":16}]],"length":4606,"saved":false}
+{"ts":1355236755993,"patch":[[{"diffs":[[0,"uery"],[-1," Aristo Template](http://taitems.tumblr.com/post/482577430/introducing-aristo-a-jquery-ui-theme): Fantastic looking jQuery UI Template."],[0,"\n\n##"]],"start1":2136,"start2":2136,"length1":143,"length2":8}]],"length":4471,"saved":false}
+{"ts":1355236759014,"patch":[[{"diffs":[[0," [jQuery"],[1," scr"],[0,"\n\n## Ins"]],"start1":2132,"start2":2132,"length1":16,"length2":20}]],"length":4475,"saved":false}
+{"ts":1355236761023,"patch":[[{"diffs":[[0,"uery scr"],[1,"ollTo"],[0,"\n\n## Ins"]],"start1":2136,"start2":2136,"length1":16,"length2":21}]],"length":4480,"saved":false}
+{"ts":1355236764249,"patch":[[{"diffs":[[0,"scrollTo"],[1,"]\n  - "],[0,"\n\n## Ins"]],"start1":2141,"start2":2141,"length1":16,"length2":22}]],"length":4486,"saved":false}
+{"ts":1355236773505,"patch":[[{"diffs":[[0,"To]\n  - "],[1,"ICanHaz"],[0,"\n\n## Ins"]],"start1":2147,"start2":2147,"length1":16,"length2":23}]],"length":4493,"saved":false}
+{"ts":1355236776018,"patch":[[{"diffs":[[0,"  - "],[1,"["],[0,"ICanHaz"],[1,"]"],[0,"\n\n##"]],"start1":2151,"start2":2151,"length1":15,"length2":17}]],"length":4495,"saved":false}
+{"ts":1355236777893,"patch":[[{"diffs":[[0,"ICanHaz]"],[1," "],[0,"\n\n## Ins"]],"start1":2156,"start2":2156,"length1":16,"length2":17}]],"length":4496,"saved":false}
+{"ts":1355236778943,"patch":[[{"diffs":[[0,"ICanHaz]"],[-1," "],[1,"()"],[0,"\n\n## Ins"]],"start1":2156,"start2":2156,"length1":17,"length2":18}]],"length":4497,"saved":false}
+{"ts":1355236779970,"patch":[[{"diffs":[[0,"anHaz]()"],[1,": "],[0,"\n\n## Ins"]],"start1":2158,"start2":2158,"length1":16,"length2":18}]],"length":4499,"saved":false}
+{"ts":1355236781010,"patch":[[{"diffs":[[0,"nHaz]():"],[-1," "],[0,"\n\n## Ins"]],"start1":2159,"start2":2159,"length1":17,"length2":16}]],"length":4498,"saved":false}
+{"ts":1355236782058,"patch":[[{"diffs":[[0,"nHaz]():"],[1," Tem"],[0,"\n\n## Ins"]],"start1":2159,"start2":2159,"length1":16,"length2":20}]],"length":4502,"saved":false}
+{"ts":1355236785379,"patch":[[{"diffs":[[0,"Haz](): "],[-1,"Tem"],[1,"Mus"],[0,"\n\n## Ins"]],"start1":2160,"start2":2160,"length1":19,"length2":19}]],"length":4502,"saved":false}
+{"ts":1355236791136,"patch":[[{"diffs":[[0,"](): Mus"],[1,"tache template engine"],[0,"\n\n## Ins"]],"start1":2163,"start2":2163,"length1":16,"length2":37}]],"length":4523,"saved":false}
+{"ts":1355236810596,"patch":[[{"diffs":[[0,"e engine"],[1,"\n  - [sammy"],[0,"\n\n## Ins"]],"start1":2184,"start2":2184,"length1":16,"length2":27}]],"length":4534,"saved":false}
+{"ts":1355236812265,"patch":[[{"diffs":[[0,"- [sammy"],[1,"]"],[0,"\n\n## Ins"]],"start1":2195,"start2":2195,"length1":16,"length2":17}]],"length":4535,"saved":false}
+{"ts":1355236813300,"patch":[[{"diffs":[[0," [sammy]"],[1,"()"],[0,"\n\n## Ins"]],"start1":2196,"start2":2196,"length1":16,"length2":18}]],"length":4537,"saved":false}
+{"ts":1355236814361,"patch":[[{"diffs":[[0,"sammy]()"],[1,": "],[0,"\n\n## Ins"]],"start1":2198,"start2":2198,"length1":16,"length2":18}]],"length":4539,"saved":false}
+{"ts":1355236822670,"patch":[[{"diffs":[[0,"mmy](): "],[1,"A Small Web Framework with Class / RESTFul Evented JavaScript"],[0,"\n\n## Ins"]],"start1":2200,"start2":2200,"length1":16,"length2":77}]],"length":4600,"saved":false}
+{"ts":1355236835027,"patch":[[{"diffs":[[0,"vaScript"],[1,"\n  - ["],[0,"\n\n## Ins"]],"start1":2261,"start2":2261,"length1":16,"length2":22}]],"length":4606,"saved":false}
+{"ts":1355236836582,"patch":[[{"diffs":[[0,"pt\n  - ["],[1,"modernizr]("],[0,"\n\n## Ins"]],"start1":2267,"start2":2267,"length1":16,"length2":27}]],"length":4617,"saved":false}
+{"ts":1355236837635,"patch":[[{"diffs":[[0,"ernizr]("],[1,")"],[0,"\n\n## Ins"]],"start1":2278,"start2":2278,"length1":16,"length2":17}]],"length":4618,"saved":false}
+{"ts":1355236838696,"patch":[[{"diffs":[[0,"rnizr]()"],[1,": "],[0,"\n\n## Ins"]],"start1":2279,"start2":2279,"length1":16,"length2":18}]],"length":4620,"saved":false}
+{"ts":1355236843488,"patch":[[{"diffs":[[0,"izr](): "],[1,"Feature "],[0,"\n\n## Ins"]],"start1":2281,"start2":2281,"length1":16,"length2":24}]],"length":4628,"saved":false}
+{"ts":1355236846677,"patch":[[{"diffs":[[0,"nizr]():"],[1," HTML5"],[0," Feature"]],"start1":2280,"start2":2280,"length1":16,"length2":22}]],"length":4634,"saved":false}
+{"ts":1355236847938,"patch":[[{"diffs":[[0,"Feature "],[1,"d"],[0,"\n\n## Ins"]],"start1":2295,"start2":2295,"length1":16,"length2":17}]],"length":4635,"saved":false}
+{"ts":1355236849522,"patch":[[{"diffs":[[0,"Feature "],[-1,"d"],[0,"\n\n## Ins"]],"start1":2295,"start2":2295,"length1":17,"length2":16}]],"length":4634,"saved":false}
+{"ts":1355236858033,"patch":[[{"diffs":[[0,"ML5 "],[-1,"Feature "],[1,"browser feature detection"],[0,"\n\n##"]],"start1":2291,"start2":2291,"length1":16,"length2":33}]],"length":4651,"saved":false}
