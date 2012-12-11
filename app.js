@@ -327,6 +327,7 @@ app.post('/changeStation/:id', Station.update);
 ///////////////////////////////////////////////////////////////////////////////
 // Subscription rutes                                                        //
 ///////////////////////////////////////////////////////////////////////////////
+app.get('/subscription/getall', Subscription.getAll);
 app.get('/subscription/getbyid/:id', Subscription.getById);
 app.get('/subscription/create', Subscription.create);
 app.get('/subscription/remove/:id', Subscription.remove);

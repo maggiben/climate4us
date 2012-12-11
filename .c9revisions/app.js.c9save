@@ -394,3 +394,8 @@
 {"ts":1355244236515,"patch":[[{"diffs":[[0,"ud-db\"\n    }"],[1,";"],[0,"\n}\nvar gener"]],"start1":3097,"start2":3097,"length1":24,"length2":25}]],"length":14254,"saved":false}
 {"ts":1355244504657,"patch":[[{"diffs":[[0,"/getbyid"],[1,"/:id"],[0,"', Subsc"]],"start1":13961,"start2":13961,"length1":16,"length2":20}]],"length":14258,"saved":false}
 {"ts":1355244628695,"patch":[[{"diffs":[[0,"reate);\napp."],[-1,"pos"],[1,"ge"],[0,"t('/subscrip"]],"start1":14045,"start2":14045,"length1":27,"length2":26}]],"length":14257,"saved":false}
+{"ts":1355251632254,"patch":[[{"diffs":[[0,"tById);\n"],[1,"app.get('/subscription/getbyid/:id', Subscription.getById);\n"],[0,"app.get("]],"start1":13991,"start2":13991,"length1":16,"length2":76}]],"length":14317,"saved":false}
+{"ts":1355251641840,"patch":[[{"diffs":[[0,"subscription/get"],[-1,"byid"],[1,"A"],[0,"/:id', Subscript"]],"start1":13949,"start2":13949,"length1":36,"length2":33}]],"length":14314,"saved":false}
+{"ts":1355251642833,"patch":[[{"diffs":[[0,"tion/get"],[-1,"A"],[1,"all"],[0,"/:id', S"]],"start1":13957,"start2":13957,"length1":17,"length2":19}]],"length":14316,"saved":false}
+{"ts":1355251644482,"patch":[[{"diffs":[[0,"n/getall"],[-1,"/:id"],[0,"', Subsc"]],"start1":13960,"start2":13960,"length1":20,"length2":16}]],"length":14312,"saved":false}
+{"ts":1355251649586,"patch":[[{"diffs":[[0,"Subscription.get"],[-1,"ById"],[1,"All"],[0,");\napp.get('/sub"]],"start1":13971,"start2":13971,"length1":36,"length2":35}]],"length":14311,"saved":false}
