@@ -53,9 +53,7 @@ nice and simple ...
 
 ## Installation
 
-#### Cloud9: 
-
-  - Install Cloud9 IDE
+#### Deploy on Cloud9 IDE: 
 
 <!---->
 
@@ -63,7 +61,7 @@ nice and simple ...
 
 > For more installation detail please see Cloud9 [faq](https://c9.io/site/category/faq/)
 
-#### Local: 
+#### Deploy Locally: 
 
   - Install node.js 
 

@@ -100,3 +100,11 @@
 {"ts":1355236965654,"patch":[[{"diffs":[[0,"erver: \n"],[1,"\n"],[0,"  - Inst"]],"start1":2588,"start2":2588,"length1":16,"length2":17}]],"length":4688,"saved":false}
 {"ts":1355236967823,"patch":[[{"diffs":[[0,"loud9: \n"],[1,"\n"],[0,"  - Inst"]],"start1":2345,"start2":2345,"length1":16,"length2":17}]],"length":4689,"saved":false}
 {"ts":1355236972736,"patch":[[{"diffs":[[0,"### "],[-1,"On your server"],[1,"Local"],[0,": \n\n"]],"start1":2576,"start2":2576,"length1":22,"length2":13}]],"length":4680,"saved":false}
+{"ts":1355237004723,"patch":[[{"diffs":[[0,"on\n\n####"],[1," Install"],[0," Cloud9"],[1," IDE"],[0,": \n\n  - "]],"start1":2335,"start2":2335,"length1":23,"length2":35}]],"length":4692,"saved":false}
+{"ts":1355237007432,"patch":[[{"diffs":[[0,"n\n\n#### Install "],[1,"on "],[0,"Cloud9 IDE: \n\n  "]],"start1":2336,"start2":2336,"length1":32,"length2":35}]],"length":4695,"saved":false}
+{"ts":1355237010504,"patch":[[{"diffs":[[0,"####"],[-1," Install on"],[0," Clo"]],"start1":2339,"start2":2339,"length1":19,"length2":8}]],"length":4684,"saved":false}
+{"ts":1355237014237,"patch":[[{"diffs":[[0,"on\n\n####"],[1," Deploy on"],[0," Cloud9 "]],"start1":2335,"start2":2335,"length1":16,"length2":26}]],"length":4694,"saved":false}
+{"ts":1355237016417,"patch":[[{"diffs":[[0,")\n\n#### "],[1,"Deplo"],[0,"Local: \n"]],"start1":2586,"start2":2586,"length1":16,"length2":21}]],"length":4699,"saved":false}
+{"ts":1355237018625,"patch":[[{"diffs":[[0,"## Deplo"],[1,"y "],[0,"Local: \n"]],"start1":2591,"start2":2591,"length1":16,"length2":18}]],"length":4701,"saved":false}
+{"ts":1355237020676,"patch":[[{"diffs":[[0,"oy Local"],[1,"ly"],[0,": \n\n  - "]],"start1":2598,"start2":2598,"length1":16,"length2":18}]],"length":4703,"saved":false}
+{"ts":1355237025110,"patch":[[{"diffs":[[0,": \n\n"],[-1,"  - Install Cloud9 IDE\n\n"],[0,"<!--"]],"start1":2364,"start2":2364,"length1":32,"length2":8}]],"length":4679,"saved":false}
