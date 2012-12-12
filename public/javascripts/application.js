@@ -124,21 +124,13 @@
                 }
             });
         },
-        change: function (a) {
+        update: function (a) {
             var that = this;
-            console.log("change: " + this.id)
             $.ajax({
-                url: "/changeStation/" + that.id,
+                url: "/station/update/" + that.id,
                 type: "post",
                 dataType: "json",
-                data: {
-                    station: {
-                        id: that.id, //Math.floor(Math.random() * 9999)
-                        type: that.type,
-                        lastUpdate: new Date(),
-                        temperature: that.temperature
-                    }
-                },
+                data: that,
                 success: function (b) {
                     console.log("data back: " + JSON.stringify(b));
                 },
@@ -149,33 +141,7 @@
                 complete: function () {                                
                 }
             });
-        },
-        getData: function() {                       
-           $.ajax({
-                url: 'updateStation' + this.id,
-                type: 'POST',
-                dataType: "json",
-                data: {
-                    station: {
-                        id: this.id,
-                        type: this.type,
-                        lastAccess: new Date()
-                    }
-                },
-                success: function (data) {
-                    //alert($.parseJSON(data.responseText));
-                    //alert("lat: " + data.latitude + " long: " + data.longitude + " temp: " + data.temperature);
-                    //alert(data);
-                    return data;
-                },
-                complete: function () {
-                
-                },
-                error: function () {
-                    //c.removeClass("loading")
-                }
-            });
-        },
+        },        
         // getters
         getTemperature: function () { 
             return this.temperature; 

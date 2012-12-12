@@ -337,6 +337,7 @@ app.delete('/subscription/remove/:id', Subscription.remove);
 app.get('/station/getall', Station.getAll);
 app.get('/station/getbyid/:id', Station.getById);
 app.get('/station/create', Station.create);
+app.post('/station/update/:id', Station.update);
 app.delete('/station/remove/:id', Station.remove);
 app.delete('/station/removeall', Station.removeall);
 

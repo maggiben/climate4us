@@ -43,16 +43,16 @@ var station_schema = require('../models/station')
 //                                                                           //
 // @url GET /station/getall                                                  //
 ///////////////////////////////////////////////////////////////////////////////
-exports.getAll = function (req, res, next) {
+exports.getAll = function(req, res, next) {
 
   Station.find(gotStations);
   function gotStations(err, stations) {
     if (err) {
-      console.log(err)
+      console.log(err);
       return next();
     }
-    console.log(stations)
-    return;
+    var stationsJSON = JSON.stringify(stations);
+    return res.send(stationsJSON);
   }
 };
 
@@ -93,7 +93,7 @@ exports.getById = function(req, res, next) {
 //                                                                           //
 // @api public                                                               //
 //                                                                           //
-// @url GET /station/remove/:id                                              //
+// @url DELETE /station/remove/:id                                           //
 ///////////////////////////////////////////////////////////////////////////////
 exports.remove = function(req, res, next) {
     res.contentType('application/json');
@@ -118,7 +118,7 @@ exports.remove = function(req, res, next) {
 //                                                                           //
 // @api public                                                               //
 //                                                                           //
-// @url GET /station/removeall                                               //
+// @url DELETE /station/removeall                                            //
 ///////////////////////////////////////////////////////////////////////////////
 exports.removeall = function(req, res, next) {
     
@@ -146,51 +146,31 @@ exports.removeall = function(req, res, next) {
     }
 }
 
-exports.getStations = function(req, res, next) {
-
-    res.contentType('application/json');
-    Station.find(gotStations);
-
-    function gotStations(err, stations) {
-        if (err) {
-            console.log(err)
-            return next();
-        }
-        var stationsJSON = JSON.stringify(stations);
-        return res.send(stationsJSON);
-    }
-};
-exports.setupStation = function(req, res, next) {
-    res.contentType('application/json');
-    var id = req.params.id;
-    console.log("setupStation: %s", req.params.id);
-    Station.findById(id, gotStation);
-    
-    function gotStation(err, station) {
-        if (err) {
-            console.log(err);
-            return next(err);
-        }
-        console.log("temp: %s", station.temperature);
-        var stationJSON = JSON.stringify(station);
-        return res.send(stationJSON);
-    }
-};
+///////////////////////////////////////////////////////////////////////////////
+// Route to remove all Stations                                              //
+//                                                                           //
+// @param {Object} req                                                       //
+// @param {Object} res                                                       //
+// @param {Object} next                                                      //
+// @return {Object} JSON updated document                                    //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url POST /station/update/:id                                             //
+///////////////////////////////////////////////////////////////////////////////
 exports.update = function (req, res, next) {
-    res.contentType('application/json');
-    var id = req.params.id;
-
-    console.log("update: %s", req.params.id);
-    Station.findById(id, gotStation);
     
-    function gotStation (err, station) {
+    res.contentType('application/json');
+    Station.findByIdAndUpdate({_id : req.params.id}, req.body, updateStation);
+    
+    function updateStation (err, station) {
         if (err) {
             console.log(err);
             return next(err);
         }
         if (!station) {
-            console.log('ERROR: ID no existe')
-            return res.send('ID Inválida!');
+            console.log(err);
+            return next(err);
         } 
         else {
             console.log(JSON.stringify(req.body));
@@ -199,6 +179,19 @@ exports.update = function (req, res, next) {
         return res.send(stationJSON);
     }
 };
+
+///////////////////////////////////////////////////////////////////////////////
+// Route to create a Stations                                                //
+//                                                                           //
+// @param {Object} req                                                       //
+// @param {Object} res                                                       //
+// @param {Object} next                                                      //
+// @return {Object} JSON new document                                        //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url GET /station/create                                                  //
+///////////////////////////////////////////////////////////////////////////////
 exports.create = function (req, res, next) {
     
     var name = req.body.name;
@@ -267,6 +260,39 @@ exports.create = function (req, res, next) {
         console.log("onSaved");
         return res.send(JSON.stringify(station));
     }
-}
+};
+
+
+exports.getStations = function(req, res, next) {
+
+    res.contentType('application/json');
+    Station.find(gotStations);
+
+    function gotStations(err, stations) {
+        if (err) {
+            console.log(err)
+            return next();
+        }
+        var stationsJSON = JSON.stringify(stations);
+        return res.send(stationsJSON);
+    }
+};
+exports.setupStation = function(req, res, next) {
+    res.contentType('application/json');
+    var id = req.params.id;
+    console.log("setupStation: %s", req.params.id);
+    Station.findById(id, gotStation);
+    
+    function gotStation(err, station) {
+        if (err) {
+            console.log(err);
+            return next(err);
+        }
+        console.log("temp: %s", station.temperature);
+        var stationJSON = JSON.stringify(station);
+        return res.send(stationJSON);
+    }
+};
+
 
 
