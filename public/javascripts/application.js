@@ -224,24 +224,7 @@
             }
         },
     });
-    // Use CommonJS if applicable
-    if (typeof require !== 'undefined') {
-        module.exports = myApplication;
-    } else {
-        // else attach it to the window
-        window.myApplication = myApplication;
-    }
-    if (typeof document !== 'undefined') {
-        if (myApplication.$) {
-            myApplication.$(function () {
-                //ich.grabTemplates();
-            });
-        } else {
-            document.addEventListener('DOMContentLoaded', function () {
-                //ich.grabTemplates();
-            }, true);
-        }
-    }
+
     // UI Events
     $("#new_site a.cancel").live("click", function () {
         return window.location.hash = "#/", $("body").removeClass("adding"), !1
@@ -311,7 +294,7 @@
             console.log("path: " + data['params'].path)
             switch (data['params'].path) {
                 case "overview":
-                        alert("XXX");
+                        //alert("XXX");
                     break;
                 
             }
@@ -565,6 +548,25 @@
         },
     };
     MyApp = MyApp || {};
+    
+    // Use CommonJS if applicable
+    if (typeof require !== 'undefined') {
+        module.exports = myApplication;
+    } else {
+        // else attach it to the window
+        window.MyApp = MyApp;
+    }
+    if (typeof document !== 'undefined') {
+        if (MyApp.$) {
+            MyApp.$(function () {
+                //ich.grabTemplates();
+            });
+        } else {
+            document.addEventListener('DOMContentLoaded', function () {
+                //ich.grabTemplates();
+            }, true);
+        }
+    }
 })(window.jQuery || window.Zepto);
 
 $(document).ready(function () {
