@@ -71,7 +71,7 @@ exports.getAll = function (req, res, next) {
 exports.getById = function(req, res, next) {
     
     res.contentType('application/json');
-    Station.findById(id, gotStation);
+    Station.findById(req.params.id, gotStation);
     
     function gotStation(err, station) {
         if (err) {

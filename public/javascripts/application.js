@@ -105,7 +105,7 @@
             var that = this;
             that.id = a.id;
             $.ajax({
-                url: "/setupStation/" + a.id,
+                url: "/station/getbyid/" + a.id,
                 type: "GET",
                 dataType: "json",
                 success: function (b) {
@@ -363,17 +363,9 @@
             $("body").removeClass("no_cancel").removeClass("my_account");
             $.trim($("#data").html()) == "" && $("#sites div.site:first a").length > 0 && a.redirect($("#sites div.site:first a").attr("href"))
         });
-        this.get("#/gauges/:id/code/:tab", function () {
-            var a = MyApp.sites[this.params.id];
-            a.trigger("show_panel.g", ["code"]); 
-            $("#site_content div.panel").hide();
-            $("#site_content ul.group_options li").removeClass("current"); 
-            $("#site_content div.panel." + this.params.tab).show();
-            $("#site_content ul.group_options li." + this.params.tab).addClass("current"); 
-            MyApp.meldSidebar();
-        });
         this.get("/coso", function() {alert("coso");});
         this.post('#/test', function () {
+            console.log("adding new station");
             var a = $(this.target).removeErrors(),
             b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
@@ -394,7 +386,8 @@
                     //Gauges.sites[c.id] = new Site(c), 
                     $("#new_title").val("");
                     setTimeout(function () {
-                        window.location.hash = "/station/" + c.id + "/code"
+                        //window.location.hash = "/station/" + c.id + "/code"
+                        window.location.hash = "/kaka"
                     }, 400); 
                     $.scrollTo("#s" + c.id, 600);
                     $("body").removeClass("adding");
@@ -483,12 +476,19 @@
             $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
             $("#site_content").html(ich.my_info_template(Gauges.user))
         });
-        
         // Subscription routes
-        this.get("#/gauges/:id/code/:tab", function () {
-        var a = Gauges.sites[this.params.id];
-        a.trigger("show_panel.g", ["code"]), $("#site_content div.panel").hide(), $("#site_content ul.group_options li").removeClass("current"), $("#site_content div.panel." + this.params.tab).show(), $("#site_content ul.group_options li." + this.params.tab).addClass("current"), Gauges.meldSidebar()
-        })
+        this.get("#/kaka", function () { alert("pepe"); });
+        this.get("#/station/:id/code/:tab", function () {
+            console.log(this.params.id);
+            var a = MyApp.sites[this.params.id];
+                    
+            a.trigger("show_panel.g", ["code"]); 
+            $("#site_content div.panel").hide();
+            $("#site_content ul.group_options li").removeClass("current"); 
+            $("#site_content div.panel." + this.params.tab).show();
+            $("#site_content ul.group_options li." + this.params.tab).addClass("current"); 
+            MyApp.meldSidebar();
+        });
         // Station routes
     });
     $(function() {
