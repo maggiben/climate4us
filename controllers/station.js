@@ -108,6 +108,44 @@ exports.remove = function(req, res, next) {
     }
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Route to remove all Stations                                              //
+//                                                                           //
+// @param {Object} req                                                       //
+// @param {Object} res                                                       //
+// @param {Object} next                                                      //
+// @return {Object} JSON result                                              //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url GET /station/removeall                                               //
+///////////////////////////////////////////////////////////////////////////////
+exports.removeall = function(req, res, next) {
+    
+    res.contentType('application/json');
+    Station.find(gotStations);
+
+    function gotStations(err, stations) {
+        if (err) {
+            console.log(err)
+            return next();
+        }
+        if (!stations || !Array.isArray(stations) || stations.length === 0)
+        {
+            console.log('no docs found');
+            return next();
+        }
+        stations.forEach(function (station) {
+            station.remove(function (err, product) {
+                console.log('document id:%d could not be removed', station._id);
+                return next();
+            });
+        });
+        var stationsJSON = JSON.stringify({action: 'removeall', result: true});
+        return res.send(stationsJSON);
+    }
+}
+
 exports.getStations = function(req, res, next) {
 
     res.contentType('application/json');

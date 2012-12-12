@@ -22,7 +22,6 @@
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // Module dependencies.                                                      //
 ///////////////////////////////////////////////////////////////////////////////
@@ -324,6 +323,7 @@ app.get('/setupStation/:id', Station.setupStation);
 app.get('/getStations', Station.getStations);
 app.post('/changeStation/:id', Station.update);
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Subscription rutes                                                        //
 ///////////////////////////////////////////////////////////////////////////////
@@ -331,6 +331,15 @@ app.get('/subscription/getall', Subscription.getAll);
 app.get('/subscription/getbyid/:id', Subscription.getById);
 app.get('/subscription/create', Subscription.create);
 app.get('/subscription/remove/:id', Subscription.remove);
+
+///////////////////////////////////////////////////////////////////////////////
+// Station rutes                                                             //
+///////////////////////////////////////////////////////////////////////////////
+app.get('/station/getall', Station.getAll);
+app.get('/station/getbyid/:id', Station.getById);
+app.get('/station/create', Station.create);
+app.get('/station/remove/:id', Station.remove);
+app.get('/station/removeall', Station.removeall);
 
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
