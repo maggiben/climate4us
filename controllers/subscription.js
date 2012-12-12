@@ -29,7 +29,6 @@
 // Controllers
 var mongoose = require('mongoose');
 
-
 // Load model
 var subscription_schema = require('../models/subscription')
   , Subscription = mongoose.model('Subscription', subscription_schema);
@@ -52,7 +51,7 @@ exports.getAll = function (req, res, next) {
     res.contentType('application/json');
     Subscription.find(gotSubscriptions);
     
-    function gotSubscriptions (err, subscriptions) {
+    function gotSubscriptions(err, subscriptions) {
         if (err) {
             console.log(err);
             return next();
@@ -79,7 +78,7 @@ exports.getById = function (req, res, next) {
     res.contentType('application/json');
     Subscription.findById(req.params.id, gotSubscription);
     
-    function gotSubscription (err, subscription) {
+    function gotSubscription(err, subscription) {
         if (err) {
             return next(err);
         }
@@ -127,7 +126,7 @@ exports.create = function (req, res, next) {
     res.contentType('application/json');
     subscription.save(onSaved);
 
-    function onSaved (err) {
+    function onSaved(err) {
         if (err) {
             console.log(err);
             return next(err);
@@ -155,7 +154,7 @@ exports.remove = function (req, res, next) {
     res.contentType('application/json');
     Subscription.remove({_id: req.params.id}, delSubscription);
     
-    function delSubscription (err) {
+    function delSubscription(err) {
         if (err) {
             return next(err);
         }
