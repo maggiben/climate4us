@@ -483,6 +483,13 @@
             $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
             $("#site_content").html(ich.my_info_template(Gauges.user))
         });
+        
+        // Subscription routes
+        this.get("#/gauges/:id/code/:tab", function () {
+        var a = Gauges.sites[this.params.id];
+        a.trigger("show_panel.g", ["code"]), $("#site_content div.panel").hide(), $("#site_content ul.group_options li").removeClass("current"), $("#site_content div.panel." + this.params.tab).show(), $("#site_content ul.group_options li." + this.params.tab).addClass("current"), Gauges.meldSidebar()
+        })
+        // Station routes
     });
     $(function() {
         app.run();

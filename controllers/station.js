@@ -141,8 +141,8 @@ exports.removeall = function(req, res, next) {
                 return next();
             });
         });
-        var stationsJSON = JSON.stringify({action: 'removeall', result: true});
-        return res.send(stationsJSON);
+        var msgJSON = JSON.stringify({action: 'removeall', result: true});
+        return res.send(msgJSON);
     }
 }
 

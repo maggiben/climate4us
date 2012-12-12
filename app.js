@@ -147,94 +147,6 @@ function ensureAuthenticated(req, res, next) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// User authentication  rutes                                                //
-///////////////////////////////////////////////////////////////////////////////
-app.get('/signin', function(req, res) {
-        res.render('signin', { title: 'signin', locale: 'en_US', user: req.user });
-});
-app.post('/signin', function(req, res, next) {
-    console.log("autenticating")
-    passport.authenticate('local', function(err, user, info) {
-        if (err) { 
-            return next(err); 
-        }
-        if (!user) { 
-            console.log("unauthorized");
-            return res.render('signin', { title: 'bad login', locale: 'en_US', user: req.user });
-        }
-        req.logIn(user, function(err) {
-            if (err) { 
-                return next(err);
-            }
-        });
-        console.log("auth okay");
-        return res.redirect('/');
-    })(req, res, next);
-});
-app.get('/signup', function(req, res) {
-        res.render('signup', { title: 'signin', locale: 'en_US', user: req.user });
-});
-app.post('/signup', function(req, res) {
-        
-        var username = req.body.username;
-        console.log("registering: user: %s pass: %s", req.body.username, req.body.password);
-        
-        Account.findOne({username : username }, function(err, existingUser) {
-            if (err || existingUser) {
-                console.log("existingUser");
-                return res.render('signup', { account : account });
-            }
-            var account = new Account({ username : req.body.username, email: req.body.username});
-            account.setPassword(req.body.password, function(err) {
-                if (err) {
-                    return res.render('signup', { account : account });
-                }
-                account.save(function(err) {
-                    if (err) {
-                        return res.render('signup', { account : account });
-                    }
-                    return res.redirect('/');
-                });
-            });
-        });
-});
-app.post('/forgot', function(req, res) {
-
-    var email = req.body.email;
-    console.log("forgot: email", email);
-    //res.writeHead(401, {"Content-Type": "application/json"});
-    res.contentType('application/json');
-
-    Account.findOne({email : email }, function(err, existingUser) {
-            if (err) {
-                var ret = {"message":"Error","status":"fail"}
-                res.statusCode = 401;
-                var retJSON = JSON.stringify(ret);
-                return res.send(retJSON);
-            }
-            else if (existingUser) {
-                console.log("sending email with new password to: %s", email);
-                var ret = {"message":"Sucess found email sent","status":"ok"}
-                var retJSON = JSON.stringify(ret);
-                return res.send(retJSON);
-            }
-            else {
-                // Invalid login/password
-                //res.writeHead(401, {"Content-Type": "application/json"});
-                //res.end(JSON.stringify({error:{type:"Unauthorized",message:"Wrong username and/or password.", code:"401"}}));
-                res.statusCode = 401;
-                var ret = {error:{type:"Unauthorized",message:"Wrong username and/or password.", code:"401"}};
-                var retJSON = JSON.stringify(ret);
-                return res.send(retJSON);
-            }
-    });
-});
-app.get('/signout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-});
-
-///////////////////////////////////////////////////////////////////////////////
 // Application rutes                                                         //
 ///////////////////////////////////////////////////////////////////////////////
 app.get('/', function(request, response) {
@@ -323,6 +235,93 @@ app.get('/setupStation/:id', Station.setupStation);
 app.get('/getStations', Station.getStations);
 app.post('/changeStation/:id', Station.update);
 
+///////////////////////////////////////////////////////////////////////////////
+// User authentication  rutes                                                //
+///////////////////////////////////////////////////////////////////////////////
+app.get('/signin', function(req, res) {
+        res.render('signin', { title: 'signin', locale: 'en_US', user: req.user });
+});
+app.post('/signin', function(req, res, next) {
+    console.log("autenticating")
+    passport.authenticate('local', function(err, user, info) {
+        if (err) { 
+            return next(err); 
+        }
+        if (!user) { 
+            console.log("unauthorized");
+            return res.render('signin', { title: 'bad login', locale: 'en_US', user: req.user });
+        }
+        req.logIn(user, function(err) {
+            if (err) { 
+                return next(err);
+            }
+        });
+        console.log("auth okay");
+        return res.redirect('/');
+    })(req, res, next);
+});
+app.get('/signup', function(req, res) {
+        res.render('signup', { title: 'signin', locale: 'en_US', user: req.user });
+});
+app.post('/signup', function(req, res) {
+        
+        var username = req.body.username;
+        console.log("registering: user: %s pass: %s", req.body.username, req.body.password);
+        
+        Account.findOne({username : username }, function(err, existingUser) {
+            if (err || existingUser) {
+                console.log("existingUser");
+                return res.render('signup', { account : account });
+            }
+            var account = new Account({ username : req.body.username, email: req.body.username});
+            account.setPassword(req.body.password, function(err) {
+                if (err) {
+                    return res.render('signup', { account : account });
+                }
+                account.save(function(err) {
+                    if (err) {
+                        return res.render('signup', { account : account });
+                    }
+                    return res.redirect('/');
+                });
+            });
+        });
+});
+app.post('/forgot', function(req, res) {
+
+    var email = req.body.email;
+    console.log("forgot: email", email);
+    //res.writeHead(401, {"Content-Type": "application/json"});
+    res.contentType('application/json');
+
+    Account.findOne({email : email }, function(err, existingUser) {
+            if (err) {
+                var ret = {"message":"Error","status":"fail"}
+                res.statusCode = 401;
+                var retJSON = JSON.stringify(ret);
+                return res.send(retJSON);
+            }
+            else if (existingUser) {
+                console.log("sending email with new password to: %s", email);
+                var ret = {"message":"Sucess found email sent","status":"ok"}
+                var retJSON = JSON.stringify(ret);
+                return res.send(retJSON);
+            }
+            else {
+                // Invalid login/password
+                //res.writeHead(401, {"Content-Type": "application/json"});
+                //res.end(JSON.stringify({error:{type:"Unauthorized",message:"Wrong username and/or password.", code:"401"}}));
+                res.statusCode = 401;
+                var ret = {error:{type:"Unauthorized",message:"Wrong username and/or password.", code:"401"}};
+                var retJSON = JSON.stringify(ret);
+                return res.send(retJSON);
+            }
+    });
+});
+app.get('/signout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
 
 ///////////////////////////////////////////////////////////////////////////////
 // Subscription rutes                                                        //

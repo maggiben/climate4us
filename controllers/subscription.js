@@ -45,7 +45,6 @@ var subscription_schema = require('../models/subscription')
 //                                                                           //
 // @url GET /subscription/getall                                             //
 ///////////////////////////////////////////////////////////////////////////////
-
 exports.getAll = function (req, res, next) {
     
     res.contentType('application/json');
@@ -159,6 +158,44 @@ exports.remove = function (req, res, next) {
             return next(err);
         }
         var msgJSON = JSON.stringify({action: 'remove', result: 0});
+        return res.send(msgJSON);
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// Route to remove all Subscriptions                                         //
+//                                                                           //
+// @param {Object} req                                                       //
+// @param {Object} res                                                       //
+// @param {Object} next                                                      //
+// @return {Object} JSON result                                              //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url GET /subscription/removeall                                          //
+///////////////////////////////////////////////////////////////////////////////
+exports.removeall = function (req, res, next) {
+    
+    res.contentType('application/json');
+    Subscription.find(gotSubscriptions);
+
+    function gotSubscriptions(err, subscriptions) {
+        if (err) {
+            console.log(err)
+            return next();
+        }
+        if (!subscriptions || !Array.isArray(subscriptions) || subscriptions.length === 0)
+        {
+            console.log('no docs found');
+            return next();
+        }
+        subscriptions.forEach(function (subscription) {
+            subscription.remove(function (err, product) {
+                console.log('document id:%d could not be removed', subscription._id);
+                return next();
+            });
+        });
+        var msgJSON = JSON.stringify({action: 'removeall', result: true});
         return res.send(msgJSON);
     }
 };
