@@ -566,3 +566,32 @@
     };
     MyApp = MyApp || {};
 })(window.jQuery || window.Zepto);
+
+$(document).ready(function () {
+    // grab jquery or zepto if it's there
+    $: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null;
+    
+    $("#sites").sortable({
+        axis: "y",
+        container: "#sites",
+        opacity: .5,
+        delay: 200,
+        items: "div.site",
+        start: function () {
+            $("#sites").removeClass("meld")
+        },
+        stop: function () {
+            $.ajax({
+                url: "/stations/reorder",
+                dataType: "json",
+                type: "put",
+                data: {
+                    ids: $.map($(this).sortable("toArray"), function (a) {
+                        return a.replace(/^s/, "")
+                    })
+                }
+            }),
+            MyApp.meldSidebar();
+        }
+    });
+});

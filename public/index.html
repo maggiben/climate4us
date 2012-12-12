@@ -38,21 +38,6 @@
         <!-- <script type="text/javascript">
             // when the dom's ready
             $(document).ready(function () {
-                // add a simple click handler for the "add user" button.
-                //$('#add_user').click(function () {
-                    var user_data, user;
-                    // build a simple user object, in a real app this 
-                    // would probably come from a server somewhere. 
-                    // Otherwise hardcoding here is just silly.
-                    user_data = {
-                        trial_days_left_text: new Date(),
-                    };                
-                    // Here's all the magic.
-                    //trial_template = ich.trial_template(user_data);
-                    // append it to the list, tada! 
-                    //Now go do something more useful with this.
-                    //$('#sites').append(trial_template);
-                //});
                 $("#sites").sortable({
                     axis: "y",
                     container: "#sites",
@@ -76,25 +61,6 @@
                         MyApp.meldSidebar();
                     }
                 });                
-                var TZ = {
-                    selected: "Eastern Time (US & Canada)",
-                    zones: [
-                        ["International Date Line West", "(GMT-11:00) International Date Line West"],
-                        ["Midway Island", "(GMT-11:00) Midway Island"],
-                        ["Samoa", "(GMT-11:00) Samoa"],
-                        ["Hawaii", "(GMT-10:00) Hawaii"],
-                        ["Alaska", "(GMT-09:00) Alaska"],
-                    ],
-                    select: function (a, b) {
-                        var b = b || TZ.selected,
-                        c = '<select id="' + a + '" name="tz">';
-                        return $.each(TZ.zones, function (a) {
-                            c += '<option value="' + a[0] + '"' + (a[0] == b ? " selected" : "") + ">" + a[1] + "</option>"
-                        }), 
-                        c += "</select>", c
-                    }
-                };
-                $("#new_site .tz").append(TZ.select("new_tz"));
             });
         </script> -->
         <!-- SAMMY APP -->
