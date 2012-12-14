@@ -7,6 +7,8 @@
 // Date         : 12 Dec 2012                                                //
 // ------------------------------------------------------------------------- //
 //                                                                           //
+// @copyright Copyright 2012 Benjamin Maggi, all rights reserved.            //
+//                                                                           //
 //                                                                           //
 // License:                                                                  //
 // This program is free software; you can redistribute it                    //

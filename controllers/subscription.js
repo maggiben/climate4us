@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : subscription.js                                           //
-// @summary      : subscription controller                                   //
+// @summary      : subscription model                                        //
 // @version      : 0.1                                                       //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //

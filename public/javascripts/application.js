@@ -340,8 +340,7 @@
                 success: function (b) {
                     console.log("server respose: " + JSON.stringify(b));
                     var c = b;
-                    MyApp.station[c._id] = new Station(c);
-                    {_id: b[i]._id, type: b[i].type, onLoad: onLoad}
+                    MyApp.station[c._id] = new Station(c); //{_id: b[i]._id, type: b[i].type, onLoad: onLoad}
                     $("#new_title").val("");
                     setTimeout(function () {
                         window.location.hash = "/station/" + c.id + "/code"
@@ -451,9 +450,13 @@
         ///////////////////////////////////////////////////////////////////////
         // Station Routes                                                    //
         ///////////////////////////////////////////////////////////////////////
-        this.post('#/station/new', function () {
+        this.get('#/station/new', function() {
+            $("body").addClass("adding");
+        });
+        this.post('#/station', function () {
             var that = this;
-            console.log("#/station/new");
+            alert("#/station");
+            return;
             var a = $(this.target).removeErrors(),
             b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));

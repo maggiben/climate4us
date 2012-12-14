@@ -1,11 +1,15 @@
 ///////////////////////////////////////////////////////////////////////////////
-// FileName     : station.js                                                 //
-// Version      : 0.1                                                        //
-// Project      : Node.JS + Express boilerplate for cloud9 and appFog        //
-// Author       : Benjamin Maggi                                             //
-// Email        : benjaminmaggi@gmail.com                                    //
-// Date         : 12 Dec 2012                                                //
+// @file         : station.js                                                //
+// @summary      : station controller                                        //
+// @version      : 0.1                                                       //
+// @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
+// @description  :                                                           //
+// @author       : Benjamin Maggi                                            //
+// @email        : benjaminmaggi@gmail.com                                   //
+// @date         : 12 Dec 2012                                               //
 // ------------------------------------------------------------------------- //
+//                                                                           //
+// @copyright Copyright 2012 Benjamin Maggi, all rights reserved.            //
 //                                                                           //
 //                                                                           //
 // License:                                                                  //
