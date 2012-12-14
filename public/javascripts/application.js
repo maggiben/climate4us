@@ -340,7 +340,8 @@
                 success: function (b) {
                     console.log("server respose: " + JSON.stringify(b));
                     var c = b;
-                    MyApp.station[c._id] = new Station(c); 
+                    MyApp.station[c._id] = new Station(c);
+                    {_id: b[i]._id, type: b[i].type, onLoad: onLoad}
                     $("#new_title").val("");
                     setTimeout(function () {
                         window.location.hash = "/station/" + c.id + "/code"
@@ -437,7 +438,8 @@
         this.get("#/kaka", function () { alert("pepe"); });
         this.get("#/crea", function () {
             
-            //var a = {"__v":0,"name":"jazmin","id":58013119082897,"type":"cosa","country":"cosa","state":"CABA","city":"CABA","latitude":38,"longitude":54,"magic":88015696057117,"lastUpdate":"2012-12-13T17:29:28.282Z","lastAccess":"2012-12-13T17:29:28.282Z","_id":"A0c891a1ae6e0a3d27000002","astronomy":{"sunrise":"2012-12-13T17:29:28.282Z","sunset":"2012-12-13T17:29:28.282Z"},"visibility":{"value":10,"unit":"KM"},"rainfall":{"value":22,"unit":"MM"},"wind":{"value":22,"direction":"SE","degrees":150,"unit":"KMH"},"humidity":{"value":66,"dewpoint":44,"unit":"%"},"feelslike":[],"temperature":{"value":34,"unit":"C"},"created":"2012-12-13T17:29:28.282Z","sensors":[1,2,3,4]};
+            var a = {"__v":0,"name":"vitoria","id":58013119082897,"type":"cosa","country":"cosa","state":"CABA","city":"CABA","latitude":38,"longitude":54,"magic":88015696057117,"lastUpdate":"2012-12-13T17:29:28.282Z","lastAccess":"2012-12-13T17:29:28.282Z","_id":"50c891a1ae6e0a3d27000002","astronomy":{"sunrise":"2012-12-13T17:29:28.282Z","sunset":"2012-12-13T17:29:28.282Z"},"visibility":{"value":10,"unit":"KM"},"rainfall":{"value":22,"unit":"MM"},"wind":{"value":22,"direction":"SE","degrees":150,"unit":"KMH"},"humidity":{"value":71,"dewpoint":11,"unit":"%"},"feelslike":[],"temperature":{"value":11,"unit":"C"},"created":"2012-12-13T17:29:28.282Z","sensors":[1,2,3,4]};
+            console.log(JSON.stringify(a));
             MyApp.station[a._id] = new Station({_id: a._id, type: a.type, onLoad: onLoad});
             function onLoad(a) {
                 console.log(JSON.stringify(a));
@@ -446,7 +448,50 @@
             };
             //console.log("new station name: " + MyApp.station[a._id].name);
         });
-        this.get("#/station/:id/code/:tab", function () {
+        ///////////////////////////////////////////////////////////////////////
+        // Station Routes                                                    //
+        ///////////////////////////////////////////////////////////////////////
+        this.post('#/station/new', function () {
+            var that = this;
+            console.log("#/station/new");
+            var a = $(this.target).removeErrors(),
+            b = a.find(".submit button span");
+            clearTimeout(b.data("timeout"));
+            b.data("text") === undefined && b.data("text", b.text()); 
+            b.text("Adding...");
+            $.ajax({
+                url: "/station/add",
+                type: "post",
+                dataType: "json",
+                data: { 
+                    name: that.params.name,
+                    type: that.params.type,
+                    country: that.params.country,
+                },
+                success: function (b) {
+                    console.log("server respose: " + JSON.stringify(b));
+                    var c = b;
+                    MyApp.station[c._id] = new Station({_id: c._id, type: c.type, onLoad: onLoad}); //
+                    function onLoad(station) {
+                    $("#new_title").val("");
+                        setTimeout(function () {
+                            window.location.hash = "/station/" + c.id + "/code";
+                        }, 400); 
+                        $.scrollTo("#s" + c.id, 600);
+                        $("body").removeClass("adding");
+                        a.removeErrors();
+                    }
+                },
+                error: function (b) {
+                    var c = $.parseJSON(b.responseText);
+                    a.displayErrors(c.errors);
+                },
+                complete: function () {
+                    b.text(b.data("text"));
+                }
+            }), !1;
+        });
+        this.get('#/station/:id/code/:tab', function () {
             alert("caca");
             console.log("new tab params: " + JSON.stringify(this.params));
             var station = MyApp.stations[this.params.id];

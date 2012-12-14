@@ -182,3 +182,10 @@
 {"ts":1355421599698,"patch":[[{"diffs":[[0," id=\"s{{"],[-1," "],[0,"id }}\" c"]],"start1":33924,"start2":33924,"length1":17,"length2":16},{"diffs":[[0,"          <h2>{{"],[-1," "],[0,"title }}</h2>\n  "]],"start1":33968,"start2":33968,"length1":33,"length2":32}]],"length":43146,"saved":false}
 {"ts":1355421600851,"patch":[[{"diffs":[[0," <h2>{{title"],[-1," "],[0,"}}</h2>\n    "]],"start1":33977,"start2":33977,"length1":25,"length2":24}]],"length":43145,"saved":false}
 {"ts":1355421601801,"patch":[[{"diffs":[[0,"d=\"s{{id"],[-1," "],[0,"}}\" clas"]],"start1":33926,"start2":33926,"length1":17,"length2":16}]],"length":43144,"saved":false}
+{"contributors":[],"silentsave":true,"ts":1355492535198,"patch":[[{"diffs":[[0,"href=\"#/"],[-1,"cre"],[1,"kak"],[0,"a\">crea<"]],"start1":25438,"start2":25438,"length1":19,"length2":19}]],"length":43144,"saved":false}
+{"ts":1355492559492,"patch":[[{"diffs":[[0,"h1><a href=\"http"],[-1,"s"],[0,"://secure.gaug.e"]],"start1":25172,"start2":25172,"length1":33,"length2":32}]],"length":43143,"saved":false}
+{"ts":1355492564120,"patch":[[{"diffs":[[0,"p://"],[-1,"secure.gaug.es/dashboard"],[1,"localhost"],[0,"\">Ga"]],"start1":25187,"start2":25187,"length1":32,"length2":17}]],"length":43128,"saved":false}
+{"ts":1355492568326,"patch":[[{"diffs":[[0,"p://"],[-1,"localhost"],[0,"\">Ga"]],"start1":25187,"start2":25187,"length1":17,"length2":8}]],"length":43119,"saved":false}
+{"ts":1355492577696,"patch":[[{"diffs":[[0,"\"http://"],[1,"http://climate4us.bmaggi.c9.io/"],[0,"\">Gauges"]],"start1":25183,"start2":25183,"length1":16,"length2":47}]],"length":43150,"saved":false}
+{"ts":1355492583222,"patch":[[{"diffs":[[0,"\"http://"],[-1,"http://"],[0,"climate4"]],"start1":25183,"start2":25183,"length1":23,"length2":16}]],"length":43143,"saved":false}
+{"ts":1355492606321,"patch":[[{"diffs":[[0,"href=\"#/"],[-1,"kak"],[1,"cre"],[0,"a\">crea<"]],"start1":25437,"start2":25437,"length1":19,"length2":19}]],"length":43143,"saved":false}
