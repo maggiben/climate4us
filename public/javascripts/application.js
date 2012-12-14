@@ -340,7 +340,7 @@
                 success: function (b) {
                     console.log("server respose: " + JSON.stringify(b));
                     var c = b;
-                    MyApp.station[c._id] = new Station(c); //{_id: b[i]._id, type: b[i].type, onLoad: onLoad}
+                    MyApp.stations[c._id] = new Station(c); //{_id: b[i]._id, type: b[i].type, onLoad: onLoad}
                     $("#new_title").val("");
                     setTimeout(function () {
                         window.location.hash = "/station/" + c.id + "/code"
@@ -439,7 +439,7 @@
             
             var a = {"__v":0,"name":"vitoria","id":58013119082897,"type":"cosa","country":"cosa","state":"CABA","city":"CABA","latitude":38,"longitude":54,"magic":88015696057117,"lastUpdate":"2012-12-13T17:29:28.282Z","lastAccess":"2012-12-13T17:29:28.282Z","_id":"50c891a1ae6e0a3d27000002","astronomy":{"sunrise":"2012-12-13T17:29:28.282Z","sunset":"2012-12-13T17:29:28.282Z"},"visibility":{"value":10,"unit":"KM"},"rainfall":{"value":22,"unit":"MM"},"wind":{"value":22,"direction":"SE","degrees":150,"unit":"KMH"},"humidity":{"value":71,"dewpoint":11,"unit":"%"},"feelslike":[],"temperature":{"value":11,"unit":"C"},"created":"2012-12-13T17:29:28.282Z","sensors":[1,2,3,4]};
             console.log(JSON.stringify(a));
-            MyApp.station[a._id] = new Station({_id: a._id, type: a.type, onLoad: onLoad});
+            MyApp.stations[a._id] = new Station({_id: a._id, type: a.type, onLoad: onLoad});
             function onLoad(a) {
                 console.log(JSON.stringify(a));
                 $("#sites").append(ich.site_template(a));
@@ -473,9 +473,10 @@
                 success: function (b) {
                     console.log("server respose: " + JSON.stringify(b));
                     var c = b;
-                    MyApp.station[c._id] = new Station({_id: c._id, type: c.type, onLoad: onLoad}); //
+                    MyApp.stations[c._id] = new Station({_id: c._id, type: c.type, onLoad: onLoad}); //
                     function onLoad(station) {
-                    $("#new_title").val("");
+                        $("#new_title").val("");
+                        console.log("station is back and into onLoad: " +  JSON.stringify(station));
                         setTimeout(function () {
                             window.location.hash = "/station/" + c.id + "/code";
                         }, 400); 
@@ -523,7 +524,7 @@
         timeout: null,
         hit_timeout: null,
         connection_count: 0,
-        stations: [],
+        stations: {},
         start: function (a) {
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
             //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});

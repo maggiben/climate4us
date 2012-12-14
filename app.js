@@ -1,10 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// FileName     : app.js                                                     //
-// Version      : 0.1                                                        //
-// Project      : Node.JS + Express boilerplate for cloud9 and appFog        //
-// Author       : Benjamin Maggi                                             //
-// Email        : benjaminmaggi@gmail.com                                    //
-// Date         : 12 Dec 2012                                                //
+// @file         : app.js                                                    //
+// @summary      : main application module                                   //
+// @version      : 0.1                                                       //
+// @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
+// @description  :                                                           //
+// @author       : Benjamin Maggi                                            //
+// @email        : benjaminmaggi@gmail.com                                   //
+// @date         : 12 Dec 2012                                               //
 // ------------------------------------------------------------------------- //
 //                                                                           //
 // @copyright Copyright 2012 Benjamin Maggi, all rights reserved.            //
@@ -153,7 +155,7 @@ function ensureAuthenticated(req, res, next) {
 ///////////////////////////////////////////////////////////////////////////////
 app.get('/', function(request, response) {
     response.sendfile(__dirname + '/public/index.html');
-})
+});
 app.get('/app', routes.index);
 app.post('/station', function(request, response){
   console.log(request.body);      // your JSON
@@ -244,7 +246,6 @@ app.get('/signin', function(req, res) {
         res.render('signin', { title: 'signin', locale: 'en_US', user: req.user });
 });
 app.post('/signin', function(req, res, next) {
-    console.log("autenticating")
     passport.authenticate('local', function(err, user, info) {
         if (err) { 
             return next(err); 
@@ -292,21 +293,20 @@ app.post('/signup', function(req, res) {
 app.post('/forgot', function(req, res) {
 
     var email = req.body.email;
+    var retJSON = "";
     console.log("forgot: email", email);
     //res.writeHead(401, {"Content-Type": "application/json"});
     res.contentType('application/json');
 
     Account.findOne({email : email }, function(err, existingUser) {
             if (err) {
-                var ret = {"message":"Error","status":"fail"}
                 res.statusCode = 401;
-                var retJSON = JSON.stringify(ret);
+                retJSON = JSON.stringify({"message":"Error","status":"fail"});
                 return res.send(retJSON);
             }
             else if (existingUser) {
                 console.log("sending email with new password to: %s", email);
-                var ret = {"message":"Sucess found email sent","status":"ok"}
-                var retJSON = JSON.stringify(ret);
+                retJSON = JSON.stringify({"message":"Error","status":"fail"});
                 return res.send(retJSON);
             }
             else {
@@ -315,7 +315,7 @@ app.post('/forgot', function(req, res) {
                 //res.end(JSON.stringify({error:{type:"Unauthorized",message:"Wrong username and/or password.", code:"401"}}));
                 res.statusCode = 401;
                 var ret = {error:{type:"Unauthorized",message:"Wrong username and/or password.", code:"401"}};
-                var retJSON = JSON.stringify(ret);
+                retJSON = JSON.stringify(ret);
                 return res.send(retJSON);
             }
     });

@@ -1,1 +1,14 @@
 {"ts":1355022767455,"silentsave":true,"restoring":false,"patch":[[{"diffs":[[1,"var conf = {\n    \"sessionSecret\" : \"secret\",\n    \"listenPort\" : process.env.PORT,\n    \"ip\" : process.env.IP\n};\n\nmodule.exports = conf;"]],"start1":0,"start2":0,"length1":0,"length2":134}]],"length":134}
+{"contributors":[],"silentsave":true,"ts":1355528945031,"patch":[[{"diffs":[[0,".env.IP\n"],[1,"        var mongo = {\n        \"hostname\":\"alex.mongohq.com\",\n        \"port\":10062,\n        \"username\":\"admin\",\n        \"password\":\"12345\",\n        \"name\":\"\",\n        \"db\":\"cloud-db\"\n    };\n"],[0,"};\n\nmodu"]],"start1":100,"start2":100,"length1":16,"length2":205}]],"length":323,"saved":false}
+{"ts":1355528949674,"patch":[[{"diffs":[[0,"    "],[-1,"    var "],[0,"mong"]],"start1":108,"start2":108,"length1":16,"length2":8}]],"length":315,"saved":false}
+{"ts":1355528952885,"patch":[[{"diffs":[[0,"   mongo"],[-1," ="],[1,";"],[0," {\n     "]],"start1":109,"start2":109,"length1":18,"length2":17}]],"length":314,"saved":false}
+{"ts":1355528955832,"patch":[[{"diffs":[[0,"   mongo"],[-1,";"],[1,":"],[0," {\n     "]],"start1":109,"start2":109,"length1":17,"length2":17}]],"length":314,"saved":false}
+{"ts":1355528958622,"patch":[[{"diffs":[[0,"s.env.IP"],[1,","],[0,"\n    mon"]],"start1":99,"start2":99,"length1":16,"length2":17}]],"length":315,"saved":false}
+{"ts":1355528960571,"patch":[[{"diffs":[[0,"b\"\n    }"],[-1,";"],[0,"\n};\n\nmod"]],"start1":279,"start2":279,"length1":17,"length2":16}]],"length":314,"saved":false}
+{"ts":1355528979386,"patch":[[{"diffs":[[0,"env.IP,\n"],[1,"    allowCrossDomain\n"],[0,"    mong"]],"start1":101,"start2":101,"length1":16,"length2":37}]],"length":335,"saved":false}
+{"ts":1355528982837,"patch":[[{"diffs":[[0,"ssDomain"],[1," : false"],[0,"\n    mon"]],"start1":121,"start2":121,"length1":16,"length2":24}]],"length":343,"saved":false}
+{"ts":1355528984067,"patch":[[{"diffs":[[0," : false"],[1,","],[0,"\n    mon"]],"start1":129,"start2":129,"length1":16,"length2":17}]],"length":344,"saved":false}
+{"ts":1355528988494,"patch":[[{"diffs":[[0,"IP,\n    "],[1,"\""],[0,"allowCro"]],"start1":105,"start2":105,"length1":16,"length2":17}]],"length":345,"saved":false}
+{"ts":1355528989696,"patch":[[{"diffs":[[0,"ssDomain"],[1,"\""],[0," : false"]],"start1":122,"start2":122,"length1":16,"length2":17}]],"length":346,"saved":false}
+{"ts":1355528991416,"patch":[[{"diffs":[[0,"se,\n    "],[1,"\""],[0,"mongo"],[1,"\""],[0,": {\n    "]],"start1":137,"start2":137,"length1":21,"length2":23}]],"length":348,"saved":false}
+{"ts":1355528992670,"patch":[[{"diffs":[[0," \"mongo\""],[1," "],[0,": {\n    "]],"start1":144,"start2":144,"length1":16,"length2":17}]],"length":349,"saved":false}
