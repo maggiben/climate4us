@@ -455,8 +455,7 @@
         });
         this.post('#/station', function () {
             var that = this;
-            alert("#/station");
-            return;
+            console.log("about to create a new station link: #/station");
             var a = $(this.target).removeErrors(),
             b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
