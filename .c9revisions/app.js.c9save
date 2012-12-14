@@ -426,3 +426,5 @@
 {"ts":1355347529777,"patch":[[{"diffs":[[0,"/update/"],[1,":"],[0,"', Stati"]],"start1":14564,"start2":14564,"length1":16,"length2":17}]],"length":14843,"saved":false}
 {"ts":1355347531692,"patch":[[{"diffs":[[0,"update/:"],[1,"id"],[0,"', Stati"]],"start1":14565,"start2":14565,"length1":16,"length2":18}]],"length":14845,"saved":false}
 {"ts":1355347538720,"patch":[[{"diffs":[[0,"e/:id', Station."],[-1,"cre"],[1,"upd"],[0,"ate);\napp.delete"]],"start1":14570,"start2":14570,"length1":35,"length2":35}]],"length":14845,"saved":false}
+{"contributors":[],"silentsave":true,"ts":1355377231346,"patch":[[{"diffs":[[0,"\n    }\n}"],[1,";"],[0,"\nvar mon"]],"start1":3518,"start2":3518,"length1":16,"length2":17}]],"length":14846,"saved":false}
+{"contributors":[],"silentsave":true,"ts":1355423243914,"patch":[[{"diffs":[[0,"on.remove);\napp."],[-1,"del"],[1,"g"],[0,"et"],[-1,"e"],[0,"('/station/remov"]],"start1":14635,"start2":14635,"length1":38,"length2":35}]],"length":14843,"saved":false}

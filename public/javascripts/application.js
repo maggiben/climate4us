@@ -103,9 +103,9 @@
         ],
         setup: function (a) {
             var that = this;
-            that.id = a.id;
+            that.id = a._id;
             $.ajax({
-                url: "/station/getbyid/" + a.id,
+                url: "/station/getbyid/" + a._id,
                 type: "GET",
                 dataType: "json",
                 success: function (b) {
@@ -193,7 +193,7 @@
                 dataType: "json",
                 success: function (b) {
                     for (var i = 0; i < b.length; i++) {
-                        that.stations[b[i]._id] = new Station({id: b[i]._id, type: b[i].type, onLoad: onLoad})
+                        that.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad})
                         console.log("Attaching station id: " + that.stations[b[i]._id].id);
                     }
                     function onLoad(station) {
@@ -288,16 +288,23 @@
             var b = this;
             var c = $("#s" + b.id);
             d = data == c.data("panel") ? $("#site_content div.display").scrollTop() : 0;
-            //b.trigger("show_site.g"), c.data("panel", a), 
+            //b.trigger("show_site.g"), 
+            c.data("panel", a);
             $("#data div.nav li.current").removeClass("current"); 
             $('#data div.nav a[href="#/gauges/' + b.id + "/" + data + '"]').closest("li").addClass("current");
             console.log("path: " + data['params'].path)
             switch (data['params'].path) {
                 case "overview":
-                        //alert("XXX");
+                        console.log("[overview]");
+                    break;
+                case "code":
+                    console.log("[code]");
+                    $panel = $("#site_content").html(ich.my_info_template(this));
                     break;
                 
             }
+            $("body").addClass("view-panel");
+            $("#site_content div.display").scrollTop(d);
         });
         /*
         this.get('/', function() {
@@ -314,6 +321,7 @@
         });
         this.get("/coso", function() {alert("coso");});
         this.post('#/test', function () {
+            var that = this;
             console.log("adding new station");
             var a = $(this.target).removeErrors(),
             b = a.find(".submit button span");
@@ -325,18 +333,18 @@
                 type: "post",
                 dataType: "json",
                 data: { 
-                    name: this.params.name,
-                    type: this.params.type,
-                    country: this.params.country,
+                    name: that.params.name,
+                    type: that.params.type,
+                    country: that.params.country,
                 },
                 success: function (b) {
                     console.log("server respose: " + JSON.stringify(b));
                     var c = b;
-                    //Gauges.sites[c.id] = new Site(c), 
+                    MyApp.station[c._id] = new Station(c); 
                     $("#new_title").val("");
                     setTimeout(function () {
-                        //window.location.hash = "/station/" + c.id + "/code"
-                        window.location.hash = "/kaka"
+                        window.location.hash = "/station/" + c.id + "/code"
+                        //window.location.hash = "/kaka"
                     }, 400); 
                     $.scrollTo("#s" + c.id, 600);
                     $("body").removeClass("adding");
@@ -344,12 +352,12 @@
                 },
                 error: function (b) {
                     var c = $.parseJSON(b.responseText);
-                    a.displayErrors(c.errors)
+                    a.displayErrors(c.errors);
                 },
                 complete: function () {
-                    b.text(b.data("text"))
+                    b.text(b.data("text"));
                 }
-            }), !1
+            }), !1;
         });
         this.get('#/temp', function() {
             $("body").addClass("adding");
@@ -427,11 +435,26 @@
         });
         // Subscription routes
         this.get("#/kaka", function () { alert("pepe"); });
+        this.get("#/crea", function () {
+            
+            //var a = {"__v":0,"name":"jazmin","id":58013119082897,"type":"cosa","country":"cosa","state":"CABA","city":"CABA","latitude":38,"longitude":54,"magic":88015696057117,"lastUpdate":"2012-12-13T17:29:28.282Z","lastAccess":"2012-12-13T17:29:28.282Z","_id":"A0c891a1ae6e0a3d27000002","astronomy":{"sunrise":"2012-12-13T17:29:28.282Z","sunset":"2012-12-13T17:29:28.282Z"},"visibility":{"value":10,"unit":"KM"},"rainfall":{"value":22,"unit":"MM"},"wind":{"value":22,"direction":"SE","degrees":150,"unit":"KMH"},"humidity":{"value":66,"dewpoint":44,"unit":"%"},"feelslike":[],"temperature":{"value":34,"unit":"C"},"created":"2012-12-13T17:29:28.282Z","sensors":[1,2,3,4]};
+            MyApp.station[a._id] = new Station({_id: a._id, type: a.type, onLoad: onLoad});
+            function onLoad(a) {
+                console.log(JSON.stringify(a));
+                $("#sites").append(ich.site_template(a));
+                $("#s" + a._id).html(ich.station_preview_template(a)); 
+            };
+            //console.log("new station name: " + MyApp.station[a._id].name);
+        });
         this.get("#/station/:id/code/:tab", function () {
-            console.log(this.params.id);
+            alert("caca");
+            console.log("new tab params: " + JSON.stringify(this.params));
+            var station = MyApp.stations[this.params.id];
+            console.log("server respose: " + JSON.stringify(b));
+            /*
             var a = MyApp.sites[this.params.id];
-                    
-            a.trigger("show_panel.g", ["code"]); 
+            */        
+            //a.trigger("show_panel.g", ["code"]); 
             $("#site_content div.panel").hide();
             $("#site_content ul.group_options li").removeClass("current"); 
             $("#site_content div.panel." + this.params.tab).show();
@@ -453,6 +476,7 @@
         timeout: null,
         hit_timeout: null,
         connection_count: 0,
+        stations: [],
         start: function (a) {
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
             //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
@@ -548,7 +572,7 @@
         },
     };
     MyApp = MyApp || {};
-    
+
     // Use CommonJS if applicable
     if (typeof require !== 'undefined') {
         module.exports = myApplication;
@@ -571,7 +595,7 @@
 
 $(document).ready(function () {
     // grab jquery or zepto if it's there
-    $: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null;
+    //$: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null;
     
     $("#sites").sortable({
         axis: "y",

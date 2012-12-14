@@ -64,7 +64,7 @@ var generate_mongo_url = function(obj){
     else{
         return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
     }
-}
+};
 var mongourl = generate_mongo_url(mongo);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -339,7 +339,7 @@ app.get('/station/getbyid/:id', Station.getById);
 app.get('/station/create', Station.create);
 app.post('/station/update/:id', Station.update);
 app.delete('/station/remove/:id', Station.remove);
-app.delete('/station/removeall', Station.removeall);
+app.get('/station/removeall', Station.removeall);
 
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);

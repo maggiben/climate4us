@@ -556,7 +556,8 @@
 			<ul>
 				<li><a href="#/account">My Account</a></li>
                 <li><a href="#/temp">temp</a></li>
-                <li><a href="#/station/123/code/tabooo">kaka</a></li>
+                <li><a href="#/crea">crea</a></li>
+                <li><a href="#/station/50c891a1ae6e0a3d27000002/code/tabooo">kaka</a></li>
 				<li><a href="#" id="feedback_link" style="visibility: visible;">Feedback</a></li>
 				<li><a href="#/sign_out">Sign Out</a></li>
 				<li class="live">Live: <span class="status">on</span> <span class="indicator"><span></span></span></li>
@@ -714,17 +715,17 @@
             <div class="toolbar bottom"></div>
         </script>
         <script type="text/html" id="disabled_site_template">
-            <div id="s{{ id }}" class="site disabled">
-                <h2>{{ title }}</h2>
+            <div id="s{{id}}" class="site disabled">
+                <h2>{{title}}</h2>
                 <p>This Gauge has been disabled.</p>
             </div>
         </script>
         <script type="text/html" id="site_template">
-            <div id="s{{ id }}" class="site">
+            <div id="s{{id}}" class="site">
             </div>
         </script>
         <script type="text/html" id="station_preview_template">
-            <h2>{{ name }}</h2>
+            <h2>{{name}}</h2>
             {{#overview}}
             <p class="temperature"><strong>{{#temperature}}{{value}}&#176;{{/temperature}}</strong> temperature</p>
             <p class="humidity"><strong>{{#humidity}}{{value}}{{unit}}{{/humidity}}</strong> humidity</p>
