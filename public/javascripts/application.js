@@ -119,6 +119,7 @@
                 
                 error: function (b) {
                     var c = $.parseJSON(b.responseText);
+                    alert(c.errors);
                 },
                 complete: function () {                                
                 }
@@ -136,7 +137,7 @@
                 },
                 error: function (b) {
                     var c = $.parseJSON(b.responseText);
-                    alert(c.errors)
+                    alert(c.errors);
                 },
                 complete: function () {                                
                 }
@@ -227,18 +228,18 @@
 
     // UI Events
     $("#new_site a.cancel").live("click", function () {
-        return window.location.hash = "#/", $("body").removeClass("adding"), !1
+        return window.location.hash = "#/", $("body").removeClass("adding"), !1;
     });
     $("a.toggle_delete").live("click", function () {
-        return $("#site_content").toggleClass("delete"), !1
+        return $("#site_content").toggleClass("delete"), !1;
     });
     // Custom jQuery Functions
     $.fn.displayErrors = function(a, b) {
         var c = this.removeErrors();
         c.parent().addClass("error");
-        for (key in a) {
+        for (var key in a) {
             var d = b ? b + "[" + key + "]" : key, e = a[key].join(", "), f = '<strong class="error_explanation">' + e + "</strong>";
-            c.find('[name="' + d + '"]').addClass("error").closest("p").append(f)
+            c.find('[name="' + d + '"]').addClass("error").closest("p").append(f);
         }
         var g = c.closest("section");
         return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this
@@ -285,6 +286,9 @@
             //alert(data['my_data'].id);
         });
         this.bind("show_panel.g", function (e, data) {
+            alert("pepepepepe show pannel")
+            JSON.stringify(data);
+            return;
             var b = this;
             var c = $("#s" + b.id);
             d = data == c.data("panel") ? $("#site_content div.display").scrollTop() : 0;
@@ -294,6 +298,9 @@
             $('#data div.nav a[href="#/gauges/' + b.id + "/" + data + '"]').closest("li").addClass("current");
             console.log("path: " + data['params'].path)
             switch (data['params'].path) {
+                case "settings":
+                    $panel = $("#site_content").html(ich.site_settings_template(this));
+                break;
                 case "overview":
                         console.log("[overview]");
                     break;
@@ -306,11 +313,6 @@
             $("body").addClass("view-panel");
             $("#site_content div.display").scrollTop(d);
         });
-        /*
-        this.get('/', function() {
-            this.trigger('getSubscription', {time: new Date()});
-        });
-        */
         this.get(/\#\/sites\/(.*)/, function () {
             //this.redirect("#", "gauges", this.params.splat)
             alert(this.params.splat);
@@ -478,6 +480,7 @@
                         $("#new_title").val("");
                         console.log("station is back and into onLoad: " +  JSON.stringify(station));
                         setTimeout(function () {
+                            console.log("setting window location");
                             window.location.hash = "/station/" + c.id + "/code";
                         }, 400); 
                         $.scrollTo("#s" + c.id, 600);
@@ -493,6 +496,13 @@
                     b.text(b.data("text"));
                 }
             }), !1;
+        });
+        this.get("#/station/:id/:path", function () {
+            var a = MyApp.stations[this.params.id];
+            alert("#/station/:id/:path a:" + JSON.stringify(a));
+            //this.params.path == "overview" && a.setRecentTraffic(); 
+            this.trigger("show_panel.g", [this.params.path]); 
+            MyApp.meldSidebar();
         });
         this.get('#/station/:id/code/:tab', function () {
             alert("caca");
@@ -517,8 +527,6 @@
     });
     // Application
     var MyApp = {
-        plants: {},
-        clients: null,
         subscription: null,
         user: null,
         timeout: null,
@@ -533,9 +541,7 @@
                     type: 'GET',
                     dataType: "json",
                     success: function (data) {
-                        //alert($.parseJSON(data.responseText));
-                        //alert("lat: " + data.latitude + " long: " + data.longitude + " temp: " + data.temperature);
-                        //alert(data);
+
                     },
                     complete: function () {
                     
@@ -642,17 +648,15 @@
 })(window.jQuery || window.Zepto);
 
 $(document).ready(function () {
-    // grab jquery or zepto if it's there
-    //$: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null;
     
     $("#sites").sortable({
         axis: "y",
         container: "#sites",
-        opacity: .5,
+        opacity: 0.5,
         delay: 200,
         items: "div.site",
         start: function () {
-            $("#sites").removeClass("meld")
+            $("#sites").removeClass("meld");
         },
         stop: function () {
             $.ajax({
@@ -661,11 +665,12 @@ $(document).ready(function () {
                 type: "put",
                 data: {
                     ids: $.map($(this).sortable("toArray"), function (a) {
-                        return a.replace(/^s/, "")
+                        return a.replace(/^s/, "");
                     })
                 }
             }),
             MyApp.meldSidebar();
         }
     });
+    
 });

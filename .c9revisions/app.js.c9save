@@ -447,3 +447,9 @@
 {"ts":1355529126839,"patch":[[{"diffs":[[0,") {\n"],[-1,"                var ret = {\"message\":\"Error\",\"status\":\"fail\"};\n"],[0,"    "]],"start1":12878,"start2":12878,"length1":71,"length2":8}]],"length":15144,"saved":false}
 {"ts":1355529131072,"patch":[[{"diffs":[[0,"l);\n"],[-1,"                ret = {\"message\":\"Sucess found email sent\",\"status\":\"ok\"};\n"],[0,"    "]],"start1":13166,"start2":13166,"length1":83,"length2":8}]],"length":15069,"saved":false}
 {"ts":1355529142784,"patch":[[{"diffs":[[0,"            "],[-1,"var "],[0,"retJSON = JS"]],"start1":13723,"start2":13723,"length1":28,"length2":24}]],"length":15065,"saved":false}
+{"contributors":[],"silentsave":true,"ts":1355580813261,"patch":[[{"diffs":[[0,"'),\n"],[-1,"    //Station = require('./models/station'),\n"],[0,"    "]],"start1":2647,"start2":2647,"length1":53,"length2":8}]],"length":15020,"saved":false}
+{"ts":1355581076010,"patch":[[{"diffs":[[0,"connect("],[1,"conf."],[0,"mongourl"]],"start1":6243,"start2":6243,"length1":16,"length2":21}]],"length":15025,"saved":false}
+{"ts":1355581080276,"patch":[[{"diffs":[[0,"t: %s\", "],[1,"conf."],[0,"mongourl"]],"start1":6366,"start2":6366,"length1":16,"length2":21}]],"length":15030,"saved":false}
+{"ts":1355581135817,"patch":[[{"diffs":[[0,"ngo_url("],[1,"conf."],[0,"mongo);\n"]],"start1":3829,"start2":3829,"length1":16,"length2":21}]],"length":15035,"saved":false}
+{"ts":1355581165976,"patch":[[{"diffs":[[0,"connect("],[-1,"conf."],[0,"mongourl"]],"start1":6248,"start2":6248,"length1":21,"length2":16},{"diffs":[[0,"t: %s\", "],[-1,"conf"],[0,".mongour"]],"start1":6366,"start2":6366,"length1":20,"length2":16}]],"length":15026,"saved":false}
+{"ts":1355581167587,"patch":[[{"diffs":[[0,"t: %s\", "],[-1,"."],[0,"mongourl"]],"start1":6366,"start2":6366,"length1":17,"length2":16}]],"length":15025,"saved":false}

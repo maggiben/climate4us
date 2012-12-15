@@ -36,7 +36,6 @@ var express = require('express'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     Account = require('./models/account'),
-    //Station = require('./models/station'),
     Station = require('./controllers/station'),
     Subscription = require('./controllers/subscription'),
     LocalStrategy = require('passport-local').Strategy;
@@ -69,7 +68,7 @@ var generate_mongo_url = function(obj){
         return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
     }
 };
-var mongourl = generate_mongo_url(mongo);
+var mongourl = generate_mongo_url(conf.mongo);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Run app                                                                   //

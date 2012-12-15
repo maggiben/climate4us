@@ -12,3 +12,12 @@
 {"ts":1355528989696,"patch":[[{"diffs":[[0,"ssDomain"],[1,"\""],[0," : false"]],"start1":122,"start2":122,"length1":16,"length2":17}]],"length":346,"saved":false}
 {"ts":1355528991416,"patch":[[{"diffs":[[0,"se,\n    "],[1,"\""],[0,"mongo"],[1,"\""],[0,": {\n    "]],"start1":137,"start2":137,"length1":21,"length2":23}]],"length":348,"saved":false}
 {"ts":1355528992670,"patch":[[{"diffs":[[0," \"mongo\""],[1," "],[0,": {\n    "]],"start1":144,"start2":144,"length1":16,"length2":17}]],"length":349,"saved":false}
+{"contributors":[],"silentsave":true,"ts":1355580761183,"patch":[[{"diffs":[[0,"stname\":"],[1," "],[0,"\"alex.mo"]],"start1":168,"start2":168,"length1":16,"length2":17},{"diffs":[[0," \"port\":"],[1," "],[0,"10062,\n "]],"start1":204,"start2":204,"length1":16,"length2":17}]],"length":351,"saved":false}
+{"ts":1355580762129,"patch":[[{"diffs":[[0,"ername\":"],[1," "],[0,"\"admin\","]],"start1":231,"start2":231,"length1":16,"length2":17}]],"length":352,"saved":false}
+{"ts":1355580763040,"patch":[[{"diffs":[[0,"ssword\":"],[1," "],[0,"\"12345\","]],"start1":260,"start2":260,"length1":16,"length2":17}]],"length":353,"saved":false}
+{"ts":1355580763797,"patch":[[{"diffs":[[0," \"name\":"],[1," "],[0,"\"\",\n    "]],"start1":285,"start2":285,"length1":16,"length2":17}]],"length":354,"saved":false}
+{"ts":1355580764537,"patch":[[{"diffs":[[0,"   \"db\":"],[1," "],[0,"\"cloud-d"]],"start1":303,"start2":303,"length1":16,"length2":17}]],"length":355,"saved":false}
+{"ts":1355580770175,"patch":[[{"diffs":[[0,"    \"ip\""],[-1," "],[0,": proces"]],"start1":82,"start2":82,"length1":17,"length2":16}]],"length":354,"saved":false}
+{"ts":1355580773078,"patch":[[{"diffs":[[0,"sDomain\""],[-1," "],[0,": false,"]],"start1":122,"start2":122,"length1":17,"length2":16}]],"length":353,"saved":false}
+{"ts":1355580775555,"patch":[[{"diffs":[[0,"tenPort\""],[-1," "],[0,": proces"]],"start1":53,"start2":53,"length1":17,"length2":16}]],"length":352,"saved":false}
+{"ts":1355580777433,"patch":[[{"diffs":[[0,"nSecret\""],[-1," "],[0,": \"secre"]],"start1":24,"start2":24,"length1":17,"length2":16}]],"length":351,"saved":false}
