@@ -107,7 +107,7 @@ exports.remove = function(req, res, next) {
         if (err) {
             return next(err);
         }
-        var stationJSON = JSON.stringify({action: 'remove', result: true});
+        var stationJSON = JSON.stringify({_id: req.params.id, action: 'remove', result: true});
         return res.send(stationJSON);
     }
 };

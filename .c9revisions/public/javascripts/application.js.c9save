@@ -1484,3 +1484,7 @@
 {"ts":1355583918669,"patch":[[{"diffs":[[0," + JSON."],[1,"stringify()"],[0,")\n      "]],"start1":21002,"start2":21002,"length1":16,"length2":27}]],"length":27336,"saved":false}
 {"ts":1355583921183,"patch":[[{"diffs":[[0,"ringify("],[1,"a"],[0,"))\n     "]],"start1":21012,"start2":21012,"length1":16,"length2":17}]],"length":27337,"saved":false}
 {"ts":1355583924232,"patch":[[{"diffs":[[0,"gify(a))"],[1,";"],[0,"\n       "]],"start1":21015,"start2":21015,"length1":16,"length2":17}]],"length":27338,"saved":false}
+{"contributors":[],"silentsave":true,"ts":1355586642961,"patch":[[{"diffs":[[0,"r MyApp = {\n"],[1,"        VERSION\n"],[0,"        subs"]],"start1":22121,"start2":22121,"length1":24,"length2":40}]],"length":27354,"saved":false}
+{"ts":1355586642961,"patch":[[{"diffs":[[0," VERSION"],[1,": "],[0,"\n       "]],"start1":22140,"start2":22140,"length1":16,"length2":18}]],"length":27356,"saved":false}
+{"ts":1355586643218,"patch":[[{"diffs":[[0,"ERSION: "],[1,"1.1"],[0,"\n       "]],"start1":22142,"start2":22142,"length1":16,"length2":19}]],"length":27359,"saved":false}
+{"ts":1355586644600,"patch":[[{"diffs":[[0,"SION: 1."],[1,"2"],[0,"1\n      "]],"start1":22144,"start2":22144,"length1":16,"length2":17}]],"length":27360,"saved":false}

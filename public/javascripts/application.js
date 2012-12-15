@@ -7,6 +7,11 @@
 // @author       : Benjamin Maggi                                            //
 // @email        : benjaminmaggi@gmail.com                                   //
 // @date         : 12 Dec 2012                                               //
+// @dependencies                                                             //
+//  jQuery       : 1.8.2                                                     //
+//  jQuery.UI    : 1.9.1                                                     //
+//  ICanHaz      : 0.10                                                      //
+//  Sammy        : 0.7.2                                                     //
 // ------------------------------------------------------------------------- //
 //                                                                           //
 // @copyright Copyright 2012 Benjamin Maggi, all rights reserved.            //
@@ -31,6 +36,7 @@
 // @param {Function} window.jQuery || window.Zepto JS libraries              //
 ///////////////////////////////////////////////////////////////////////////////
 ;(function($) {
+    "use strict";
     // grab jquery or zepto if it's there
     //$: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null;
     
@@ -194,8 +200,9 @@
                 dataType: "json",
                 success: function (b) {
                     for (var i = 0; i < b.length; i++) {
-                        that.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad})
-                        console.log("Attaching station id: " + that.stations[b[i]._id].id);
+                        MyApp.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad});
+                        that.stations[b[i]._id] = MyApp.stations[b[i]._id];
+                        console.log("Attaching station id: " + MyApp.stations[b[i]._id].id);
                     }
                     function onLoad(station) {
                         station.isReady = true;
@@ -203,19 +210,13 @@
                         a.onSetup(station);
                     }
                 },
-                error: function (b) {
-                    var c = $.parseJSON(b.responseText);
-                    alert(c.errors)
+                error: function (jqXHR, status, error) {
+                    var c = $.parseJSON(jqXHR);
+                    console.log(jqXHR.responseText);
                 },
                 complete: function () {                                
                 }
             });
-        },
-        onLoadX: function(a) {
-            a.isReady = true;
-            //console.log(this.onSetup);
-            console.log("is ready: " + a.isReady);
-            //this.onSetup(a);
         },
         listStations: function (a) {
             for (var key in this.stations)
@@ -223,6 +224,71 @@
                 if (this.stations.hasOwnProperty(key))
                 console.log("key: " + key);
             }
+        },
+        getStations:  function (callback) {
+            var that = this;
+            $.ajax({
+                url: "/getStations",
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    callback(data);
+                },
+                error: function (jqXHR, status, error) {
+                    var c = $.parseJSON(jqXHR);
+                    console.log(jqXHR.responseText);
+                }
+            });
+        },
+        removeStations: function(stations, callback) {
+            for (var station in stations)
+            {
+                if (stations.hasOwnProperty(station))
+                {
+                    this.removeStation(station, onRemove);
+                    function onRemove(station) {
+                        console.log("onRemove: " + JSON.stringify(station));
+                    }
+                }
+            }
+        },
+        removeStation: function(station, callback) {
+            var that = this;
+            $.ajax({
+                url: "/station/remove/" + station._id,
+                type: "delete",
+                dataType: "json",
+                data: station,
+                success: function (data, textStatus, jqXHR) {
+                    delete that.stations[data._id];
+                    console.log("removed id: " + JSON.stringify(data));
+                    callback(data);
+                },
+                error: function (jqXHR, status, error) {
+                    var c = $.parseJSON(jqXHR);
+                    console.log(jqXHR.responseText);
+                }
+            }), !1;
+        },
+        addStation: function(station, callback) {
+            var that = this;
+            $.ajax({
+                url: "/station/add",
+                type: "post",
+                dataType: "json",
+                data: station,
+                success: function (data, textStatus, jqXHR) {
+                    that.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
+                    function onLoad(station) {
+                        station.isReady = true;
+                        callback(data);
+                    }
+                },
+                error: function (jqXHR, status, error) {
+                    var c = $.parseJSON(jqXHR);
+                    console.log(jqXHR.responseText);
+                }
+            }), !1;
         },
     });
 
@@ -268,8 +334,9 @@
         this.bind('getSubscription', function(e, data) {
             console.log("getSubscription");
             
-            var subscription = new myApplication({onSetup: onSetup});
+            MyApp.subscription = new myApplication({onSetup: onSetup});
             function onSetup(a) {
+                console.log("onSetup: " + JSON.stringify(a));
                 $("#sites").append(ich.site_template(a));
                 $("#s" + a.id).html(ich.station_preview_template(a)); 
             };
@@ -507,7 +574,7 @@
         this.get('#/station/:id/code/:tab', function () {
             alert("caca");
             console.log("new tab params: " + JSON.stringify(this.params));
-            var station = MyApp.stations[this.params.id];
+            var station = MyApp.subscription.stations[this.params.id];
             console.log("server respose: " + JSON.stringify(b));
             /*
             var a = MyApp.sites[this.params.id];
@@ -527,12 +594,14 @@
     });
     // Application
     var MyApp = {
-        subscription: null,
+        VERSION: 1.12,
+        //subscription: null,
         user: null,
         timeout: null,
         hit_timeout: null,
         connection_count: 0,
         stations: {},
+        subscription: {},
         start: function (a) {
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
             //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
@@ -629,7 +698,7 @@
 
     // Use CommonJS if applicable
     if (typeof require !== 'undefined') {
-        module.exports = myApplication;
+        //module.exports = myApplication;
     } else {
         // else attach it to the window
         window.MyApp = MyApp;
