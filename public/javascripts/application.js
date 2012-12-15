@@ -187,6 +187,7 @@
         app: { 
             VERSION: "0.10",
             lic: {},
+            author: "",
         },
         stations: [],
         onSetup: null,
@@ -222,8 +223,24 @@
             for (var key in this.stations)
             {
                 if (this.stations.hasOwnProperty(key))
-                console.log("key: " + key);
+                {
+                    console.log("key: " + key);
+                }
             }
+        },
+        getStationById: function(id) {
+            return this.stations[id];
+        },
+        getAllStationsIds: function() {
+            var stations = [];
+            for (var station in this.stations)
+            {
+                if (this.stations.hasOwnProperty(station))
+                {
+                    stations.push(station);
+                }
+            }
+            return stations;
         },
         getStations:  function (callback) {
             var that = this;
@@ -240,25 +257,23 @@
                 }
             });
         },
-        removeStations: function(stations, callback) {
-            for (var station in stations)
+        removeStations: function(ids, callback) {
+            for (var id in ids)
             {
-                if (stations.hasOwnProperty(station))
+                if (ids.hasOwnProperty(id))
                 {
-                    this.removeStation(station, onRemove);
-                    function onRemove(station) {
-                        console.log("onRemove: " + JSON.stringify(station));
-                    }
+                    this.removeStation(id, function(station) {
+                    });
                 }
             }
         },
-        removeStation: function(station, callback) {
+        removeStation: function(id, callback) {
             var that = this;
             $.ajax({
-                url: "/station/remove/" + station._id,
+                url: "/station/remove/" + id,
                 type: "delete",
                 dataType: "json",
-                data: station,
+                data: {},
                 success: function (data, textStatus, jqXHR) {
                     delete that.stations[data._id];
                     console.log("removed id: " + JSON.stringify(data));
@@ -343,7 +358,7 @@
         });
         this.bind('showSite', function(e, data) {
             var a = this;
-                b = $("#s" + data['my_data'].id);
+            var b = $("#s" + data['my_data'].id);
             if (b.hasClass("current")) return !0;
             $("div.site.current").removeClass("current");
             b.addClass("current");
@@ -525,8 +540,8 @@
         this.post('#/station', function () {
             var that = this;
             console.log("about to create a new station link: #/station");
-            var a = $(this.target).removeErrors(),
-            b = a.find(".submit button span");
+            var a = $(this.target).removeErrors();
+            var b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
             b.data("text") === undefined && b.data("text", b.text()); 
             b.text("Adding...");
@@ -548,7 +563,7 @@
                         console.log("station is back and into onLoad: " +  JSON.stringify(station));
                         setTimeout(function () {
                             console.log("setting window location");
-                            window.location.hash = "/station/" + c.id + "/code";
+                            window.location.hash = "/station/" + c._id + "/code";
                         }, 400); 
                         $.scrollTo("#s" + c.id, 600);
                         $("body").removeClass("adding");
@@ -565,7 +580,9 @@
             }), !1;
         });
         this.get("#/station/:id/:path", function () {
-            var a = MyApp.stations[this.params.id];
+            //var a = MyApp.stations[this.params.id];
+            console.log("#/station/:id/:path a:" + JSON.stringify(this.params));
+            var a = MyApp.subscription.getStationById(this.params.id);
             alert("#/station/:id/:path a:" + JSON.stringify(a));
             //this.params.path == "overview" && a.setRecentTraffic(); 
             this.trigger("show_panel.g", [this.params.path]); 
@@ -666,10 +683,6 @@
                     g = a.attr("id") == $("#sites > div:first").attr("id") ? 0 : 10;
                 a.length > 0 && c >= e + g && d < f - 10 ? $("#sites").addClass("meld") : $("#sites").removeClass("meld")
                 }
-        },
-        newSensor: function (site) {
-            $("#sites div.current").removeClass("current");
-            b.addClass("current")
         },
         formatNumber: function (a) {
             a += "";
