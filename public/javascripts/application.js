@@ -229,6 +229,7 @@
             }
         },
         getStationById: function(id) {
+            console.log("getStationById(%s)", id);
             return this.stations[id];
         },
         getAllStationsIds: function() {
@@ -583,7 +584,7 @@
             //var a = MyApp.stations[this.params.id];
             console.log("#/station/:id/:path a:" + JSON.stringify(this.params));
             var a = MyApp.subscription.getStationById(this.params.id);
-            alert("#/station/:id/:path a:" + JSON.stringify(a));
+            alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic(); 
             this.trigger("show_panel.g", [this.params.path]); 
             MyApp.meldSidebar();
