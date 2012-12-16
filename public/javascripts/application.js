@@ -364,8 +364,22 @@
         });
         this.bind("station.setup", function(e, data) {
             console.log("station.setup: " + JSON.stringify(data));
-            $("#sites").append(ich.site_template(data));
-            $("#s" + data.id).html(ich.station_preview_template(data)); 
+            var station_template = ich.site_template(data);
+            $(station_template).appendTo('#sites').hide().fadeIn('slow');
+            //$("#sites").append(ich.site_template(data));
+            $("#s" + data.id).html(ich.station_preview_template(data));
+            //this.trigger("show_station.g");
+            //this.trigger('showSite', {my_data: this.params});
+            
+            var site = $("#s" + data.id);
+            if (site.hasClass("current"))
+            {
+                return !0;
+            }
+            $("div.site.current").removeClass("current");
+            site.addClass("current");
+            $("#data").html(ich.site_data_template(data)); 
+            $("body").addClass("view-nav");
         });
         this.bind('showSite', function(e, data) {
             var a = this;
@@ -378,19 +392,28 @@
             //$("body").addClass("view-nav");
             //alert(data['my_data'].id);
         });
+        this.bind("show_station.g", function(e, data) {
+            console.log("show_station.g: " + JSON.stringify(data));
+            var station = $("#s" + data.id);
+            if (station.hasClass("current"))
+            {
+                return !0;
+            }
+            $("div.site.current").removeClass("current");
+            station.addClass("current");
+            $("#data").html(ich.site_data_template(station)); 
+            $("body").addClass("view-nav");
+        });
         this.bind("show_panel.g", function (e, data) {
-            alert("pepepepepe show pannel")
-            JSON.stringify(data);
-            return;
+            console.log("show_panel.g: " + JSON.stringify(data));
             var b = this;
             var c = $("#s" + b.id);
-            d = data == c.data("panel") ? $("#site_content div.display").scrollTop() : 0;
-            //b.trigger("show_site.g"), 
-            c.data("panel", a);
+            var d = data == c.data("panel") ? $("#site_content div.display").scrollTop() : 0;
+            b.trigger("show_station.g", data), 
+            c.data("panel", data);
             $("#data div.nav li.current").removeClass("current"); 
             $('#data div.nav a[href="#/gauges/' + b.id + "/" + data + '"]').closest("li").addClass("current");
-            console.log("path: " + data['params'].path)
-            switch (data['params'].path) {
+            switch (data.path) {
                 case "settings":
                     $panel = $("#site_content").html(ich.site_settings_template(this));
                 break;
@@ -414,64 +437,9 @@
             $("body").removeClass("no_cancel").removeClass("my_account");
             $.trim($("#data").html()) == "" && $("#sites div.site:first a").length > 0 && a.redirect($("#sites div.site:first a").attr("href"))
         });
-        this.get("/coso", function() {alert("coso");});
-        this.post('#/test', function () {
-            var that = this;
-            console.log("adding new station");
-            var a = $(this.target).removeErrors(),
-            b = a.find(".submit button span");
-            clearTimeout(b.data("timeout"));
-            b.data("text") === undefined && b.data("text", b.text()); 
-            b.text("Adding...");
-            $.ajax({
-                url: "/station/add",
-                type: "post",
-                dataType: "json",
-                data: { 
-                    name: that.params.name,
-                    type: that.params.type,
-                    country: that.params.country,
-                },
-                success: function (b) {
-                    console.log("server respose: " + JSON.stringify(b));
-                    var c = b;
-                    MyApp.stations[c._id] = new Station(c); //{_id: b[i]._id, type: b[i].type, onLoad: onLoad}
-                    $("#new_title").val("");
-                    setTimeout(function () {
-                        window.location.hash = "/station/" + c.id + "/code"
-                        //window.location.hash = "/kaka"
-                    }, 400); 
-                    $.scrollTo("#s" + c.id, 600);
-                    $("body").removeClass("adding");
-                    a.removeErrors();
-                },
-                error: function (b) {
-                    var c = $.parseJSON(b.responseText);
-                    a.displayErrors(c.errors);
-                },
-                complete: function () {
-                    b.text(b.data("text"));
-                }
-            }), !1;
-        });
-        this.get('#/temp', function() {
-            $("body").addClass("adding");
-        });
-        this.get('#/mapxxx', function() {
-            //alert("maposi");
-            this.trigger('newSensor', {my_data: this.id});
-        });
-        this.get('#/gauges/new', function() {
-            MyApp.start(this);
-            var user_data, user;
-            user_data = {
-                trial_days_left_text: new Date()
-            };                
-            trial_template = ich.trial_template(user_data);
-            //$('#sites').append(trial_template);
-            $(trial_template).appendTo('#sites').hide().fadeIn('slow');
-            window.location.hash = "/";
-        });
+        ///////////////////////////////////////////////////////////////////////
+        // Dession Routes                                                    //
+        ///////////////////////////////////////////////////////////////////////
         this.get('#/sign_out', function() {
             $.ajax({
                     url: "/signout",
@@ -482,66 +450,6 @@
             });
             $("body").addClass("loading").removeClass("loaded");
         });
-        this.get("#/gauges/:id/:path", function () {
-            //var a = Gauges.sites[this.params.id];
-            //this.params.path == "overview" && a.setRecentTraffic(), a.trigger("show_panel.g", [this.params.path]), Gauges.meldSidebar()
-            //alert("id: " + this.params.id + " path: " + this.params.path);
-            this.trigger('showSite', {my_data: this.params});
-            //return;
-            //alert(this.params.path)
-            this.params.path == "overview"; 
-            this.trigger("show_panel.g", {params: this.params}); 
-            MyApp.meldSidebar();
-        });
-        this.del("#/gauges/:id", function () {
-            var a = $(this.target).removeErrors();
-            b = a.find(".submit button span");
-            b.text("Deleting...");
-            window.location.hash = "/deleting";
-            /*
-            $.ajax({
-                url: "/gauges/" + this.params.id,
-                dataType: "json",
-                type: "delete",
-                success: function (a) {
-                    var b = a.gauge,
-                    c = Gauges.sites[b.id];
-                    c.trigger("teardown.g"), $("#data").html(ich.deleted_site_template(b)), window.location.hash = "/"
-                }
-            });
-            */
-            $("#data").html(ich.deleted_site_template(b));
-            window.location.hash = "/";
-        });
-        this.get("#/account", function () {
-            var server = "http://climate4us.aws.af.cm";
-            var apiKey = "/subscription";
-            $("body").removeClass("adding"), $.ajax({
-                url: server + apiKey,
-                dataType: "json",
-                success: function (a) {
-                    //Gauges.subscription = new Subscription(a.subscription)
-                }
-            }), 
-            $("#sites div.current").removeClass("current"), 
-            $("#data").html(ich.account_template(Gauges.user)), 
-            $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
-            $("#site_content").html(ich.my_info_template(Gauges.user))
-        });
-        // Subscription routes
-        this.get("#/kaka", function () { alert("pepe"); });
-        this.get("#/crea", function () {
-            
-            var a = {"__v":0,"name":"vitoria","id":58013119082897,"type":"cosa","country":"cosa","state":"CABA","city":"CABA","latitude":38,"longitude":54,"magic":88015696057117,"lastUpdate":"2012-12-13T17:29:28.282Z","lastAccess":"2012-12-13T17:29:28.282Z","_id":"50c891a1ae6e0a3d27000002","astronomy":{"sunrise":"2012-12-13T17:29:28.282Z","sunset":"2012-12-13T17:29:28.282Z"},"visibility":{"value":10,"unit":"KM"},"rainfall":{"value":22,"unit":"MM"},"wind":{"value":22,"direction":"SE","degrees":150,"unit":"KMH"},"humidity":{"value":71,"dewpoint":11,"unit":"%"},"feelslike":[],"temperature":{"value":11,"unit":"C"},"created":"2012-12-13T17:29:28.282Z","sensors":[1,2,3,4]};
-            console.log(JSON.stringify(a));
-            MyApp.stations[a._id] = new Station({_id: a._id, type: a.type, onLoad: onLoad});
-            function onLoad(a) {
-                console.log(JSON.stringify(a));
-                $("#sites").append(ich.site_template(a));
-                $("#s" + a._id).html(ich.station_preview_template(a)); 
-            };
-            //console.log("new station name: " + MyApp.station[a._id].name);
-        });
         ///////////////////////////////////////////////////////////////////////
         // Station Routes                                                    //
         ///////////////////////////////////////////////////////////////////////
@@ -550,7 +458,7 @@
         });
         this.post('#/station', function () {
             var that = this;
-            console.log("about to create a new station link: #/station");
+            //console.log("about to create a new station link: #/station");
             var a = $(this.target).removeErrors();
             var b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
@@ -565,20 +473,21 @@
                     type: that.params.type,
                     country: that.params.country,
                 },
-                success: function (b) {
+                success: function (data, textStatus, jqXHR) {
                     //console.log("server respose: " + JSON.stringify(b));
-                    var c = b;
-                    MyApp.subscription.stations[c._id] = new Station({_id: c._id, type: c.type, onLoad: onLoad}); //
+                    var c = data;
+                    MyApp.subscription.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //
                     function onLoad(station) {
                         $("#new_title").val("");
-                        //console.log("station is back and into onLoad: " +  JSON.stringify(station));
                         setTimeout(function () {
-                            //console.log("setting window location");
-                            window.location.hash = "/station/" + c._id + "/code";
+                            window.location.hash = "/station/" + station._id + "/code";
+                            $.scrollTo("#s" + station._id, 800);
                         }, 400); 
-                        $.scrollTo("#s" + c.id, 600);
+                        console.log("onLoad id: " + station._id);
+                        //$.scrollTo("#s" + station._id, 800);
                         $("body").removeClass("adding");
                         a.removeErrors();
+                        that.trigger('station.setup', station);
                     }
                 },
                 error: function (b) {
@@ -596,14 +505,14 @@
             //var a = MyApp.subscription.getStationById(this.params.id);
             //console.log("MyApp.subscription.getStationById = " + JSON.stringify(a));
             //alert(typeof this.params.id);
-            alert(MyApp.subscription.stations[this.params.id].name);
-            var station = "pepito"; //MyApp.subscription.stations[this.params.id];
-            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station);
+            //alert(MyApp.subscription.stations[this.params.id].name);
+            var station = MyApp.subscription.stations[this.params.id];
+            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
             //alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic();
-            //this.trigger('station.setup', a);
-            //this.trigger("show_panel.g", [this.params.path]); 
-            //MyApp.meldSidebar();
+            //this.trigger('station.setup', station);
+            this.trigger("show_panel.g", this.params); 
+            MyApp.meldSidebar();
         });
         this.get('#/station/:id/code/:tab', function () {
             alert("caca");
@@ -771,5 +680,14 @@ $(document).ready(function () {
             MyApp.meldSidebar();
         }
     });
-    
+    $(window).scroll(function() {
+    var a = $(window).height(), b = $(document).height(), c = $(window).scrollTop(), d = $("#wrapper"), e = $("body");
+    if (d.data("scrollTop") < c)
+        $(document.body).height(b - e.css("padding-top").replace("px", ""));
+    else {
+        var f = e.height() - (d.data("scrollTop") - c);
+        f >= d.height() ? e.height(f) : e.height(d.height())
+    }
+    d.data("scrollTop", c)
+    });
 });
