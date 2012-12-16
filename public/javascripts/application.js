@@ -201,13 +201,14 @@
                 dataType: "json",
                 success: function (b) {
                     for (var i = 0; i < b.length; i++) {
-                        MyApp.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad});
-                        that.stations[b[i]._id] = MyApp.stations[b[i]._id];
+                        that.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad}); //that.stations[b[i]._id] = 
+                        MyApp.stations[b[i]._id] = b[i]; //that.stations[b[i]._id];
                         console.log("Attaching station id: " + MyApp.stations[b[i]._id].id);
                     }
                     function onLoad(station) {
+                        that.stations[station._id] = station;
                         station.isReady = true;
-                        console.log("is onLoad ready: " + station.isReady);
+                        console.log("is onLoad ready: " + that.stations[station._id].isReady);
                         a.onSetup(station);
                     }
                 },
@@ -230,6 +231,7 @@
         },
         getStationById: function(id) {
             console.log("getStationById(%s)", id);
+            console.log("getStationById(%s) = %s", id, JSON.stringify(this.stations[id]));
             return this.stations[id];
         },
         getAllStationsIds: function() {
@@ -349,13 +351,17 @@
         });
         this.bind('getSubscription', function(e, data) {
             console.log("getSubscription");
-            
             MyApp.subscription = new myApplication({onSetup: onSetup});
             function onSetup(a) {
                 console.log("onSetup: " + JSON.stringify(a));
                 $("#sites").append(ich.site_template(a));
                 $("#s" + a.id).html(ich.station_preview_template(a)); 
             };
+        });
+        this.bind("station.setup", function(e, data) {
+            console.log("station.setup: " + JSON.stringify(data));
+            $("#sites").append(ich.site_template(data));
+            $("#s" + data.id).html(ich.station_preview_template(data)); 
         });
         this.bind('showSite', function(e, data) {
             var a = this;
@@ -584,8 +590,10 @@
             //var a = MyApp.stations[this.params.id];
             console.log("#/station/:id/:path a:" + JSON.stringify(this.params));
             var a = MyApp.subscription.getStationById(this.params.id);
+            console.log("MyApp.subscription.getStationById = " + JSON.stringify(a));
             //alert("#/station/%s/%s",typeof a, this.params.path);
-            //this.params.path == "overview" && a.setRecentTraffic(); 
+            //this.params.path == "overview" && a.setRecentTraffic();
+            this.trigger('station.setup', a);
             this.trigger("show_panel.g", [this.params.path]); 
             MyApp.meldSidebar();
         });
