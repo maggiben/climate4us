@@ -205,7 +205,7 @@
                 success: function (b) {
                     for (var i = 0; i < b.length; i++) {
                         that.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad}); //that.stations[b[i]._id] = 
-                        MyApp.stations[b[i]._id] = b[i]; //that.stations[b[i]._id];
+                        //MyApp.stations[b[i]._id] = b[i]; //that.stations[b[i]._id];
                         console.log("Attaching station id: " + that.stations[b[i]._id].id);
                     }
                     function onLoad(station) {
@@ -568,7 +568,7 @@
                 success: function (b) {
                     //console.log("server respose: " + JSON.stringify(b));
                     var c = b;
-                    MyApp.stations[c._id] = new Station({_id: c._id, type: c.type, onLoad: onLoad}); //
+                    MyApp.subscription.stations[c._id] = new Station({_id: c._id, type: c.type, onLoad: onLoad}); //
                     function onLoad(station) {
                         $("#new_title").val("");
                         //console.log("station is back and into onLoad: " +  JSON.stringify(station));
@@ -595,13 +595,15 @@
             //console.log("runRoute: #/station/%s/$s",this.params.id, this.params.path);
             //var a = MyApp.subscription.getStationById(this.params.id);
             //console.log("MyApp.subscription.getStationById = " + JSON.stringify(a));
-            var station = MyApp.subscription.stations[this.params.id];
-            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
+            //alert(typeof this.params.id);
+            alert(MyApp.subscription.stations[this.params.id].name);
+            var station = "pepito"; //MyApp.subscription.stations[this.params.id];
+            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station);
             //alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic();
-            this.trigger('station.setup', a);
-            this.trigger("show_panel.g", [this.params.path]); 
-            MyApp.meldSidebar();
+            //this.trigger('station.setup', a);
+            //this.trigger("show_panel.g", [this.params.path]); 
+            //MyApp.meldSidebar();
         });
         this.get('#/station/:id/code/:tab', function () {
             alert("caca");
@@ -632,7 +634,7 @@
         timeout: null,
         hit_timeout: null,
         connection_count: 0,
-        stations: {},
+        stationsxx: {},
         subscription: {},
         start: function (a) {
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
