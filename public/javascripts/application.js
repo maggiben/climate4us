@@ -47,6 +47,7 @@
     $.extend(Station.prototype, {
         name: '',
         id: 0,
+        _id: 0,
         type: '',
         country: '',
         state: '',
@@ -115,7 +116,9 @@
                 type: "GET",
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {
-                    console.log("Station[" + data._id + "] successfully created");
+                    //console.log("Station[" + data._id + "] successfully created");
+                    that._id = data._id,
+                    that.id = data._id,
                     that.name = data.name;
                     that.type = data.type;
                     that.temperature = data.temperature;
@@ -203,7 +206,7 @@
                     for (var i = 0; i < b.length; i++) {
                         that.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad}); //that.stations[b[i]._id] = 
                         MyApp.stations[b[i]._id] = b[i]; //that.stations[b[i]._id];
-                        console.log("Attaching station id: " + that.stations[b[i]._id]._id);
+                        console.log("Attaching station id: " + that.stations[b[i]._id].id);
                     }
                     function onLoad(station) {
                         //that.stations[station._id] = station;
@@ -228,6 +231,7 @@
                     console.log("key: " + key);
                 }
             }
+            return !1;
         },
         getStationById: function(id) {
             console.log("getStationById(%s)", id);
@@ -350,10 +354,10 @@
             });
         });
         this.bind('getSubscription', function(e, data) {
-            console.log("getSubscription");
+            //console.log("getSubscription");
             MyApp.subscription = new myApplication({onSetup: onSetup});
             function onSetup(a) {
-                console.log("onSetup: " + JSON.stringify(a));
+                //console.log("onSetup: " + JSON.stringify(a));
                 $("#sites").append(ich.site_template(a));
                 $("#s" + a.id).html(ich.station_preview_template(a)); 
             };
@@ -562,14 +566,14 @@
                     country: that.params.country,
                 },
                 success: function (b) {
-                    console.log("server respose: " + JSON.stringify(b));
+                    //console.log("server respose: " + JSON.stringify(b));
                     var c = b;
                     MyApp.stations[c._id] = new Station({_id: c._id, type: c.type, onLoad: onLoad}); //
                     function onLoad(station) {
                         $("#new_title").val("");
-                        console.log("station is back and into onLoad: " +  JSON.stringify(station));
+                        //console.log("station is back and into onLoad: " +  JSON.stringify(station));
                         setTimeout(function () {
-                            console.log("setting window location");
+                            //console.log("setting window location");
                             window.location.hash = "/station/" + c._id + "/code";
                         }, 400); 
                         $.scrollTo("#s" + c.id, 600);
@@ -588,9 +592,11 @@
         });
         this.get("#/station/:id/:path", function () {
             //var a = MyApp.stations[this.params.id];
-            console.log("#/station/:id/:path a:" + JSON.stringify(this.params));
-            var a = MyApp.subscription.getStationById(this.params.id);
-            console.log("MyApp.subscription.getStationById = " + JSON.stringify(a));
+            //console.log("runRoute: #/station/%s/$s",this.params.id, this.params.path);
+            //var a = MyApp.subscription.getStationById(this.params.id);
+            //console.log("MyApp.subscription.getStationById = " + JSON.stringify(a));
+            var station = MyApp.subscription.stations[this.params.id];
+            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
             //alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic();
             this.trigger('station.setup', a);

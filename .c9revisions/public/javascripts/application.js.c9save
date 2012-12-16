@@ -1526,3 +1526,14 @@
 {"ts":1355673502837,"patch":[[{"diffs":[[0,"  error:"],[-1," "],[0," functio"]],"start1":5222,"start2":5222,"length1":17,"length2":16},{"diffs":[[0,"nction ("],[-1,"data, textStatus, jqXHR"],[1,"b"],[0,") {\n    "]],"start1":5233,"start2":5233,"length1":39,"length2":17}]],"length":31289,"saved":false}
 {"ts":1355673516535,"patch":[[{"diffs":[[0,"uccess: function"],[-1," (b"],[1,"(data, textStatus, jqXHR"],[0,") {\n            "]],"start1":5717,"start2":5717,"length1":35,"length2":56}]],"length":31310,"saved":false}
 {"ts":1355673522607,"patch":[[{"diffs":[[0," JSON.stringify("],[-1,"b"],[1,"data"],[0,"));\n            "]],"start1":5808,"start2":5808,"length1":33,"length2":36}]],"length":31313,"saved":false}
+{"contributors":[],"silentsave":true,"ts":1355680618439,"patch":[[{"diffs":[[0,"}\n            }\n"],[1,"            return !1;\n"],[0,"        },\n     "]],"start1":8852,"start2":8852,"length1":32,"length2":55}]],"length":31336,"saved":false}
+{"ts":1355681068640,"patch":[[{"diffs":[[0,"params.id);\n"],[1,"            var b\n"],[0,"            "]],"start1":24890,"start2":24890,"length1":24,"length2":42}]],"length":31354,"saved":false}
+{"ts":1355681070038,"patch":[[{"diffs":[[0,"    var "],[-1,"b"],[1,"stat"],[0,"\n       "]],"start1":24910,"start2":24910,"length1":17,"length2":20}]],"length":31357,"saved":false}
+{"ts":1355681071274,"patch":[[{"diffs":[[0,"var stat"],[1,"ion = "],[0,"\n       "]],"start1":24914,"start2":24914,"length1":16,"length2":22}]],"length":31363,"saved":false}
+{"ts":1355681073457,"patch":[[{"diffs":[[0,"ation = "],[1,"MyApp.subscription.stations["],[0,"\n       "]],"start1":24920,"start2":24920,"length1":16,"length2":44}]],"length":31391,"saved":false}
+{"ts":1355681080988,"patch":[[{"diffs":[[0,"tations["],[1,"this.params.id"],[0,"\n       "]],"start1":24948,"start2":24948,"length1":16,"length2":30}]],"length":31405,"saved":false}
+{"ts":1355681083538,"patch":[[{"diffs":[[0,"arams.id"],[1,"];"],[0,"\n       "]],"start1":24962,"start2":24962,"length1":16,"length2":18}]],"length":31407,"saved":false}
+{"ts":1355681095167,"patch":[[{"diffs":[[0,"params.id);\n"],[1,"            console.log(\"MyApp.subscription.getStationById = \" + JSON.stringify(a));\n"],[0,"            "]],"start1":24890,"start2":24890,"length1":24,"length2":109}]],"length":31492,"saved":false}
+{"ts":1355681103828,"patch":[[{"diffs":[[0,"ription."],[-1,"getS"],[1,"s"],[0,"tation"],[-1,"ById = "],[1,"s[this.params.id]"],[0,"\" + JSON"]],"start1":25094,"start2":25094,"length1":33,"length2":40}]],"length":31499,"saved":false}
+{"ts":1355681107239,"patch":[[{"diffs":[[0,"tations["],[-1,"this.params.id"],[1,"%s"],[0,"]\" + JSO"]],"start1":25103,"start2":25103,"length1":30,"length2":18}]],"length":31487,"saved":false}
+{"ts":1355681112258,"patch":[[{"diffs":[[0,"ions[%s]"],[1," ="],[0,"\" + JSON"]],"start1":25106,"start2":25106,"length1":16,"length2":18}]],"length":31489,"saved":false}
