@@ -114,12 +114,12 @@
                 url: "/station/getbyid/" + a._id,
                 type: "GET",
                 dataType: "json",
-                success: function (b) {
-                    console.log("Station[" + b._id + "] successfully created");
-                    that.name = b.name;
-                    that.type = b.type;
-                    that.temperature = b.temperature;
-                    that.humidity = b.humidity;
+                success: function (data, textStatus, jqXHR) {
+                    console.log("Station[" + data._id + "] successfully created");
+                    that.name = data.name;
+                    that.type = data.type;
+                    that.temperature = data.temperature;
+                    that.humidity = data.humidity;
                     a.onLoad(that);
                 },
                 
@@ -138,8 +138,8 @@
                 type: "post",
                 dataType: "json",
                 data: that,
-                success: function (b) {
-                    console.log("data back: " + JSON.stringify(b));
+                success: function(data, textStatus, jqXHR) {
+                    console.log("data back: " + JSON.stringify(data));
                 },
                 error: function (b) {
                     var c = $.parseJSON(b.responseText);
@@ -203,12 +203,12 @@
                     for (var i = 0; i < b.length; i++) {
                         that.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad}); //that.stations[b[i]._id] = 
                         MyApp.stations[b[i]._id] = b[i]; //that.stations[b[i]._id];
-                        console.log("Attaching station id: " + MyApp.stations[b[i]._id].id);
+                        console.log("Attaching station id: " + that.stations[b[i]._id]._id);
                     }
                     function onLoad(station) {
-                        that.stations[station._id] = station;
+                        //that.stations[station._id] = station;
                         station.isReady = true;
-                        console.log("is onLoad ready: " + that.stations[station._id].isReady);
+                        //console.log("is onLoad ready: " + that.stations[station._id].isReady + " id: " + that.stations[station._id]._id);
                         a.onSetup(station);
                     }
                 },
