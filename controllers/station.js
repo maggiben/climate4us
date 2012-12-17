@@ -219,11 +219,11 @@ exports.create = function (req, res, next) {
         lastUpdate: new Date(),
         lastAccess: new Date(),
         temperature: {
-            value: 34,
+            value: Math.floor(Math.random() * 50),
             unit: 'C'
         },
         humidity: { 
-            value: 66, 
+            value: Math.floor(Math.random() * 100),
             dewpoint: 44, 
             unit: '%'
         },

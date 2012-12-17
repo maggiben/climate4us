@@ -365,18 +365,17 @@
         });
         this.bind("station.setup", function(e, data) {
             console.log("station.setup: " + JSON.stringify(data));
+            var site = $("#s" + data.id);
+            if (site.hasClass("current"))
+            {
+                return !0;
+            }
             var station_template = ich.site_template(data);
             $(station_template).appendTo('#sites').hide().fadeIn('slow');
             //$("#sites").append(ich.site_template(data));
             $("#s" + data.id).html(ich.station_preview_template(data));
             //this.trigger("show_station.g");
             //this.trigger('showSite', {my_data: this.params});
-            
-            var site = $("#s" + data.id);
-            if (site.hasClass("current"))
-            {
-                return !0;
-            }
             $("div.site.current").removeClass("current");
             site.addClass("current");
             $("#data").html(ich.site_data_template(data)); 
@@ -480,6 +479,7 @@
                     MyApp.subscription.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //
                     function onLoad(station) {
                         $("#new_title").val("");
+                        this.trigger('station.setup', MyApp.subscription.stations[this.params.id]);
                         setTimeout(function () {
                             window.location.hash = "/station/" + station._id + "/code";
                             $.scrollTo("#s" + station._id, 800);
@@ -502,7 +502,7 @@
         });
         this.get("#/station/:id/:path", function () {
             //var a = MyApp.stations[this.params.id];
-            //console.log("runRoute: #/station/%s/$s",this.params.id, this.params.path);
+            console.log("sammy route: #/station/%s/$s", this.params.id, this.params.path);
             //var a = MyApp.subscription.getStationById(this.params.id);
             //console.log("MyApp.subscription.getStationById = " + JSON.stringify(a));
             //alert(typeof this.params.id);
@@ -512,7 +512,7 @@
             //alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic();
             //this.trigger('station.setup', station);
-            this.trigger('station.setup', MyApp.subscription.stations[this.params.id]);
+            //this.trigger('station.setup', MyApp.subscription.stations[this.params.id]);
             this.trigger("show_panel.g", this.params); 
             MyApp.meldSidebar();
         });
