@@ -509,7 +509,7 @@ span.overflow {
 	z-index:5;
 	margin-left:-483px;
 	padding:3px 0 36px 3px;
-	fader() {
+	&:after, &:before {
 		content:'';
 		position:fixed;
 		bottom:35px;
@@ -522,7 +522,7 @@ span.overflow {
 		background:url("../images/fader-5c5a416fe46271ede3a426b9395de19b.png") repeat-x;
 		display:none;
 	};
-	&:after {
+	/* &:after {
 		fader();
 	}
 	&:before {
@@ -530,6 +530,12 @@ span.overflow {
 		top:53px;
 		background-position:0 -12px;
 		fader();
+	};
+    */
+    &:before {
+		bottom:auto;
+		top:53px;
+		background-position:0 -12px;
 	};
 	div.site {
 		width:226px;

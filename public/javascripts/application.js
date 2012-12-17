@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : application.js                                            //
 // @summary      : client side application                                   //
-// @version      : 0.1                                                       //
+// @version      : 0.1      3                                                 //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //
@@ -359,7 +359,8 @@
             function onSetup(a) {
                 //console.log("onSetup: " + JSON.stringify(a));
                 $("#sites").append(ich.site_template(a));
-                $("#s" + a.id).html(ich.station_preview_template(a)); 
+                $("#s" + a.id).html(ich.station_preview_template(a));
+                MyApp.meldSidebar();
             };
         });
         this.bind("station.setup", function(e, data) {
@@ -487,7 +488,7 @@
                         //$.scrollTo("#s" + station._id, 800);
                         $("body").removeClass("adding");
                         a.removeErrors();
-                        that.trigger('station.setup', station);
+                        //that.trigger('station.setup', station);
                     }
                 },
                 error: function (b) {
@@ -511,6 +512,7 @@
             //alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic();
             //this.trigger('station.setup', station);
+            this.trigger('station.setup', MyApp.subscription.stations[this.params.id]);
             this.trigger("show_panel.g", this.params); 
             MyApp.meldSidebar();
         });
@@ -681,6 +683,7 @@ $(document).ready(function () {
         }
     });
     $(window).scroll(function() {
+    console.log("scroll")
     var a = $(window).height(), b = $(document).height(), c = $(window).scrollTop(), d = $("#wrapper"), e = $("body");
     if (d.data("scrollTop") < c)
         $(document.body).height(b - e.css("padding-top").replace("px", ""));
@@ -689,5 +692,13 @@ $(document).ready(function () {
         f >= d.height() ? e.height(f) : e.height(d.height())
     }
     d.data("scrollTop", c)
+    });
+    $(window).scroll(MyApp.meldSidebar);
+    $(function() {
+        //$("#new_site .tz").append(TZ.select("new_tz")), 
+        $("body").hasClass("loading") ? Gauges.start() : auth.run(), 
+        document.onmousemove = function(a) {
+            Gauges.pageX = window.event ? window.event.clientX : a.pageX, Gauges.pageY = window.event ? window.event.clientY : a.pageY
+        }
     });
 });

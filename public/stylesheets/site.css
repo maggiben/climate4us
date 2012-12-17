@@ -572,8 +572,19 @@ span.overflow {
   z-index: 5;
   margin-left: -483px;
   padding: 3px 0 36px 3px;
+/* &:after {
+		fader();
+	}
+	&:before {
+		bottom:auto;
+		top:53px;
+		background-position:0 -12px;
+		fader();
+	};
+    */
 }
-#sites:after {
+#sites:after,
+#sites:before {
   content: '';
   position: fixed;
   bottom: 35px;
@@ -590,17 +601,6 @@ span.overflow {
   bottom: auto;
   top: 53px;
   background-position: 0 -12px;
-  content: '';
-  position: fixed;
-  bottom: 35px;
-  z-index: 100;
-  left: 50%;
-  margin-left: -488px;
-  right: 0;
-  height: 13px;
-  width: 256px;
-  background: url("../images/fader-5c5a416fe46271ede3a426b9395de19b.png") repeat-x;
-  display: none;
 }
 #sites div.site {
   width: 226px;
