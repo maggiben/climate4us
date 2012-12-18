@@ -326,17 +326,32 @@
         var c = this.removeErrors();
         c.parent().addClass("error");
         for (var key in a) {
-            var d = b ? b + "[" + key + "]" : key, e = a[key].join(", "), f = '<strong class="error_explanation">' + e + "</strong>";
+            var d = b ? b + "[" + key + "]" : key;
+            var e = a[key].join(", ");
+            console.log("a[%s] = %s", key, e);            
+            var f = '<strong class="error_explanation">' + e + "</strong>";
             c.find('[name="' + d + '"]').addClass("error").closest("p").append(f);
         }
         var g = c.closest("section");
-        return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this
-    }
+        return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this;
+    };
     $.fn.removeErrors = function() {
         this.parent().removeClass("error").find("input.error").removeClass("error"), this.find("strong.error_explanation").remove();
         var a = this.closest("section");
-        return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this
-    }
+        return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this;
+    };
+    $.fn.labelize = function() {
+        return this.focus(function() {
+            $(this).val() == $(this).attr("title") && ($(this).removeClass("labelized"), $(this).val(""))
+        }).blur(function() {
+            $.trim($(this).val()) == "" && ($(this).addClass("labelized"), $(this).val($(this).attr("title")))
+        }).blur().each(function() {
+            var b = $(this);
+            $(this.form).submit(function($) {
+                b.focus()
+            })
+        })
+    };
     // Sammy.JS application
     var app = $.sammy(function() {
         //this.element_selector = '#main';
@@ -438,7 +453,7 @@
             $.trim($("#data").html()) == "" && $("#sites div.site:first a").length > 0 && a.redirect($("#sites div.site:first a").attr("href"))
         });
         ///////////////////////////////////////////////////////////////////////
-        // Session Routes                                                    //
+        // Account Routes                                                    //
         ///////////////////////////////////////////////////////////////////////
         this.get("#/account", function() {
             $("body").removeClass("adding"), 
@@ -462,10 +477,92 @@
                 email: "pirulo12345@mailinator.com"
             };
             $("#sites div.current").removeClass("current"), 
-            $("#data").html(ich.account_template(user)), 
+            $("#data").html(ich.account_template(MyApp.user)), 
             $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
-            $("#site_content").html(ich.my_info_template(user))
+            $("#site_content").html(ich.my_info_template(MyApp.user))
         });
+        this.get("#/account/clients", function() {
+            $("body").removeClass("adding"), 
+            $("#sites div.current").removeClass("current"), 
+            $("#data").html(ich.account_template(MyApp.user)), 
+            $('div.nav a[href="#/account/clients"]').closest("li").addClass("current"), 
+            $("#site_content").html(ich.clients_template(MyApp.user)), 
+            $("#site_content").find("input[title]").labelize(), 
+            MyApp.clients == null ? $.ajax({
+                url: "/clients",
+                dataType: "json",
+                type: "get",
+                success: function(data, textStatus, jqXHR) {
+                    MyApp.clients = data.clients, 
+                    $("#clients_list").removeClass("loading").html(ich.clients_list_template(MyApp))
+                },
+                error: function(jqXHR, status, error) {
+                    $("#clients_list").removeClass("loading").addClass("empty").text("Could not load API Keys")
+                }
+            }) : $("#clients_list").removeClass("loading").html(ich.clients_list_template(MyApp))
+        });
+        this.post("#/account/clients", function() {
+            console.log("targent: " + this.target);
+            window.kaka = this.target;
+            var a = $(this.target).removeErrors(), 
+            b = a.find("button span");
+            clearTimeout(b.data("timeout")), 
+            b.data("text") === undefined && b.data("text", b.text()), 
+            b.text("Creating..."), 
+            $.ajax({
+                url: "/clients",
+                dataType: "json",
+                type: "post",
+                data: {
+                    description: this.params.description
+                },
+                success: function(b) {
+                    MyApp.clients == null && (MyApp.clients = []), 
+                    MyApp.clients.push(b.client), 
+                    a.find("input[type=text]").val("").blur(), 
+                    $("#clients_list").removeClass("loading").html(ich.clients_list_template(MyApp))
+                },
+                error: function (jqXHR, status, error) {
+                    //var c = $.parseJSON(jqXHR);
+                    console.log(jqXHR.responseText);
+                    //a.displayErrors("jqXHR.responseText"), 
+                    a.displayErrors({description: ["Could not find that Email"]});
+                    b.text(b.data("text"))
+                },    
+                /*error: function(c) {
+                    
+                    var d = $.parseJSON(c.responseText);
+                    a.displayErrors(d.errors), b.text(b.data("text"))
+                },*/
+                complete: function() {
+                    b.text("Created"), 
+                    setTimeout(function() {
+                        b.text(b.data("text"))
+                    }, 2e3)
+                }
+            })
+        });
+        this.del("#/account/clients/:key", function() {
+            var a = $(this.target).removeErrors(), 
+            b = a.find("button span");
+            clearTimeout(b.data("timeout")), 
+            b.data("text") === undefined && b.data("text", b.text()), b.text("Removing"), 
+            $.ajax({
+                url: "/clients/" + this.params.key,
+                dataType: "json",
+                type: "delete",
+                success: function(a) {
+                    MyApp.clients = $.compact($.map(MyApp.clients, function(b) {
+                        if (b.key != a.client.key)
+                            return b
+                    })), 
+                    $("#clients_list").html(ich.clients_list_template(MyApp))
+                }
+            })
+        });
+        ///////////////////////////////////////////////////////////////////////
+        // Session Routes                                                    //
+        ///////////////////////////////////////////////////////////////////////
         this.get('#/sign_out', function() {
             $.ajax({
                     url: "/signout",
@@ -567,8 +664,8 @@
     var MyApp = {
         VERSION: 1.12,
         $: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null,
-        user: null,
         timeout: null,
+        clients: null,
         hit_timeout: null,
         connection_count: 0,
         stationsxx: {},
@@ -576,6 +673,18 @@
         mousecoords: {
             pageX: 0, 
             pageY: 0,
+        },
+        user: {
+                name:"pirulo12345@mailinator.com", 
+                urls: {
+                    self: "https://secure.gaug.es/me", 
+                    gauges: "https://secure.gaug.es/gauges", 
+                    clients: "https://secure.gaug.es/clients"
+                }, 
+                id: "50c9e8b9f5a1f56713000002", 
+                last_name: null, 
+                first_name: null, 
+                email: "pirulo12345@mailinator.com"
         },
         start: function (a) {
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");

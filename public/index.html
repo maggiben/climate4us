@@ -210,6 +210,23 @@
             </form>
             <div class="toolbar bottom"></div>
         </script>
+        <script id="clients_template" type="text/html">
+          <div class="toolbar top">Generate API Keys</div>
+          <div id="display_panel" class="display">
+            <div class="wrapper">
+              <form action="#/account/clients" method="post" class="add_client">
+                <input type="hidden" name="_csrf" value="" />
+                <p class="text">
+                  <label for="new_client_{{id}}">New API Key</label>
+                  <input type="text" name="description" title="Description (Optional)" id="new_client_{{id}}" />
+                  <button><span>Create</span></button>
+                </p>
+              </form>
+              <div id="clients_list" class="loading"></div>
+            </div>
+          </div>
+          <div class="toolbar bottom"></div>
+        </script>
         <script type="text/html" id="disabled_site_template">
             <div id="s{{id}}" class="site disabled">
                 <h2>{{title}}</h2>
