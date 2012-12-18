@@ -342,6 +342,35 @@ app.post('/station/update/:id', Station.update);
 app.delete('/station/remove/:id', Station.remove);
 app.get('/station/removeall', Station.removeall);
 
+///////////////////////////////////////////////////////////////////////////////
+// API Key Generation rutes                                                  //
+///////////////////////////////////////////////////////////////////////////////
+app.get('/clients',  function(request, response, next) {
+    response.contentType('application/json');
+    var mock = {"clients":[{"created_at":"2012-12-18T04:50:25Z","urls":{"self":"https://secure.gaug.es/clients/5ddfdb50358f68fa55670adbc3d86ea2"},"description":"popopo","key":"5ddfdb50358f68fa55670adbc3d86ea2"}]}
+    var retJSON = JSON.stringify(mock);
+    return response.send(retJSON);
+});
+app.post('/clients',  function(request, response, next) {
+    var description = request.body.description;
+    var key = Math.floor(Math.random() * 99999999999999);
+    var self = "http://" + process.env.IP + "/clients/" + key;
+
+    console.log("Generating new API Key for: ", description);
+    response.contentType('application/json');
+        var mock = { 
+            "clients":[{
+                "created_at": new Date(),
+                "urls": { "self": self},
+                "description": description,
+                "key": key
+            }]
+        };
+    var retJSON = JSON.stringify(mock);
+    return response.send(retJSON);
+});
+
+
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
 });

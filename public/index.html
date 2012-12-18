@@ -210,22 +210,47 @@
             </form>
             <div class="toolbar bottom"></div>
         </script>
+        <!-- CLIENTS -->
         <script id="clients_template" type="text/html">
-          <div class="toolbar top">Generate API Keys</div>
-          <div id="display_panel" class="display">
-            <div class="wrapper">
-              <form action="#/account/clients" method="post" class="add_client">
-                <input type="hidden" name="_csrf" value="" />
-                <p class="text">
-                  <label for="new_client_{{id}}">New API Key</label>
-                  <input type="text" name="description" title="Description (Optional)" id="new_client_{{id}}" />
-                  <button><span>Create</span></button>
-                </p>
-              </form>
-              <div id="clients_list" class="loading"></div>
+            <div class="toolbar top">Generate API Keys</div>
+            <div id="display_panel" class="display">
+                <div class="wrapper">
+                    <form action="#/account/clients" method="post" class="add_client">
+                        <input type="hidden" name="_csrf" value="" />
+                        <p class="text">
+                            <label for="new_client_{{id}}">New API Key</label>
+                            <input type="text" name="description" title="Description (Optional)" id="new_client_{{id}}" />
+                            <button><span>Create</span></button>
+                        </p>
+                    </form>
+                    <div id="clients_list" class="loading"></div>
+                </div>
             </div>
-          </div>
-          <div class="toolbar bottom"></div>
+            <div class="toolbar bottom"></div>
+        </script>
+        <script id="clients_list_template" type="text/html">
+            {{#clients}}
+                <div class="share">
+                    <form action="#/account/clients/{{key}}" method="delete">
+                        <input type="hidden" name="_csrf" value="GdqXHipFFG/dB6sDpBsLP4NmzqwQYgCUGZMved3qq9o=" />
+                        <p class="share state">
+                            <span class="show">
+                                <span class="info"><strong>{{ key }}</strong>{{#description}}<small>{{ description }}</small>{{/description}}</span>
+                                <a href="#" class="state_toggler button subtle">Remove</a>
+                            </span>
+                            <span class="edit">
+                                <span class="info">Remove this API Key?</span>
+                                <button class="delete"><span>Yes, Remove</span></button> <a href="#" class="state_toggler">Cancel</a>
+                            </span>
+                        </p>
+                    </form>
+                </div>
+                {{/clients}}
+                {{^clients}}
+                <div class="empty">
+                    No API Keys have been created for this account.
+                </div>
+            {{/clients}}
         </script>
         <script type="text/html" id="disabled_site_template">
             <div id="s{{id}}" class="site disabled">
