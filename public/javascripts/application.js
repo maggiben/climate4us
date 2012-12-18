@@ -314,12 +314,22 @@
         },
     });
 
-    // UI Events
+    ///////////////////////////////////////////////////////////////////////
+    // UI Events & UI transformations                                    //
+    ///////////////////////////////////////////////////////////////////////
     $("#new_site a.cancel").live("click", function () {
         return window.location.hash = "#/", $("body").removeClass("adding"), !1;
     });
     $("a.toggle_delete").live("click", function () {
         return $("#site_content").toggleClass("delete"), !1;
+    });
+    $('#new_datexxx').datepicker({
+        //comment the beforeShow handler if you want to see the ugly overlay
+        beforeShow: function() {
+            setTimeout(function(){
+                $('.ui-datepicker').css('z-index', 9999); // Fix For top(Z) dialogs
+            }, 0);
+        }
     });
     // Custom jQuery Functions
     $.fn.displayErrors = function(a, b) {
@@ -831,24 +841,43 @@ $(document).ready(function () {
             MyApp.meldSidebar();
         }
     });
-    /*
-    $(window).scroll(function() {
-        console.log("scroll")
-        var a = $(window).height()
-        , b = $(document).height()
-        , c = $(window).scrollTop()
-        , d = $("#wrapper")
-        , e = $("body");
-        
-        if (d.data("scrollTop") < c)
-            $(document.body).height(b - e.css("padding-top").replace("px", ""));
-        else {
-            var f = e.height() - (d.data("scrollTop") - c);
-            f >= d.height() ? e.height(f) : e.height(d.height())
+    $('#new_date').datepicker({
+        //comment the beforeShow handler if you want to see the ugly overlay
+        beforeShow: function() {
+            setTimeout(function(){
+                $('.ui-datepicker').css('z-index', 9999); // Fix For top(Z) dialogs
+            }, 0);
         }
-        d.data("scrollTop", c)
     });
-    */
+    $(function initialize() {
+        var myLatlng = new google.maps.LatLng(-34.6036, -58.3817);
+        var myOptions = {
+          zoom: 8,
+          center: myLatlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }        
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        
+        var contentString = 
+            '<div id="infowindow">' +
+            'Galaconcert<br />' +
+            'Jaarbeurslaan 2-6<br />' +
+            '3690 Genk' +
+            '</div>'
+        ;
+        var infowindow = new google.maps.InfoWindow();
+        
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'Galaconcert'
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+        });
+    });
+
     $(window).scroll(function() {
         var a = $(window).height()
         , docHeight = $(document).height()
