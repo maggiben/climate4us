@@ -43,7 +43,7 @@
     // Station class
     var Station = function(arg) {
         this.setup(arg);
-    };
+    };   
     $.extend(Station.prototype, {
         name: '',
         id: 0,
@@ -438,8 +438,34 @@
             $.trim($("#data").html()) == "" && $("#sites div.site:first a").length > 0 && a.redirect($("#sites div.site:first a").attr("href"))
         });
         ///////////////////////////////////////////////////////////////////////
-        // Dession Routes                                                    //
+        // Session Routes                                                    //
         ///////////////////////////////////////////////////////////////////////
+        this.get("#/account", function() {
+            $("body").removeClass("adding"), 
+            $.ajax({
+                url: "/subscription",
+                dataType: "json",
+                success: function(a) {
+                    //Gauges.subscription = new Subscription(a.subscription)
+                }
+            });
+            var user = {
+                name:"pirulo12345@mailinator.com", 
+                urls: {
+                    self: "https://secure.gaug.es/me", 
+                    gauges: "https://secure.gaug.es/gauges", 
+                    clients: "https://secure.gaug.es/clients"
+                }, 
+                id: "50c9e8b9f5a1f56713000002", 
+                last_name: null, 
+                first_name: null, 
+                email: "pirulo12345@mailinator.com"
+            };
+            $("#sites div.current").removeClass("current"), 
+            $("#data").html(ich.account_template(user)), 
+            $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
+            $("#site_content").html(ich.my_info_template(user))
+        });
         this.get('#/sign_out', function() {
             $.ajax({
                     url: "/signout",
@@ -479,7 +505,7 @@
                     MyApp.subscription.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //
                     function onLoad(station) {
                         $("#new_title").val("");
-                        this.trigger('station.setup', MyApp.subscription.stations[this.params.id]);
+                        that.trigger('station.setup', station);
                         setTimeout(function () {
                             window.location.hash = "/station/" + station._id + "/code";
                             $.scrollTo("#s" + station._id, 800);
@@ -540,13 +566,17 @@
     // Application
     var MyApp = {
         VERSION: 1.12,
-        //subscription: null,
+        $: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null,
         user: null,
         timeout: null,
         hit_timeout: null,
         connection_count: 0,
         stationsxx: {},
         subscription: {},
+        mousecoords: {
+            pageX: 0, 
+            pageY: 0,
+        },
         start: function (a) {
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
             //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
@@ -612,6 +642,12 @@
                 a.length > 0 && c >= e + g && d < f - 10 ? $("#sites").addClass("meld") : $("#sites").removeClass("meld")
                 }
         },
+        resize: function() {
+            MyApp.meldSidebar();
+            
+            //$("#full_map").is(":visible") && (Gauges.resize_timeout && clearTimeout(Gauges.resize_timeout), 
+            //Gauges.resize_timeout = setTimeout(Gauges.showScreenMap, 300));
+        },
         formatNumber: function (a) {
             a += "";
             var b = /(\d+)(\d{3})/;
@@ -634,7 +670,11 @@
                 people: this.formatNumber(this.today.people)
             }
         },
+        domready: function() {
+            console.log("DOMContentLoaded")
+        }
     };
+    
     MyApp = MyApp || {};
 
     // Use CommonJS if applicable
@@ -647,11 +687,11 @@
     if (typeof document !== 'undefined') {
         if (MyApp.$) {
             MyApp.$(function () {
-                //ich.grabTemplates();
+                MyApp.domready();
             });
         } else {
             document.addEventListener('DOMContentLoaded', function () {
-                //ich.grabTemplates();
+                MyApp.domready();
             }, true);
         }
     }
@@ -682,23 +722,46 @@ $(document).ready(function () {
             MyApp.meldSidebar();
         }
     });
+    /*
     $(window).scroll(function() {
-    console.log("scroll")
-    var a = $(window).height(), b = $(document).height(), c = $(window).scrollTop(), d = $("#wrapper"), e = $("body");
-    if (d.data("scrollTop") < c)
-        $(document.body).height(b - e.css("padding-top").replace("px", ""));
-    else {
-        var f = e.height() - (d.data("scrollTop") - c);
-        f >= d.height() ? e.height(f) : e.height(d.height())
-    }
-    d.data("scrollTop", c)
+        console.log("scroll")
+        var a = $(window).height()
+        , b = $(document).height()
+        , c = $(window).scrollTop()
+        , d = $("#wrapper")
+        , e = $("body");
+        
+        if (d.data("scrollTop") < c)
+            $(document.body).height(b - e.css("padding-top").replace("px", ""));
+        else {
+            var f = e.height() - (d.data("scrollTop") - c);
+            f >= d.height() ? e.height(f) : e.height(d.height())
+        }
+        d.data("scrollTop", c)
     });
-    $(window).scroll(MyApp.meldSidebar);
+    */
+    $(window).scroll(function() {
+        var a = $(window).height()
+        , docHeight = $(document).height()
+        , winScrollTop = $(window).scrollTop()
+        , wrapper = $("#wrapper")
+        , body = $("body");
+        
+        if (wrapper.data("scrollTop") < winScrollTop)
+            $(document.body).height(docHeight - body.css("padding-top").replace("px", ""));
+        else {
+            var f = body.height() - (wrapper.data("scrollTop") - winScrollTop);
+            f >= wrapper.height() ? body.height(f) : body.height(wrapper.height());
+        }
+        wrapper.data("scrollTop", winScrollTop);
+    });
+    $(window).scroll(MyApp.meldSidebar).resize(MyApp.resize);
     $(function() {
         //$("#new_site .tz").append(TZ.select("new_tz")), 
-        $("body").hasClass("loading") ? Gauges.start() : auth.run(), 
+        //$("body").hasClass("loading") ? MyApp.start() : auth.run(), 
         document.onmousemove = function(a) {
-            Gauges.pageX = window.event ? window.event.clientX : a.pageX, Gauges.pageY = window.event ? window.event.clientY : a.pageY
+            window.MyApp.mousecoords.pageX = window.event ? window.event.clientX : a.pageX;
+            window.MyApp.mousecoords.pageY = window.event ? window.event.clientY : a.pageY;
         }
     });
 });

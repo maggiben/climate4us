@@ -700,8 +700,9 @@ div.deleted {
     	background:url("../images/deleted-fada4901bd34a071bdf2d242888fbec7.png") no-repeat center;
     };
 };
+
 #sites.meld div.site.current {
-	-webkit-border-radius:0;
+    -webkit-border-radius:0;
 	-moz-border-radius:0;
 	border-radius:0;
 	-moz-background-clip:padding;
@@ -716,63 +717,63 @@ div.deleted {
 	-moz-background-clip:padding;
 	-webkit-background-clip:padding-box;
 	background-clip:padding-box;
-	width:242px
-}
-#sites.meld div.site.current ul {
-	right:25px
-}
-#sites.meld div.site.current:before {
-	content:'';
-	position:absolute;
-	right:-5px;
-	overflow:hidden;
-	top:-5px;
-	width:10px;
-	height:70px;
-	background:url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png")
-}
-#sites.meld div.site.current:after {
-	content:'';
-	position:absolute;
-	right:1px;
-	overflow:hidden;
-	top:-5px;
-	width:5px;
-	height:5px;
-	background:url("../images/fondo.png");
-	border-bottom-right-radius:5px;
-	-webkit-border-bottom-right-radius:5px;
-	-moz-border-radius-bottomright:5px;
-	-webkit-box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0;
-	-moz-box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0;
-	box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0
-}
-#sites.meld div.site.current h2:before {
-	content:'';
-	position:absolute;
-	right:1px;
-	overflow:hidden;
-	bottom:-5px;
-	width:5px;
-	height:6px;
-	background:url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png")
-}
-#sites.meld div.site.current h2:after {
-	content:'';
-	position:absolute;
-	right:1px;
-	overflow:hidden;
-	bottom:-5px;
-	width:5px;
-	height:5px;
-	background:url("../images/fondo.png");
-	-webkit-border-top-right-radius:5px;
-	-moz-border-radius-topright:5px;
-	border-top-right-radius:5px;
-	-webkit-box-shadow:inset rgba(0,0,0,0.45) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 0 -1px 0;
-	-moz-box-shadow:inset rgba(0,0,0,0.65) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 1px -1px 0;
-	box-shadow:inset rgba(0,0,0,0.65) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 1px -1px 0
-}
+	width:242px;
+	ul {
+		right:25px;
+	};
+	&:before {
+		content:'';
+		position:absolute;
+		right:-5px;
+		overflow:hidden;
+		top:-5px;
+		width:10px;
+		height:70px;
+		background:url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
+	};
+	&:after {
+		content:'';
+		position:absolute;
+		right:1px;
+		overflow:hidden;
+		top:-5px;
+		width:5px;
+		height:5px;
+		background:url("../images/fondo.png");
+		border-bottom-right-radius:5px;
+		-webkit-border-bottom-right-radius:5px;
+		-moz-border-radius-bottomright:5px;
+		-webkit-box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0;
+		-moz-box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0;
+		box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0;
+	};
+	h2:before {
+		content:'';
+		position:absolute;
+		right:1px;
+		overflow:hidden;
+		bottom:-5px;
+		width:5px;
+		height:6px;
+		background:url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
+	};
+	h2:after {
+		content:'';
+		position:absolute;
+		right:1px;
+		overflow:hidden;
+		bottom:-5px;
+		width:5px;
+		height:5px;
+		background:url("../images/fondo.png");
+		-webkit-border-top-right-radius:5px;
+		-moz-border-radius-topright:5px;
+		border-top-right-radius:5px;
+		-webkit-box-shadow:inset rgba(0,0,0,0.45) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 0 -1px 0;
+		-moz-box-shadow:inset rgba(0,0,0,0.65) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 1px -1px 0;
+		box-shadow:inset rgba(0,0,0,0.65) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 1px -1px 0;
+	};
+};
 #sites.meld div.site:first-child.current:before {
 	top:0;
 	height:65px;
@@ -784,6 +785,7 @@ div.deleted {
 #sites.meld div.site:first-child.current:after {
 	display:none
 }
+
 #sites.topcut:before {
 	display:block
 }
@@ -1653,10 +1655,10 @@ div.map_label strong {
 	background-color:#d2af25;
 	background-image:-moz-linear-gradient(top,#d2af25,#b89920);
 	background-image:-ms-linear-gradient(top,#d2af25,#b89920);
-	background-image:-o-linear-gradient(top,#d2af25,#b89920);
+	background-image:-o-linear-gradient(top, #d2af25, #b89920);
 	background-image:-webkit-gradient(linear,left top,left bottom,from(#d2af25),to(#b89920));
-	background-image:-webkit-linear-gradient(top,#d2af25,#b89920);
-	background-image:linear-gradient(top,#d2af25,#b89920)
+	background-image:-webkit-linear-gradient(top, #d2af25, #b89920);
+	background-image:linear-gradient(top, #d2af25, #b89920)
 }
 #site_content table div.vertical-bar.mid div.partial {
 	background-color:#e6d076;
@@ -2699,15 +2701,15 @@ div.notice {
 	font-size:11px;
 	font-weight:normal;
 	text-shadow:rgba(255,255,255,0.7) 0 1px 1px;
-	margin:0 0 15px
-}
-div.notice a {
-	color:#630;
-	text-decoration:none;
-	display:block;
-	margin:-7px -10px;
-	padding:7px 10px
-}
+	margin:0 0 15px;
+    a {
+    	color:#630;
+    	text-decoration:none;
+    	display:block;
+    	margin:-7px -10px;
+    	padding:7px 10px;
+    };
+};
 div#notices {
 	margin:0 auto;
 	position:relative;
