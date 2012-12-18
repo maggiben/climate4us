@@ -358,14 +358,15 @@ app.post('/clients',  function(request, response, next) {
 
     console.log("Generating new API Key for: ", description);
     response.contentType('application/json');
-        var mock = { 
-            "clients":[{
-                "created_at": new Date(),
-                "urls": { "self": self},
-                "description": description,
-                "key": key
-            }]
-        };
+    var mock = { 
+        "client":[{
+            "created_at": new Date(),
+            "urls": { "self": self},
+            "description": description,
+            "key": key
+        }]
+    };
+    mock = {"client":{"created_at":"2012-12-18T16:27:56Z","urls":{"self":"https://secure.gaug.es/clients/429edc9f0fae89c849b7b335dbf5c760"},"description":"octo","key":"429edc9f0fae89c849b7b335dbf5c760"}};
     var retJSON = JSON.stringify(mock);
     return response.send(retJSON);
 });
