@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : application.js                                            //
 // @summary      : client side application                                   //
-// @version      : 0.1      3                                                 //
+// @version      : 0.1      3                                                //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //
@@ -37,10 +37,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 ;(function($) {
     "use strict";
-    // grab jquery or zepto if it's there
-    //$: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null;
-    
-    // Station class
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Station class                                                         //
+    ///////////////////////////////////////////////////////////////////////////
     var Station = function(arg) {
         this.setup(arg);
     };   
@@ -182,7 +182,9 @@
             this.wind = wind; 
         },
     });
-    // Subscription class
+    ///////////////////////////////////////////////////////////////////////////
+    // Subscription class                                                    //
+    ///////////////////////////////////////////////////////////////////////////
     var myApplication = function(a) {
         this.setup(a);
     };
@@ -314,9 +316,9 @@
         },
     });
 
-    ///////////////////////////////////////////////////////////////////////
-    // UI Events & UI transformations                                    //
-    ///////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    // UI Events & UI transformations                                        //
+    ///////////////////////////////////////////////////////////////////////////
     $("#new_site a.cancel").live("click", function () {
         return window.location.hash = "#/", $("body").removeClass("adding"), !1;
     });
@@ -331,7 +333,10 @@
             }, 0);
         }
     });
-    // Custom jQuery Functions
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Custom jQuery Functions                                               //
+    ///////////////////////////////////////////////////////////////////////////
     $.fn.displayErrors = function(a, b) {
         var c = this.removeErrors();
         c.parent().addClass("error");
@@ -362,7 +367,10 @@
             })
         })
     };
-    // Sammy.JS application
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // Sammy.JS application                                                  //
+    ///////////////////////////////////////////////////////////////////////////
     var app = $.sammy(function() {
         //this.element_selector = '#main';
         this.bind('newSensor', function(e, data) {
@@ -670,7 +678,10 @@
         app.run();
         app.trigger('getSubscription', {time: new Date()});
     });
-    // Application
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // Main Client application                                               //
+    ///////////////////////////////////////////////////////////////////////////
     var MyApp = {
         VERSION: 1.12,
         $: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null,
@@ -793,10 +804,11 @@
             console.log("DOMContentLoaded")
         }
     };
-    
     MyApp = MyApp || {};
 
-    // Use CommonJS if applicable
+    ///////////////////////////////////////////////////////////////////////////
+    // Use CommonJS if applicable                                            //
+    ///////////////////////////////////////////////////////////////////////////
     if (typeof require !== 'undefined') {
         //module.exports = myApplication;
     } else {
@@ -816,6 +828,9 @@
     }
 })(window.jQuery || window.Zepto);
 
+///////////////////////////////////////////////////////////////////////////////
+// jQuery on document ready closure                                          //
+///////////////////////////////////////////////////////////////////////////////
 $(document).ready(function () {
     "use strict";
     
@@ -890,17 +905,17 @@ $(document).ready(function () {
                 map.setZoom(17);  
             }
             
-            moveMarker(place.name, place.geometry.location);
+            //moveMarker(place.name, place.geometry.location);
         });  
         
-        $("input").focusin(function () {
+        $(input).focusin(function () {
             $(document).keypress(function (e) {
                 if (e.which == 13) {
                      selectFirstResult();   
                 }
             });
         });
-        $("input").focusout(function () {
+        $(input).focusout(function () {
             if(!$(".pac-container").is(":focus") && !$(".pac-container").is(":visible"))
                 selectFirstResult();
         });
@@ -918,8 +933,8 @@ $(document).ready(function () {
                         placeName = results[0].address_components[0].long_name,
                         latlng = new google.maps.LatLng(lat, lng);
                     
-                    moveMarker(placeName, latlng);
-                    $("input").val(firstResult);
+                    //moveMarker(placeName, latlng);
+                    $(input).val(firstResult);
                 }
             });   
         }
