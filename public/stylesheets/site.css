@@ -3063,3 +3063,7 @@ td.sharing.none span {
 #IntercomMessageViewContainer li blockquote p {
   color: #1f1f1f;
 }
+/* NEW */
+.pac-container {
+  color: #000;
+}
