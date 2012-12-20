@@ -21,6 +21,7 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.scrollTo.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.ui.map.js"></script>   
         <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
@@ -112,8 +113,16 @@
                             <input type="text" name="name" id="new_name" />
                         </p>
                         <p class="text">
-                            <label for="new_type">Type</label>
-                            <input type="text" name="type" id="new_type" />
+                            <label for="new_event_type">Event Type</label>
+                            <!-- <input type="text" name="type" id="new_type" /> -->
+                            <select id="new_event_type">
+                                <option value="0" data-imagesrc="images/markers/anniversary.png" data-description="An Aniversary event">Aniversary</option>
+                                <option value="1" data-imagesrc="images/markers/comedyclub.png" data-description="Comedy club">Comedy</option>
+                                <option value="2" data-imagesrc="images/markers/cinema.png" data-description="Cinema">Cinema</option>
+                                <option value="3" data-imagesrc="images/markers/music_live.png" data-description="Music concert">Music</option>
+                                <option value="4" data-imagesrc="images/markers/poker.png" data-description="Poker">Poker</option>
+                                <option value="5" data-imagesrc="images/markers/theater.png" data-description="theater">Theater</option>
+                            </select>
                         </p>
                         <p class="text">
                             <label for="new_date">Date</label>
@@ -238,12 +247,12 @@
                 </ul>
             </div>
             <div id="map_wrapper">
-                <div id="map" class="map"><a href="#" class="hide_map toggle_map">Hide Map</a></div>
+               
             </div>
             <div class="toolbar bottom">
             </div>
         </script>
-        
+        <!-- <div id="map_canvas" class="map"><a href="#" class="hide_map toggle_map">Hide Map</a></div> -->
         <!-- CLIENTS -->
         <script id="clients_template" type="text/html">
             <div class="toolbar top">Generate API Keys</div>

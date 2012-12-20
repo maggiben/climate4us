@@ -2791,6 +2791,18 @@ form p.text input.error {
   border-color: #cc9d9d;
 }
 form select {
+  border: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  width: 250px;
+  font-size: 11px;
+  padding: 6px;
   width: 262px;
   font-size: 11px;
   margin: 5px 0;

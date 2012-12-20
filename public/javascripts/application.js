@@ -467,6 +467,11 @@
                 case "live":
                     var e = this;
                     $("#site_content").html(ich.live_data_template(this))
+                    $('#map_wrapper').gmap().bind('init', function(ev, map) {
+                        $('#map_wrapper').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
+                    		$('#map_wrapper').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
+                    	});
+                    });
                     break;
             }
             $("body").addClass("view-panel");
@@ -982,17 +987,14 @@ $(document).ready(function() {
 });
 
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
-// jQuery on document ready closure                                          //
+// Google MAPS bindings                                                      //
 ///////////////////////////////////////////////////////////////////////////////
+/*
 $(document).ready(function() {
-    "use strict";
-    
-    $(function initialize() {
+        function initialize() {
         var myLatlng = new google.maps.LatLng(0, 0) //(-34.6036, -58.3817);
-        var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png'
+        var image = 'images/markers/anniversary.png'
         var myOptions = {
           zoom: 1,
           center: myLatlng,
@@ -1016,13 +1018,88 @@ $(document).ready(function() {
             title: 'Galaconcert',
             icon: image
         });
+        //var infowindow = new google.maps.InfoWindow(); 
+        
+        var div = document.createElement('DIV');
+        $(div).html(ich.infobubble_template({name: $(input).val()}));
+        google.maps.event.addListener(marker, 'click', function() {
+            //infowindow.setContent(contentString);
+            //infowindow.open(map, marker);
+            infoBox.setContent(div);
+            infoBox.open(map, marker);
+        });
+        
+        function moveMarker(placeName, latlng){
+            marker.setIcon(image);
+            marker.setPosition(latlng);
+            infowindow.close();
+            //infowindow.setContent(contentString);
+            infoBox.setContent(div);
+            //infowindow.open(map, marker);
+            //infoBox.open(map, marker);
+        }
+        
+        var infoBox = new InfoBubble({
+            map: map,
+            content: '<div class="signin"><form action="/signin" method="post"><p class="phoneytext">Hello There</p></form></div>',
+            position: new google.maps.LatLng(-34.6036, -58.3817),
+            shadowStyle: 1,
+            padding: 0,
+            backgroundColor: 'rgb(57,57,57)',
+            borderRadius: 4,
+            arrowSize: 10,
+            borderWidth: 1,
+            borderColor: '#2c2c2c',
+            disableAutoPan: true,
+            hideCloseButton: true,
+            arrowPosition: 30,
+            backgroundClassName: 'signin',
+            arrowStyle: 2
+        });
+    });
+});
+*/
+
+///////////////////////////////////////////////////////////////////////////////
+// Google MAPS bindings                                                      //
+///////////////////////////////////////////////////////////////////////////////
+$(document).ready(function() {
+    "use strict";
+    
+    $(function initialize() {
+        var myLatlng = new google.maps.LatLng(0, 0) //(-34.6036, -58.3817);
+        var image = 'images/markers/anniversary.png'
+        var myOptions = {
+          zoom: 1,
+          center: myLatlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }        
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        
+        var contentString = 
+            '<div id="infowindow">' +
+            'Galaconcert<br />' +
+            'Jaarbeurslaan 2-6<br />' +
+            '3690 Genk' +
+            '</div>'
+        ;
+        var infowindow = new google.maps.InfoWindow();
+        
+        
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'Galaconcert',
+            icon: image
+        });
+        var infowindow = new google.maps.InfoWindow(); 
         
         var input = document.getElementById('new_location');         
         var autocomplete = new google.maps.places.Autocomplete(input, {
             types: ["geocode"]
         });
-            autocomplete.bindTo('bounds', map); 
-        var infowindow = new google.maps.InfoWindow(); 
+        autocomplete.bindTo('bounds', map); 
+        
      
         google.maps.event.addListener(autocomplete, 'place_changed', function() {
             infowindow.close();
@@ -1078,10 +1155,11 @@ $(document).ready(function() {
         function moveMarker(placeName, latlng){
             marker.setIcon(image);
             marker.setPosition(latlng);
+            infowindow.close();
             //infowindow.setContent(contentString);
             infoBubble2.setContent(div);
             //infowindow.open(map, marker);
-            infoBubble2.open(map, marker);
+            //infoBubble2.open(map, marker);
         }
         
         var infoBubble2 = new InfoBubble({

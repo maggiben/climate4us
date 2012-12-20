@@ -2664,13 +2664,24 @@ form p.text input.error {
 	border-color:#CC9D9D
 }
 form select {
+    border:none;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	border-radius:3px;
+	-moz-background-clip:padding;
+	-webkit-background-clip:padding-box;
+	background-clip:padding-box;
+	width:250px;
+	font-size:11px;
+	padding:6px;
+
 	width:262px;
 	font-size:11px;
 	margin:5px 0;
 	color:#222
 }
 form input:focus,form select:focus {
-	outline:none
+	outline: none
 }
 #data form input {
 	-webkit-box-shadow:inset rgba(0,102,204,0.1) 0 0 10px;
