@@ -123,6 +123,8 @@
                     that.type = data.type;
                     that.temperature = data.temperature;
                     that.humidity = data.humidity;
+                    that.latitude = data.latitude;
+                    that.longitude = data.longitude;
                     a.onLoad(that);
                 },
                 
@@ -467,11 +469,19 @@
                 case "live":
                     var e = this;
                     $("#site_content").html(ich.live_data_template(this))
+                    /*
                     $('#map_wrapper').gmap().bind('init', function(ev, map) {
                         $('#map_wrapper').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
                     		$('#map_wrapper').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
                     	});
                     });
+                    */
+                    var options = {
+                        zoom: 8,
+                        center: new google.maps.LatLng(-34.6036, -58.3817),
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    }
+                    var map = new window.map({id: "site_content", latitude: -34.6036, longitude: -58.3817, mapOptions: options});
                     break;
             }
             $("body").addClass("view-panel");
@@ -611,6 +621,7 @@
         ///////////////////////////////////////////////////////////////////////
         this.get('#/station/new', function() {
             $("body").addClass("adding");
+            $('#new_date').val(new Date());
         });
         this.post('#/station', function () {
             var that = this;
@@ -990,75 +1001,65 @@ $(document).ready(function() {
 ///////////////////////////////////////////////////////////////////////////////
 // Google MAPS bindings                                                      //
 ///////////////////////////////////////////////////////////////////////////////
-/*
-$(document).ready(function() {
-        function initialize() {
-        var myLatlng = new google.maps.LatLng(0, 0) //(-34.6036, -58.3817);
-        var image = 'images/markers/anniversary.png'
-        var myOptions = {
-          zoom: 1,
-          center: myLatlng,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        }        
-        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+;(function($) {
+    "use strict";
+
+    window.map = function (method) {
+        if (methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method ' + method + ' does not exists.');
+        }
+    };
+    
+    var methods = {};
+
+    //Set defauls for the control
+    var defaults = {
+        data: [],
+        width: 260,
+        height: null,
+        background: "#eee",
+        mapOptions: {
+            zoom: 8,
+            center: new google.maps.LatLng(0, 0),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+    };
+    
+    //Public methods 
+    methods.init = function (options) {
+        //Preserve the original defaults by passing an empty object as the target
+        var options = $.extend({}, defaults, options);
+        console.log(JSON.stringify(options));
         
-        var contentString = 
-            '<div id="infowindow">' +
-            'Galaconcert<br />' +
-            'Jaarbeurslaan 2-6<br />' +
-            '3690 Genk' +
-            '</div>'
-        ;
-        var infowindow = new google.maps.InfoWindow();
+        var myLatlng = new google.maps.LatLng(options.latitude, options.longitude)
+        var image = 'images/markers/anniversary.png'  
         
-        
+        var map = new google.maps.Map(document.getElementById(options.id), options.mapOptions);
+
         var marker = new google.maps.Marker({
             position: myLatlng,
             map: map,
             title: 'Galaconcert',
             icon: image
         });
-        //var infowindow = new google.maps.InfoWindow(); 
-        
-        var div = document.createElement('DIV');
-        $(div).html(ich.infobubble_template({name: $(input).val()}));
+
         google.maps.event.addListener(marker, 'click', function() {
-            //infowindow.setContent(contentString);
-            //infowindow.open(map, marker);
-            infoBox.setContent(div);
-            infoBox.open(map, marker);
-        });
-        
-        function moveMarker(placeName, latlng){
-            marker.setIcon(image);
-            marker.setPosition(latlng);
-            infowindow.close();
-            //infowindow.setContent(contentString);
-            infoBox.setContent(div);
-            //infowindow.open(map, marker);
+            //infoBox.setContent(div);
             //infoBox.open(map, marker);
-        }
-        
-        var infoBox = new InfoBubble({
-            map: map,
-            content: '<div class="signin"><form action="/signin" method="post"><p class="phoneytext">Hello There</p></form></div>',
-            position: new google.maps.LatLng(-34.6036, -58.3817),
-            shadowStyle: 1,
-            padding: 0,
-            backgroundColor: 'rgb(57,57,57)',
-            borderRadius: 4,
-            arrowSize: 10,
-            borderWidth: 1,
-            borderColor: '#2c2c2c',
-            disableAutoPan: true,
-            hideCloseButton: true,
-            arrowPosition: 30,
-            backgroundClassName: 'signin',
-            arrowStyle: 2
         });
-    });
-});
-*/
+
+    };
+    methods.moveMarker = function (placeName, latlng){
+        //marker.setPosition(latlng);
+        //infowindow.close();
+    };
+})(window.jQuery || window.Zepto);
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Google MAPS bindings                                                      //

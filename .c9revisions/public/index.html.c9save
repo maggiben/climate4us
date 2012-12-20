@@ -449,3 +449,5 @@
 {"ts":1356026776230,"patch":[[{"diffs":[[0,"    "],[-1,"- <div id=\"map_canvas\" class=\"map\"><a href=\"#\" class=\"hide_map toggle_map\">Hide Map</a></div>"],[0,"\n   "]],"start1":13398,"start2":13398,"length1":101,"length2":8}]],"length":25039,"saved":false}
 {"ts":1356026779418,"patch":[[{"diffs":[[0,"script>\n        "],[1,"<!"],[0,"\n        <!-- CL"]],"start1":13492,"start2":13492,"length1":32,"length2":34}]],"length":25041,"saved":false}
 {"ts":1356026782244,"patch":[[{"diffs":[[0,"      <!"],[1,"-- <div id=\"map_canvas\" class=\"map\"><a href=\"#\" class=\"hide_map toggle_map\">Hide Map</a></div> -->"],[0,"\n       "]],"start1":13502,"start2":13502,"length1":16,"length2":114}]],"length":25139,"saved":false}
+{"ts":1356030642662,"patch":[[{"diffs":[[0,"4us</title>\n"],[1,"        <link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"/favicon.ico\">\n"],[0,"        <met"]],"start1":235,"start2":235,"length1":24,"length2":99}]],"length":25214,"saved":false}
+{"ts":1356030644800,"patch":[[{"diffs":[[0,"\" href=\""],[1,"images"],[0,"/favicon"]],"start1":299,"start2":299,"length1":16,"length2":22}]],"length":25220,"saved":false}
