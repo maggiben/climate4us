@@ -434,7 +434,7 @@
             }
             $("div.site.current").removeClass("current");
             station.addClass("current");
-            $("#data").html(ich.site_data_template(station)); 
+            $("#data").html(ich.site_data_template(MyApp.subscription.stations[data.id])); 
             $("body").addClass("view-nav");
         });
         this.bind("show_panel.g", function (e, data) {
@@ -452,12 +452,22 @@
                 break;
                 case "overview":
                         console.log("[overview]");
+                        b.setOverviewTraffic(), 
+                        $("#site_content").html(ich.overview_template(this)), 
+                        new TrafficGraph("#traffic_graph", this), 
+                        $("#hours_graph").css("left", $("#site_content div.today").width() + 50 + "px"), 
+                        new HoursGraph("#hours_graph", this, 12), 
+                        b.overview_data ? ($("#top_content").html(ich.top_content_template(b)), 
+                        $("#top_referrers").html(ich.top_referrers_template(b))) : b.trigger("load_overview.g");
                     break;
                 case "code":
                     console.log("[code]");
                     $panel = $("#site_content").html(ich.my_info_template(this));
                     break;
-                
+                case "live":
+                    var e = this;
+                    $("#site_content").html(ich.live_data_template(this))
+                    break;
             }
             $("body").addClass("view-panel");
             $("#site_content div.display").scrollTop(d);
@@ -945,10 +955,44 @@ $(document).ready(function() {
             }, 0);
         }
     });
+    $(window).scroll(function() {
+        var a = $(window).height()
+        , docHeight = $(document).height()
+        , winScrollTop = $(window).scrollTop()
+        , wrapper = $("#wrapper")
+        , body = $("body");
+        
+        if (wrapper.data("scrollTop") < winScrollTop)
+            $(document.body).height(docHeight - body.css("padding-top").replace("px", ""));
+        else {
+            var f = body.height() - (wrapper.data("scrollTop") - winScrollTop);
+            f >= wrapper.height() ? body.height(f) : body.height(wrapper.height());
+        }
+        wrapper.data("scrollTop", winScrollTop);
+    });
+    $(window).scroll(MyApp.meldSidebar).resize(MyApp.resize);
+    $(function() {
+        //$("#new_site .tz").append(TZ.select("new_tz")), 
+        //$("body").hasClass("loading") ? MyApp.start() : auth.run(), 
+        document.onmousemove = function(a) {
+            window.MyApp.mousecoords.pageX = window.event ? window.event.clientX : a.pageX;
+            window.MyApp.mousecoords.pageY = window.event ? window.event.clientY : a.pageY;
+        }
+    });
+});
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// jQuery on document ready closure                                          //
+///////////////////////////////////////////////////////////////////////////////
+$(document).ready(function() {
+    "use strict";
     
     $(function initialize() {
         var myLatlng = new google.maps.LatLng(0, 0) //(-34.6036, -58.3817);
-        var marker;
+        var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png'
         var myOptions = {
           zoom: 1,
           center: myLatlng,
@@ -965,13 +1009,14 @@ $(document).ready(function() {
         ;
         var infowindow = new google.maps.InfoWindow();
         
-        /*
+        
         var marker = new google.maps.Marker({
             position: myLatlng,
             map: map,
-            title: 'Galaconcert'
+            title: 'Galaconcert',
+            icon: image
         });
-        */
+        
         var input = document.getElementById('new_location');         
         var autocomplete = new google.maps.places.Autocomplete(input, {
             types: ["geocode"]
@@ -988,8 +1033,7 @@ $(document).ready(function() {
                 map.setCenter(place.geometry.location);
                 map.setZoom(17);  
             }
-            
-            //moveMarker(place.name, place.geometry.location);
+            moveMarker(place.name, place.geometry.location);
         });  
         
         $(input).focusin(function () {
@@ -1017,39 +1061,45 @@ $(document).ready(function() {
                         placeName = results[0].address_components[0].long_name,
                         latlng = new google.maps.LatLng(lat, lng);
                     
-                    //moveMarker(placeName, latlng);
+                    moveMarker(placeName, latlng);
                     $(input).val(firstResult);
                 }
             });   
         }
+        var div = document.createElement('DIV');
+        $(div).html(ich.infobubble_template({name: $(input).val()}));
         google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(contentString);
-            infowindow.open(map, marker);
+            //infowindow.setContent(contentString);
+            //infowindow.open(map, marker);
+            infoBubble2.setContent(div);
+            infoBubble2.open(map, marker);
         });
-    });
-    
-    $(window).scroll(function() {
-        var a = $(window).height()
-        , docHeight = $(document).height()
-        , winScrollTop = $(window).scrollTop()
-        , wrapper = $("#wrapper")
-        , body = $("body");
         
-        if (wrapper.data("scrollTop") < winScrollTop)
-            $(document.body).height(docHeight - body.css("padding-top").replace("px", ""));
-        else {
-            var f = body.height() - (wrapper.data("scrollTop") - winScrollTop);
-            f >= wrapper.height() ? body.height(f) : body.height(wrapper.height());
+        function moveMarker(placeName, latlng){
+            marker.setIcon(image);
+            marker.setPosition(latlng);
+            //infowindow.setContent(contentString);
+            infoBubble2.setContent(div);
+            //infowindow.open(map, marker);
+            infoBubble2.open(map, marker);
         }
-        wrapper.data("scrollTop", winScrollTop);
-    });
-    $(window).scroll(MyApp.meldSidebar).resize(MyApp.resize);
-    $(function() {
-        //$("#new_site .tz").append(TZ.select("new_tz")), 
-        //$("body").hasClass("loading") ? MyApp.start() : auth.run(), 
-        document.onmousemove = function(a) {
-            window.MyApp.mousecoords.pageX = window.event ? window.event.clientX : a.pageX;
-            window.MyApp.mousecoords.pageY = window.event ? window.event.clientY : a.pageY;
-        }
+        
+        var infoBubble2 = new InfoBubble({
+          map: map,
+          content: '<div class="signin"><form action="/signin" method="post"><p class="phoneytext">Hello There</p></form></div>',
+          position: new google.maps.LatLng(-34.6036, -58.3817),
+          shadowStyle: 1,
+          padding: 0,
+          backgroundColor: 'rgb(57,57,57)',
+          borderRadius: 4,
+          arrowSize: 10,
+          borderWidth: 1,
+          borderColor: '#2c2c2c',
+          disableAutoPan: true,
+          hideCloseButton: true,
+          arrowPosition: 30,
+          backgroundClassName: 'signin',
+          arrowStyle: 2
+        });
     });
 });
