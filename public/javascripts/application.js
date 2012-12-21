@@ -481,7 +481,7 @@
                         center: new google.maps.LatLng(-34.6036, -58.3817),
                         mapTypeId: google.maps.MapTypeId.ROADMAP
                     }
-                    var map = new window.map({id: "site_content", latitude: -34.6036, longitude: -58.3817, mapOptions: options});
+                    var map = new window.map({id: "map_wrapper", latitude: -34.6036, longitude: -58.3817, mapOptions: options});
                     break;
             }
             $("body").addClass("view-panel");
