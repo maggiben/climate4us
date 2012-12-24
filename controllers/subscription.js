@@ -135,6 +135,39 @@ exports.create = function (req, res, next) {
     }
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Route to update a Subscription                                            //
+//                                                                           //
+// @param {Object} req                                                       //
+// @param {Object} res                                                       //
+// @param {Object} next                                                      //
+// @return {Object} JSON updated document                                    //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url POST /station/update/:id                                             //
+///////////////////////////////////////////////////////////////////////////////
+exports.update = function (req, res, next) {
+    
+    res.contentType('application/json');
+    Subscription.findByIdAndUpdate({_id : req.params.id}, req.body, updateSubscription);
+    
+    function updateSubscription (err, station) {
+        if (err) {
+            console.log(err);
+            return next(err);
+        }
+        if (!station) {
+            console.log(err);
+            return next(err);
+        } 
+        else {
+            console.log(JSON.stringify(req.body));
+        }
+        var subscriptionJSON = JSON.stringify(station);
+        return res.send(subscriptionJSON);
+    }
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to remove a Subscription                                            //

@@ -22,7 +22,8 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.scrollTo.js"></script>
-        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.ui.map.js"></script>   
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.flot.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.ui.map.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
@@ -50,8 +51,6 @@
 			<ul>
 				<li><a href="#/account">My Account</a></li>
                 <li><a href="#/temp">temp</a></li>
-                <li><a href="#/crea">crea</a></li>
-                <li><a href="#/station/50cc9085171ddf2d33000006/code">kaka</a></li>
 				<li><a href="#" id="feedback_link" style="visibility: visible;">Feedback</a></li>
 				<li><a href="#/sign_out">Sign Out</a></li>
 				<li class="live">Live: <span class="status">on</span> <span class="indicator"><span></span></span></li>
@@ -66,29 +65,6 @@
 			    <div id="sites" class="meld" style="">
 				</div>
 				<div id="data">
-					<div id="site_nav" class="nav">
-                        <h2>cloud9</h2>
-                        <ul>
-                            <li class="current"><a href="#/station/50d0904e42ad706152000003/overview">Overview</a></li>
-                            <li class=""><a href="#/station/50d0904e42ad706152000003/live">Live Data</a></li>
-                            <li class=""><a href="#/station/50d0904e42ad706152000003/traffic" class="traffic">Views and People</a></li>
-                            <li class=""><a href="#/station/50d0904e42ad706152000003/referrers" class="referrers">Referring Sites</a></li>
-                            <li class=""><a href="#/station/50d0904e42ad706152000003/contents" class="contents">Top Content</a></li>
-                            <li class=""><a href="#/station/50d0904e42ad706152000003/searches" class="searches">Search Terms</a></li>
-                        </ul>
-                        <h2>Demographics</h2>
-                        <ul>
-                            <li><a href="#/station/50d0904e42ad706152000003/locations" class="locations">GeoLocation</a></li>
-                            <li><a href="#/station/50d0904e42ad706152000003/technology" class="technology">Technology</a></li>
-                            <li><a href="#/station/50d0904e42ad706152000003/resolutions" class="resolutions">Screen Sizes</a></li>
-                        </ul>
-                        <h2>Management</h2>
-                        <ul>
-                            <li><a href="#/station/50d0904e42ad706152000003/settings">Gauge Settings</a></li>
-                            <li><a href="#/station/50d0904e42ad706152000003/sharing" class="sharing unloaded">Sharing</a></li>
-                            <li><a href="#/station/50d0904e42ad706152000003/code">Tracking Code</a></li>
-                        </ul>
-                    </div>
 				</div>
 			</div>
 		</div>
@@ -370,6 +346,16 @@
             </div>
             <div id="site_content"></div>
         </script>
+        <script id="overview_template" type="text/html">
+            <div class="toolbar top">Overview for {{name}} <a href="#" class="live refresh"><span>Refresh</span></a></div>
+            <div id="display_panel" class="display">
+                <div class="wrapper">
+                    <div id="placeholder" style="width:100%;height:240px;"></div>
+                    <p class="message"></p>
+                </div>
+            </div>
+            <div class="toolbar bottom"></div>
+        </script>
         <script id="sharing_template" type="text/html">
             <div class="toolbar top">Share this Gauge with Friends or Colleagues</div>
             <div id="display_panel" class="display">
@@ -460,16 +446,16 @@
     </body>
     <!-- ANALITICS -->
     <script type="text/javascript">
-    var _gauges = _gauges || [];
-    (function() {
-        var t   = document.createElement('script');
-        t.type  = 'text/javascript';
-        t.async = true;
-        t.id    = 'gauges-tracker';
-        t.setAttribute('data-site-id', '50bc04e9613f5d6105000005');
-        t.src = '//secure.gaug.es/track.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(t, s);
-    })();
+        var _gauges = _gauges || [];
+        (function() {
+            var t   = document.createElement('script');
+            t.type  = 'text/javascript';
+            t.async = true;
+            t.id    = 'gauges-tracker';
+            t.setAttribute('data-site-id', '50d4ea31613f5d1d80000049');
+            t.src = '//secure.gaug.es/track.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(t, s);
+        })();
     </script>
 </html>

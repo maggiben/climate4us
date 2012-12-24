@@ -331,6 +331,8 @@ app.get('/subscription/getall', Subscription.getAll);
 app.get('/subscription/getbyid/:id', Subscription.getById);
 app.get('/subscription/create', Subscription.create);
 app.delete('/subscription/remove/:id', Subscription.remove);
+app.put('/subscription/reorder', Subscription.reorder);
+app.put('/subscription/update', Subscription.update);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Station rutes                                                             //

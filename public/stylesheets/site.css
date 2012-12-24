@@ -446,6 +446,11 @@ div.dialog p.text input {
   -moz-box-shadow: inset rgba(0,102,204,0.1) 0 0 10px;
   border: 1px solid #ccc;
 }
+div.dialog p.text select {
+  -webkit-box-shadow: inset rgba(0,102,204,0.1) 0 0 10px;
+  -moz-box-shadow: inset rgba(0,102,204,0.1) 0 0 10px;
+  border: 1px solid #ccc;
+}
 div.dialog label {
   width: 70px;
 }
@@ -572,16 +577,6 @@ span.overflow {
   z-index: 5;
   margin-left: -483px;
   padding: 3px 0 36px 3px;
-/* &:after {
-		fader();
-	}
-	&:before {
-		bottom:auto;
-		top:53px;
-		background-position:0 -12px;
-		fader();
-	};
-    */
 }
 #sites:after,
 #sites:before {
@@ -601,6 +596,9 @@ span.overflow {
   bottom: auto;
   top: 53px;
   background-position: 0 -12px;
+}
+#sites div.site.ui-sortable-helper {
+  width: 226px !important;
 }
 #sites div.site {
   width: 226px;
@@ -763,6 +761,81 @@ div.deleted:before {
   height: 120px;
   background: url("../images/deleted-fada4901bd34a071bdf2d242888fbec7.png") no-repeat center;
 }
+/*
+#sites.meld div.site.current {
+    -webkit-border-radius:0;
+	-moz-border-radius:0;
+	border-radius:0;
+	-moz-background-clip:padding;
+	-webkit-background-clip:padding-box;
+	background-clip:padding-box;
+	-webkit-border-top-left-radius:5px;
+	-webkit-border-bottom-left-radius:5px;
+	border-top-left-radius:5px;
+	border-bottom-left-radius:5px;
+	-moz-border-radius-topleft:5px;
+	-moz-border-radius-bottomleft:5px;
+	-moz-background-clip:padding;
+	-webkit-background-clip:padding-box;
+	background-clip:padding-box;
+	width:242px;
+	ul {
+		right:25px;
+	};
+	&:before {
+		content:'';
+		position:absolute;
+		right:-5px;
+		overflow:hidden;
+		top:-5px;
+		width:10px;
+		height:70px;
+		background:url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
+	};
+	&:after {
+		content:'';
+		position:absolute;
+		right:1px;
+		overflow:hidden;
+		top:-5px;
+		width:5px;
+		height:5px;
+		background:url("../images/fondo.png");
+		border-bottom-right-radius:5px;
+		-webkit-border-bottom-right-radius:5px;
+		-moz-border-radius-bottomright:5px;
+		-webkit-box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0;
+		-moz-box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0;
+		box-shadow:inset rgba(0,0,0,0.65) -1px -1px 0;
+	};
+	h2:before {
+		content:'';
+		position:absolute;
+		right:1px;
+		overflow:hidden;
+		bottom:-5px;
+		width:5px;
+		height:6px;
+		background:url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
+	};
+	h2:after {
+		content:'';
+		position:absolute;
+		right:1px;
+		overflow:hidden;
+		bottom:-5px;
+		width:5px;
+		height:5px;
+		background:url("../images/fondo.png");
+		-webkit-border-top-right-radius:5px;
+		-moz-border-radius-topright:5px;
+		border-top-right-radius:5px;
+		-webkit-box-shadow:inset rgba(0,0,0,0.45) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 0 -1px 0;
+		-moz-box-shadow:inset rgba(0,0,0,0.65) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 1px -1px 0;
+		box-shadow:inset rgba(0,0,0,0.65) -1px 1px 0,inset rgba(0,0,0,0.6) -1px 1px 2px,rgba(0,0,0,0.1) 1px -1px 0;
+	};
+};
+*/
 #sites.meld div.site.current {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -2621,7 +2694,7 @@ p.instructions {
   margin: 0 0 10px;
 }
 html.live li.live span.status {
-  color: #579d7a;
+  color: #750775;
 }
 html.live li.live span.indicator {
   background: #222;
@@ -2791,7 +2864,7 @@ form p.text input.error {
   border-color: #cc9d9d;
 }
 form select {
-  border: none;
+  border: 1px solid #ccc;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;

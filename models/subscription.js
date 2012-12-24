@@ -37,6 +37,8 @@ var Subscription = new Schema({
     lastAccess: { type: Date, default: Date.now },
     isReady: Boolean,
     stations: [],
+    order: [],
+    selected: null,
     humidity: { 
         value: Number, 
         dewpoint: Number, 

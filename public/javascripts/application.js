@@ -40,6 +40,8 @@
 
     ///////////////////////////////////////////////////////////////////////////
     // Station class                                                         //
+    // This object stores all information regarding the weather station      //
+    // It has no data bindings to UI                                         //
     ///////////////////////////////////////////////////////////////////////////
     var Station = function(arg) {
         this.setup(arg);
@@ -125,6 +127,8 @@
                     that.humidity = data.humidity;
                     that.latitude = data.latitude;
                     that.longitude = data.longitude;
+                    //Preserve the original defaults by passing an empty object as the target
+                    //that = $.extend({}, that, data);
                     a.onLoad(that);
                 },
                 
@@ -191,16 +195,19 @@
         this.setup(a);
     };
     $.extend(myApplication.prototype, {
-        app: { 
+        module: { 
             VERSION: "0.10",
-            lic: {},
+            license: {},
+            dependencies: {},
             author: "",
         },
+        _id: null,
         stations: [],
+        order: [],
+        selected: null,
         onSetup: null,
         setup: function (a) {
             this.onSetup = a.onSetup;
-            //console.log(this.onSetup);
             var that = this;
             $.ajax({
                 url: "/getStations",
@@ -209,11 +216,9 @@
                 success: function (b) {
                     for (var i = 0; i < b.length; i++) {
                         that.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad}); //that.stations[b[i]._id] = 
-                        //MyApp.stations[b[i]._id] = b[i]; //that.stations[b[i]._id];
                         console.log("Attaching station id: " + that.stations[b[i]._id].id);
                     }
                     function onLoad(station) {
-                        //that.stations[station._id] = station;
                         station.isReady = true;
                         //console.log("is onLoad ready: " + that.stations[station._id].isReady + " id: " + that.stations[station._id]._id);
                         a.onSetup(station);
@@ -268,6 +273,9 @@
                 }
             });
         },
+        getSelected: function() {
+          return this.selected;
+        },
         removeStations: function(ids, callback) {
             for (var id in ids)
             {
@@ -316,6 +324,32 @@
                 }
             }), !1;
         },
+        setSelected: function(id) {
+            this.update(onUpdate);
+            function onUpdate()
+            {
+                console.log("subscription update ok!")
+            }
+        }
+        update: function(callback) {
+            var that = this;
+            console.log("setSelected(%s)", id);
+            $.ajax({
+                url: "/subscription/update",
+                dataType: "json",
+                type: "put",
+                data: {
+                    selected: id,
+                },
+                success: function (data, textStatus, jqXHR) {
+                    callback(data);
+                },
+                error: function (jqXHR, status, error) {
+                    var c = $.parseJSON(jqXHR);
+                    console.log(jqXHR.responseText);
+                },
+            }),
+        },
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -326,14 +360,6 @@
     });
     $("a.toggle_delete").live("click", function () {
         return $("#site_content").toggleClass("delete"), !1;
-    });
-    $('#new_datexxx').datepicker({
-        //comment the beforeShow handler if you want to see the ugly overlay
-        beforeShow: function() {
-            setTimeout(function(){
-                $('.ui-datepicker').css('z-index', 9999); // Fix For top(Z) dialogs
-            }, 0);
-        }
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -375,19 +401,6 @@
     ///////////////////////////////////////////////////////////////////////////
     var app = $.sammy(function() {
         //this.element_selector = '#main';
-        this.bind('newSensor', function(e, data) {
-            alert(data['my_data']);
-            var server = "http://climate4us.aws.af.cm";
-            var api = "/setup";
-            $.ajax({
-                    url: server + api, //"/gauges/" + this.params.id,
-                    dataType: "json",
-                    type: "get",
-                    success: function (a) {
-                        alert("data back: " + JSON.stringify(a));
-                    }
-            });
-        });
         this.bind('getSubscription', function(e, data) {
             //console.log("getSubscription");
             MyApp.subscription = new myApplication({onSetup: onSetup});
@@ -442,29 +455,75 @@
         this.bind("show_panel.g", function (e, data) {
             console.log("show_panel.g: " + JSON.stringify(data));
             var b = this;
-            var c = $("#s" + b.id);
+            var c = $("#s" + data.id);
             var d = data == c.data("panel") ? $("#site_content div.display").scrollTop() : 0;
             b.trigger("show_station.g", data), 
             c.data("panel", data);
             $("#data div.nav li.current").removeClass("current"); 
-            $('#data div.nav a[href="#/gauges/' + b.id + "/" + data + '"]').closest("li").addClass("current");
+            $('#data div.nav a[href="#/station/' + data.id + "/" + data.path + '"]').closest("li").addClass("current");
             switch (data.path) {
                 case "settings":
                     $panel = $("#site_content").html(ich.site_settings_template(this));
                 break;
                 case "overview":
-                        console.log("[overview]");
-                        b.setOverviewTraffic(), 
-                        $("#site_content").html(ich.overview_template(this)), 
-                        new TrafficGraph("#traffic_graph", this), 
-                        $("#hours_graph").css("left", $("#site_content div.today").width() + 50 + "px"), 
-                        new HoursGraph("#hours_graph", this, 12), 
-                        b.overview_data ? ($("#top_content").html(ich.top_content_template(b)), 
-                        $("#top_referrers").html(ich.top_referrers_template(b))) : b.trigger("load_overview.g");
+                    console.log("[overview]");
+                    $("#site_content").html(ich.overview_template(MyApp.subscription.stations[data.id]));
+                    var placeholder = $("#placeholder");
+                    var d1 = [];
+                    for (var i = 0; i < Math.PI * 2; i += 0.25)
+                        d1.push([i, Math.sin(i)]);
+                    
+                    var d2 = [];
+                    for (var i = 0; i < Math.PI * 2; i += 0.25)
+                        d2.push([i, Math.cos(i)]);
+                
+                    var d3 = [];
+                    for (var i = 0; i < Math.PI * 2; i += 0.1)
+                        d3.push([i, Math.tan(i)]);
+                        
+                    /*
+                    var options = {
+                        series: { lines: { show: true }, shadowSize: 0 },
+                        xaxis: { zoomRange: [0.1, 10], panRange: [-10, 10] },
+                        yaxis: { zoomRange: [0.1, 10], panRange: [-10, 10] },
+                        zoom: {
+                            interactive: true
+                        },
+                        pan: {
+                            interactive: true
+                        }
+                    };
+                    */
+                    var options = {
+        series: {
+            lines: { show: true },
+            points: { show: true }
+        },
+        xaxis: {
+            ticks: [0, [Math.PI/2, "\u03c0/2"], [Math.PI, "\u03c0"], [Math.PI * 3/2, "3\u03c0/2"], [Math.PI * 2, "2\u03c0"]]
+        },
+        yaxis: {
+            ticks: 10,
+            min: -2,
+            max: 2
+        },
+        grid: {
+            backgroundColor: { colors: ["#fff", "#eee"] }
+        }
+    }
+                    
+                    var data = [
+                        { label: "sin(x)",  data: d1},
+                        { label: "cos(x)",  data: d2},
+                        { label: "tan(x)",  data: d3}
+                    ];
+                    //$.plot($("#placeholder"), [ [[0, 0], [1, 1], , [2, 3]] ], { yaxis: { max: 1 } });
+                    var plot = $.plot(placeholder, data, options);
+                    
                     break;
                 case "code":
                     console.log("[code]");
-                    $panel = $("#site_content").html(ich.my_info_template(this));
+                    $("#site_content").html(ich.my_info_template(this));
                     break;
                 case "live":
                     var e = this;
@@ -507,18 +566,6 @@
                     //Gauges.subscription = new Subscription(a.subscription)
                 }
             });
-            var user = {
-                name:"pirulo12345@mailinator.com", 
-                urls: {
-                    self: "https://secure.gaug.es/me", 
-                    gauges: "https://secure.gaug.es/gauges", 
-                    clients: "https://secure.gaug.es/clients"
-                }, 
-                id: "50c9e8b9f5a1f56713000002", 
-                last_name: null, 
-                first_name: null, 
-                email: "pirulo12345@mailinator.com"
-            };
             $("#sites div.current").removeClass("current"), 
             $("#data").html(ich.account_template(MyApp.user)), 
             $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
@@ -611,8 +658,8 @@
                     url: "/signout",
                     type: "GET",
                     complete: function () {
-                    window.location = "/signin"
-                }
+                        window.location = "/signin";
+                    }
             });
             $("body").addClass("loading").removeClass("loaded");
         });
@@ -621,11 +668,9 @@
         ///////////////////////////////////////////////////////////////////////
         this.get('#/station/new', function() {
             $("body").addClass("adding");
-            $('#new_date').val(new Date());
         });
         this.post('#/station', function () {
             var that = this;
-            //console.log("about to create a new station link: #/station");
             var a = $(this.target).removeErrors();
             var b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
@@ -675,6 +720,7 @@
             //alert(typeof this.params.id);
             //alert(MyApp.subscription.stations[this.params.id].name);
             var station = MyApp.subscription.stations[this.params.id];
+            MyApp.subscription.
             console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
             //alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic();
@@ -709,13 +755,12 @@
     // Main Client application                                               //
     ///////////////////////////////////////////////////////////////////////////
     var MyApp = {
-        VERSION: 1.12,
+        VERSION: 1.23,
         $: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null,
         timeout: null,
         clients: null,
         hit_timeout: null,
         connection_count: 0,
-        stationsxx: {},
         subscription: {},
         mousecoords: {
             pageX: 0, 
@@ -736,42 +781,20 @@
         start: function (a) {
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
             //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
-                $.ajax({
-                    url: 'http://climate4us.aws.af.cm',
-                    type: 'GET',
-                    dataType: "json",
-                    success: function (data) {
-
-                    },
-                    complete: function () {
-                    
-                    },
-                    error: function () {
-                        //c.removeClass("loading")
-                    }
-                });
-        },
-        getTemperature: function(a) {
-            var server = "http://c9-node-express-boilerplate.bmaggi.c9.io";
-            var apiKey = "/start";
             $.ajax({
-                    url: server + apiKey,
-                    type: 'GET',
-                    dataType: "json",
-                    success: function (data) {
-                        //alert($.parseJSON(data.responseText));
-                        //alert("lat: " + data.latitude + " long: " + data.longitude + " temp: " + data.temperature);
-                        alert(data);
-                        return data;
-                    },
-                    complete: function () {
-                    
-                    },
-                    error: function () {
-                        //c.removeClass("loading")
-                    }
-                });
-            
+                url: 'http://climate4us.aws.af.cm',
+                type: 'GET',
+                dataType: "json",
+                success: function (data) {
+
+                },
+                complete: function () {
+                
+                },
+                error: function () {
+                    //c.removeClass("loading")
+                }
+            });
         },
         reset: function () {},
         setUser: function (a) {
@@ -799,6 +822,7 @@
                 }
         },
         resize: function() {
+            console.log("resize");
             MyApp.meldSidebar();
             
             //$("#full_map").is(":visible") && (Gauges.resize_timeout && clearTimeout(Gauges.resize_timeout), 
@@ -827,7 +851,8 @@
             }
         },
         domready: function() {
-            console.log("DOMContentLoaded")
+            console.log("DOMContentLoaded starting MyApp.version: %f", this.VERSION);
+        
         }
     };
     MyApp = MyApp || {};
@@ -856,86 +881,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // jQuery on document ready closure                                          //
-///////////////////////////////////////////////////////////////////////////////
-/*
-$(document).ready(function(){
-    function initialize() {
-        var mapOptions = {
-        center: new google.maps.LatLng(-34.6036, -58.3817),
-        zoom: 8,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-
-    var input = document.getElementById('new_location');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-
-    autocomplete.bindTo('bounds', map);
-    //autocomplete.setTypes(['geocode']);
-    
-    var infowindow = new google.maps.InfoWindow();
-    var marker = new google.maps.Marker({
-      map: map
-    });
-
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
-      infowindow.close();
-      marker.setVisible(false);
-      input.className = '';
-      var place = autocomplete.getPlace();
-      if (!place.geometry) {
-        // Inform the user that the place was not found and return.
-        input.className = 'notfound';
-        return;
-      }
-
-      // If the place has a geometry, then present it on a map.
-      if (place.geometry.viewport) {
-        map.fitBounds(place.geometry.viewport);
-      } else {
-        map.setCenter(place.geometry.location);
-        map.setZoom(17);  // Why 17? Because it looks good.
-      }
-      var image = new google.maps.MarkerImage(
-          place.icon,
-          new google.maps.Size(71, 71),
-          new google.maps.Point(0, 0),
-          new google.maps.Point(17, 34),
-          new google.maps.Size(35, 35));
-      marker.setIcon(image);
-      marker.setPosition(place.geometry.location);
-
-      var address = '';
-      if (place.address_components) {
-        address = [
-          (place.address_components[0] && place.address_components[0].short_name || ''),
-          (place.address_components[1] && place.address_components[1].short_name || ''),
-          (place.address_components[2] && place.address_components[2].short_name || '')
-        ].join(' ');
-      }
-
-      infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-      infowindow.open(map, marker);
-    });
-
-    // Sets a listener on a radio button to change the filter type on Places
-    // Autocomplete.
-    function setupClickListener(id, types) {
-      var radioButton = document.getElementById(id);
-      google.maps.event.addDomListener(radioButton, 'click', function() {
-        autocomplete.setTypes(types);
-      });
-    }
-
-    setupClickListener('changetype-all', []);
-    setupClickListener('changetype-establishment', ['establishment']);
-    setupClickListener('changetype-geocode', ['geocode']);
-  }
-  google.maps.event.addDomListener(window, 'load', initialize);
-});
-*/
-///////////////////////////////////////////////////////////////////////////////
-// jQuery on document ready closure                                          //
+// Activates UI components                                                   //
+// Sets and gets default data bindings                                       //
 ///////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {
     "use strict";
@@ -970,7 +917,7 @@ $(document).ready(function() {
                 $('.ui-datepicker').css('z-index', 9999); // Fix For top(Z) dialogs
             }, 0);
         }
-    });
+    }).val($.datepicker.formatDate('dd/m/yy', new Date()));
     $(window).scroll(function() {
         var a = $(window).height()
         , docHeight = $(document).height()
@@ -978,8 +925,9 @@ $(document).ready(function() {
         , wrapper = $("#wrapper")
         , body = $("body");
         
-        if (wrapper.data("scrollTop") < winScrollTop)
+        if (wrapper.data("scrollTop") < winScrollTop) {
             $(document.body).height(docHeight - body.css("padding-top").replace("px", ""));
+        }
         else {
             var f = body.height() - (wrapper.data("scrollTop") - winScrollTop);
             f >= wrapper.height() ? body.height(f) : body.height(wrapper.height());
@@ -1001,10 +949,8 @@ $(document).ready(function() {
 ///////////////////////////////////////////////////////////////////////////////
 // Google MAPS bindings                                                      //
 ///////////////////////////////////////////////////////////////////////////////
-
 ;(function($) {
     "use strict";
-
     window.map = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -1014,12 +960,12 @@ $(document).ready(function() {
             $.error('Method ' + method + ' does not exists.');
         }
     };
-    
     var methods = {};
-
     //Set defauls for the control
     var defaults = {
         data: [],
+        icon: 'images/markers/anniversary.png',
+        title: 'Feria',
         width: 260,
         height: null,
         background: "#eee",
@@ -1029,7 +975,6 @@ $(document).ready(function() {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         }
     };
-    
     //Public methods 
     methods.init = function (options) {
         //Preserve the original defaults by passing an empty object as the target
@@ -1047,16 +992,38 @@ $(document).ready(function() {
             title: 'Galaconcert',
             icon: image
         });
-
         google.maps.event.addListener(marker, 'click', function() {
             //infoBox.setContent(div);
             //infoBox.open(map, marker);
         });
 
     };
+    
+    //Public:
     methods.moveMarker = function (placeName, latlng){
         //marker.setPosition(latlng);
         //infowindow.close();
+    };
+    
+    //Private:
+    function makeBubble(map, index) {
+        return new InfoBubble({
+            map: map,
+            content: '<div class="signin"><form action="/signin" method="post"><p class="phoneytext">Hello There</p></form></div>',
+            position: new google.maps.LatLng(-34.6036, -58.3817),
+            shadowStyle: 1,
+            padding: 0,
+            backgroundColor: 'rgb(57,57,57)',
+            borderRadius: 4,
+            arrowSize: 10,
+            borderWidth: 1,
+            borderColor: '#2c2c2c',
+            disableAutoPan: true,
+            hideCloseButton: true,
+            arrowPosition: 30,
+            backgroundClassName: 'signin',
+            arrowStyle: 2
+        });  
     };
 })(window.jQuery || window.Zepto);
 
