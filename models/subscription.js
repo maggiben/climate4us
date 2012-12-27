@@ -38,7 +38,7 @@ var Subscription = new Schema({
     isReady: Boolean,
     stations: [],
     order: [],
-    selected: null,
+    selected: Number,
     humidity: { 
         value: Number, 
         dewpoint: Number, 

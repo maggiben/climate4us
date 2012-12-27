@@ -325,22 +325,23 @@
             }), !1;
         },
         setSelected: function(id) {
-            this.update(onUpdate);
-            function onUpdate()
+            var that = this;
+            that.update(onUpdate);
+            function onUpdate(data)
             {
-                console.log("subscription update ok!")
-            }
-        }
+                that.selected = id;
+                console.log("subscription update ok! result: " + data);
+            };
+        },
         update: function(callback) {
             var that = this;
-            console.log("setSelected(%s)", id);
+            callback("coso")
+            /*
             $.ajax({
                 url: "/subscription/update",
                 dataType: "json",
                 type: "put",
-                data: {
-                    selected: id,
-                },
+                data: that,
                 success: function (data, textStatus, jqXHR) {
                     callback(data);
                 },
@@ -348,7 +349,8 @@
                     var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
                 },
-            }),
+            });
+            */
         },
     });
 
@@ -720,7 +722,7 @@
             //alert(typeof this.params.id);
             //alert(MyApp.subscription.stations[this.params.id].name);
             var station = MyApp.subscription.stations[this.params.id];
-            MyApp.subscription.
+            MyApp.subscription.setSelected(this.params.id);
             console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
             //alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic();
