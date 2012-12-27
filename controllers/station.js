@@ -33,13 +33,12 @@ var mongoose = require('mongoose');
 // Load model
 var station_schema = require('../models/station')
   , Station = mongoose.model('Station', station_schema);
-  
-  
+    
 ///////////////////////////////////////////////////////////////////////////////
 // Route to get all Stations                                                 //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
 // @param {Object} next                                                      //
 // @return {Object} JSON Collection of Stations                              //
 //                                                                           //
@@ -47,24 +46,24 @@ var station_schema = require('../models/station')
 //                                                                           //
 // @url GET /station/getall                                                  //
 ///////////////////////////////////////////////////////////////////////////////
-exports.getAll = function(req, res, next) {
+exports.getAll = function(request, response, next) {
 
   Station.find(gotStations);
-  function gotStations(err, stations) {
-    if (err) {
-      console.log(err);
+  function gotStations(error, stations) {
+    if (error) {
+      console.log(error);
       return next();
     }
     var stationsJSON = JSON.stringify(stations);
-    return res.send(stationsJSON);
+    return response.send(stationsJSON);
   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to a specific Station                                               //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
 // @param {Object} next                                                      //
 // @return {Object} JSON Station                                             //
 //                                                                           //
@@ -72,26 +71,26 @@ exports.getAll = function(req, res, next) {
 //                                                                           //
 // @url GET /station/getbyid                                                 //
 ///////////////////////////////////////////////////////////////////////////////
-exports.getById = function(req, res, next) {
+exports.getById = function(request, response, next) {
     
-    res.contentType('application/json');
-    Station.findById(req.params.id, gotStation);
+    response.contentType('application/json');
+    Station.findById(request.params.id, gotStation);
     
-    function gotStation(err, station) {
-        if (err) {
-            console.log(err);
-            return next(err);
+    function gotStation(ererrorr, station) {
+        if (error) {
+            console.log(error);
+            return next(error);
         }
         var stationJSON = JSON.stringify(station);
-        return res.send(stationJSON);
+        return response.send(stationJSON);
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to remove a Station                                                 //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
 // @param {Object} next                                                      //
 // @return {Object} JSON result                                              //
 //                                                                           //
@@ -99,24 +98,24 @@ exports.getById = function(req, res, next) {
 //                                                                           //
 // @url DELETE /station/remove/:id                                           //
 ///////////////////////////////////////////////////////////////////////////////
-exports.remove = function(req, res, next) {
-    res.contentType('application/json');
-    Station.remove({_id: req.params.id}, delStation);
+exports.remove = function(request, response, next) {
+    response.contentType('application/json');
+    Station.remove({_id: request.params.id}, delStation);
     
-    function delStation(err, station) {
-        if (err) {
-            return next(err);
+    function delStation(error, station) {
+        if (error) {
+            return next(error);
         }
-        var stationJSON = JSON.stringify({_id: req.params.id, action: 'remove', result: true});
-        return res.send(stationJSON);
+        var stationJSON = JSON.stringify({_id: request.params.id, action: 'remove', result: true});
+        return response.send(stationJSON);
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to remove all Stations                                              //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
 // @param {Object} next                                                      //
 // @return {Object} JSON result                                              //
 //                                                                           //
@@ -124,14 +123,14 @@ exports.remove = function(req, res, next) {
 //                                                                           //
 // @url DELETE /station/removeall                                            //
 ///////////////////////////////////////////////////////////////////////////////
-exports.removeall = function(req, res, next) {
+exports.removeall = function(request, response, next) {
     
-    res.contentType('application/json');
+    response.contentType('application/json');
     Station.find(gotStations);
 
-    function gotStations(err, stations) {
-        if (err) {
-            console.log(err)
+    function gotStations(error, stations) {
+        if (error) {
+            console.log(error)
             return next();
         }
         if (!stations || !Array.isArray(stations) || stations.length === 0)
@@ -146,15 +145,15 @@ exports.removeall = function(req, res, next) {
             });
         });
         var msgJSON = JSON.stringify({action: 'removeall', result: true});
-        return res.send(msgJSON);
+        return response.send(msgJSON);
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to remove all Stations                                              //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
 // @param {Object} next                                                      //
 // @return {Object} JSON updated document                                    //
 //                                                                           //
@@ -162,33 +161,33 @@ exports.removeall = function(req, res, next) {
 //                                                                           //
 // @url POST /station/update/:id                                             //
 ///////////////////////////////////////////////////////////////////////////////
-exports.update = function (req, res, next) {
+exports.update = function (request, response, next) {
     
-    res.contentType('application/json');
-    Station.findByIdAndUpdate({_id : req.params.id}, req.body, updateStation);
+    response.contentType('application/json');
+    Station.findByIdAndUpdate({_id : request.params.id}, request.body, updateStation);
     
-    function updateStation (err, station) {
-        if (err) {
-            console.log(err);
-            return next(err);
+    function updateStation (error, station) {
+        if (error) {
+            console.log(error);
+            return next(error);
         }
         if (!station) {
-            console.log(err);
-            return next(err);
+            console.log(error);
+            return next(error);
         } 
         else {
-            console.log(JSON.stringify(req.body));
+            console.log(JSON.stringify(request.body));
         }
         var stationJSON = JSON.stringify(station);
-        return res.send(stationJSON);
+        return response.send(stationJSON);
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to create a Stations                                                //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
 // @param {Object} next                                                      //
 // @return {Object} JSON new document                                        //
 //                                                                           //
@@ -196,19 +195,19 @@ exports.update = function (req, res, next) {
 //                                                                           //
 // @url GET /station/create                                                  //
 ///////////////////////////////////////////////////////////////////////////////
-exports.create = function (req, res, next) {
+exports.create = function (request, response, next) {
     
-    var name = req.body.name;
+    var name = request.body.name;
     console.log("name: ", name);
 
-    //console.log("para: " + JSON.stringify(req.params));
-    console.log('create-body: ' + JSON.stringify(req.body));
+    //console.log("para: " + JSON.stringify(request.params));
+    console.log('create-body: ' + JSON.stringify(request.body));
     
     var station = new Station({
-        name: req.body.name,
+        name: request.body.name,
         id: Math.floor(Math.random() * 99999999999999),
-        type: req.body.type,
-        country: req.body.country,
+        type: request.body.type,
+        country: request.body.country,
         state: 'CABA',
         city: 'CABA',
         latitude: -34.6036,
@@ -253,48 +252,34 @@ exports.create = function (req, res, next) {
         
     });
     
-    res.contentType('application/json');
+    response.contentType('application/json');
     station.save(onSaved);
 
-    function onSaved (err) {
-        if (err) {
-            console.log(err);
-            return next(err);
+    function onSaved (error) {
+        if (error) {
+            console.log(error);
+            return next(error);
         }
         console.log("onSaved");
-        return res.send(JSON.stringify(station));
+        return response.send(JSON.stringify(station));
     }
 };
 
 
-exports.getStations = function(req, res, next) {
-
-    res.contentType('application/json');
-    Station.find(gotStations);
-
-    function gotStations(err, stations) {
-        if (err) {
-            console.log(err)
-            return next();
-        }
-        var stationsJSON = JSON.stringify(stations);
-        return res.send(stationsJSON);
-    }
-};
-exports.setupStation = function(req, res, next) {
-    res.contentType('application/json');
-    var id = req.params.id;
-    console.log("setupStation: %s", req.params.id);
+exports.setupStation = function(request, response, next) {
+    response.contentType('application/json');
+    var id = request.params.id;
+    console.log("setupStation: %s", request.params.id);
     Station.findById(id, gotStation);
     
-    function gotStation(err, station) {
-        if (err) {
-            console.log(err);
-            return next(err);
+    function gotStation(error, station) {
+        if (error) {
+            console.log(error);
+            return next(error);
         }
         console.log("temp: %s", station.temperature);
         var stationJSON = JSON.stringify(station);
-        return res.send(stationJSON);
+        return response.send(stationJSON);
     }
 };
 

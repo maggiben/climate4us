@@ -1000,13 +1000,11 @@ $(document).ready(function() {
         });
 
     };
-    
     //Public:
     methods.moveMarker = function (placeName, latlng){
         //marker.setPosition(latlng);
         //infowindow.close();
     };
-    
     //Private:
     function makeBubble(map, index) {
         return new InfoBubble({

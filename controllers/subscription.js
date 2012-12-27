@@ -115,6 +115,8 @@ exports.create = function (req, res, next) {
         lastAccess: new Date(),
         isReady: false,
         stations: [],
+        order: [],
+        selected: null,
         humidity: { 
             value: 5, 
             dewpoint: 5, 
