@@ -46,8 +46,8 @@
     <body class="loaded view-nav view-panel" style="height: 899px;">
         <!-- HEADER -->
         <header>
-            <h1><a href="/">Gauges</a></h1>
-			<p><a href="#/station/new" class="button new"><i></i> New Gauge</a></p>
+            <h1><a href="/">gipsy</a></h1>
+			<p><a href="#/station/new" class="button new"><i></i> New station</a></p>
 			<ul>
 				<li><a href="#/account">My Account</a></li>
                 <li><a href="#/temp">temp</a></li>
@@ -159,7 +159,7 @@
         </script>
         <script id="deleted_site_template" type="text/html">
             <div class="deleted">
-                <strong>{{title}}</strong> was successfully deleted.
+                <strong>{{name}}</strong> was successfully deleted.
             </div>
         </script>        
         <script type="text/html" id="trial_template">
@@ -381,6 +381,35 @@
                 </div>
             </div>
             <div class="toolbar bottom"></div>
+        </script>
+        <script id="station_settings_template" type="text/html">
+            <form action="#/station/update/{{id}}" method="put">
+                <input type="hidden" name="_csrf" value="WuqJlgIgWDRO3hcvUE1j/R9Ka9AcXNuGK57vEcvR6p0=" />
+                <div class="toolbar top"><p>Edit this Station</p></div>
+                <div id="display_panel" class="display">
+                    <div class="wrapper">
+                        <p class="text">
+                            <label for="station_name_{{id}}">Station Name</label>
+                            <input type="text" id="station_name_{{id}}" name="name" value="{{ name }}" />
+                        </p>
+                        <p class="text">
+                            <label for="station_allowed_hosts_{{id}}">Allowed Hosts</label>
+                            <input type="text" id="station_allowed_hosts_{{id}}" name="allowed_hosts" value="{{ allowed_hosts }}" placeholder="Only track from these domains (a.com b.com)" />
+                        </p>
+                        <p class="submit"><button><span>Save these Settings</span></button></p>
+                    </div>
+                </div>
+                <div class="toolbar bottom submit edit">
+                    <p class="secondary delete"><a href="#" class="toggle_delete">Delete this Station</a></p>
+                </div>
+            </form>
+            <form action="#/station/remove/{{id}}" method="delete">
+                <input type="hidden" name="_csrf" value="WuqJlgIgWDRO3hcvUE1j/R9Ka9AcXNuGK57vEcvR6p0=" />
+                <div class="toolbar bottom submit delete">
+                    <p class="secondary"><a href="#" class="toggle_delete">No, Nevermind</a></p>
+                    <button class="delete"><span>Yes, Delete this Station</span></button>
+                </div>
+            </form>
         </script>
         <!-- GRAPH TMPL -->
         <script id="technology_template" type="text/html">

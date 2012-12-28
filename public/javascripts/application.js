@@ -63,6 +63,7 @@
         lastAccess: new Date(),
         isReady: false,
         overview: true,
+        mine: true,
         temperature: {
             value: 0, 
             unit: 'C'
@@ -210,7 +211,7 @@
             this.onSetup = a.onSetup;
             var that = this;
             $.ajax({
-                url: "/getStations",
+                url: "/station/getall",
                 type: "GET",
                 dataType: "json",
                 success: function (b) {
@@ -225,7 +226,7 @@
                     }
                 },
                 error: function (jqXHR, status, error) {
-                    var c = $.parseJSON(jqXHR);
+                    //var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
                 },
                 complete: function () {                                
@@ -268,7 +269,7 @@
                     callback(data);
                 },
                 error: function (jqXHR, status, error) {
-                    var c = $.parseJSON(jqXHR);
+                    //var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
                 }
             });
@@ -319,7 +320,7 @@
                     }
                 },
                 error: function (jqXHR, status, error) {
-                    var c = $.parseJSON(jqXHR);
+                    //var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
                 }
             }), !1;
@@ -464,9 +465,6 @@
             $("#data div.nav li.current").removeClass("current"); 
             $('#data div.nav a[href="#/station/' + data.id + "/" + data.path + '"]').closest("li").addClass("current");
             switch (data.path) {
-                case "settings":
-                    $panel = $("#site_content").html(ich.site_settings_template(this));
-                break;
                 case "overview":
                     console.log("[overview]");
                     $("#site_content").html(ich.overview_template(MyApp.subscription.stations[data.id]));
@@ -483,36 +481,23 @@
                     for (var i = 0; i < Math.PI * 2; i += 0.1)
                         d3.push([i, Math.tan(i)]);
                         
-                    /*
                     var options = {
-                        series: { lines: { show: true }, shadowSize: 0 },
-                        xaxis: { zoomRange: [0.1, 10], panRange: [-10, 10] },
-                        yaxis: { zoomRange: [0.1, 10], panRange: [-10, 10] },
-                        zoom: {
-                            interactive: true
+                        series: {
+                            lines: { show: true },
+                            points: { show: true }
                         },
-                        pan: {
-                            interactive: true
+                        xaxis: {
+                            ticks: [0, [Math.PI/2, "\u03c0/2"], [Math.PI, "\u03c0"], [Math.PI * 3/2, "3\u03c0/2"], [Math.PI * 2, "2\u03c0"]]
+                        },
+                        yaxis: {
+                            ticks: 10,
+                            min: -2,
+                            max: 2
+                        },
+                        grid: {
+                            backgroundColor: { colors: ["#fff", "#eee"] }
                         }
-                    };
-                    */
-                    var options = {
-        series: {
-            lines: { show: true },
-            points: { show: true }
-        },
-        xaxis: {
-            ticks: [0, [Math.PI/2, "\u03c0/2"], [Math.PI, "\u03c0"], [Math.PI * 3/2, "3\u03c0/2"], [Math.PI * 2, "2\u03c0"]]
-        },
-        yaxis: {
-            ticks: 10,
-            min: -2,
-            max: 2
-        },
-        grid: {
-            backgroundColor: { colors: ["#fff", "#eee"] }
-        }
-    }
+                    }
                     
                     var data = [
                         { label: "sin(x)",  data: d1},
@@ -544,9 +529,21 @@
                     }
                     var map = new window.map({id: "map_wrapper", latitude: -34.6036, longitude: -58.3817, mapOptions: options});
                     break;
+                case "settings":
+                    console.log("[settings]");
+                    $("#site_content").html(ich.station_settings_template(MyApp.subscription.getStationById(data.id)));
+                    break;
             }
             $("body").addClass("view-panel");
             $("#site_content div.display").scrollTop(d);
+        });
+        this.bind("station_teardown.g", function(event, data) {
+            console.log("station_teardown.g id: " + JSON.stringify(data));
+            var a = $("#s" + data.id).css({height: 0,opacity: 0});
+            setTimeout(function() {
+                a.remove()
+            }, 500);
+            //delete Gauges.sites[this.id]
         });
         this.get(/\#\/sites\/(.*)/, function () {
             //this.redirect("#", "gauges", this.params.splat)
@@ -706,7 +703,7 @@
                     }
                 },
                 error: function (b) {
-                    var c = $.parseJSON(b.responseText);
+                    //var c = $.parseJSON(b.responseText);
                     a.displayErrors(c.errors);
                 },
                 complete: function () {
@@ -746,6 +743,26 @@
             $("#site_content ul.group_options li." + this.params.tab).addClass("current"); 
             MyApp.meldSidebar();
         });
+        this.get("#/deleting", function() {
+        });
+        this.del("#/station/remove/:id", function() {
+            var that = this;
+            var a = $(this.target).removeErrors(), b = a.find(".submit button span");
+            b.text("Deleting..."), window.location.hash = "/deleting", 
+            $.ajax({
+                url: "/station/remove/" + this.params.id,
+                dataType: "json",
+                type: "delete",
+                success: function(data, textStatus, jqXHR) {
+                    var station = data.station;
+                    console.log("remove server respose: " + JSON.stringify(data));
+                    //var c = Gauges.sites[b.id];
+                    that.trigger("station_teardown.g", that.params), 
+                    $("#data").html(ich.deleted_site_template(b)), 
+                    window.location.hash = "/"
+                }
+        });
+    })
         // Station routes
     });
     $(function() {
@@ -854,7 +871,7 @@
         },
         domready: function() {
             console.log("DOMContentLoaded starting MyApp.version: %f", this.VERSION);
-        
+            $("body").height(0);
         }
     };
     MyApp = MyApp || {};
@@ -947,7 +964,76 @@ $(document).ready(function() {
     });
 });
 
-
+///////////////////////////////////////////////////////////////////////////////
+// Plus Object template                                                      //
+///////////////////////////////////////////////////////////////////////////////
+(function($) {
+    
+    "use strict";
+    
+    var fernet = function (method) {
+        if (methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method ' + method + ' does not exists.');
+        }
+    };
+    var VERSION = 1.0;
+    var methods = {};
+    //Set defauls for the control
+    var defaults = {
+        data: [],
+        magic: 911,
+        icon: 'images/markers/anniversary.png',
+        title: 'fernet',
+        loggers: []
+    };
+    //Public methods 
+    methods.init = function (object, callback, options) {
+        //Preserve the original defaults by passing an empty object as the target
+        var options = $.extend({}, defaults, options);
+        var io = document.getElementById(object);
+        io.addEventListener("input", _onInput, false);
+    };
+    //Public:
+    methods.addLogger = function(logger) {
+        loggers.push(logger);
+    };
+    //Private:
+    function _onInput(options)
+    {
+        console.log("io has new input")
+    };
+    function _domready()
+    {
+        console.log("Starting fernet.version: %f", VERSION);
+    };
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // Use CommonJS if applicable                                            //
+    ///////////////////////////////////////////////////////////////////////////
+    if (typeof require !== 'undefined') {
+        //module.exports = myApplication;
+    } else {
+        // else attach it to the window
+        window.fernet = fernet;
+    }
+    if (typeof document !== 'undefined') {
+        if (fernet.$) {
+            fernet.$(function () {
+                fernet.domready();
+            });
+        } else {
+            document.addEventListener('DOMContentLoaded', function () {
+                _domready();
+            }, true);
+        }
+    }
+})(window.jQuery || window.Zepto);      
+      
+      
 ///////////////////////////////////////////////////////////////////////////////
 // Google MAPS bindings                                                      //
 ///////////////////////////////////////////////////////////////////////////////

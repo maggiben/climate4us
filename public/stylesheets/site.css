@@ -5,6 +5,8 @@ body {
   font: 13px/1.231 helvetica, arial, clean, sans-serif;
   *font-size: small;
   *font: x-small;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 table {
   font-size: inherit;
@@ -571,7 +573,7 @@ span.overflow {
   width: 255px;
 /* benja */
   position: absolute;
-/*display:none; */
+  display: none;
   top: 51px;
   left: 50%;
   z-index: 5;
@@ -2903,6 +2905,12 @@ button {
   background: none;
 }
 #loading {
+  display: none;
+}
+header,
+footer,
+#sites {
+/* benja */
   display: none;
 }
 body.loaded header,

@@ -48,15 +48,17 @@ var station_schema = require('../models/station')
 ///////////////////////////////////////////////////////////////////////////////
 exports.getAll = function(request, response, next) {
 
-  Station.find(gotStations);
-  function gotStations(error, stations) {
-    if (error) {
-      console.log(error);
-      return next();
+    response.contentType('application/json');
+    Station.find(gotStations);
+    
+    function gotStations(error, stations) {
+        if (error) {
+            console.log(error);
+            return next();
+        }
+        var stationsJSON = JSON.stringify(stations);
+        return response.send(stationsJSON);
     }
-    var stationsJSON = JSON.stringify(stations);
-    return response.send(stationsJSON);
-  }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,7 +78,7 @@ exports.getById = function(request, response, next) {
     response.contentType('application/json');
     Station.findById(request.params.id, gotStation);
     
-    function gotStation(ererrorr, station) {
+    function gotStation(error, station) {
         if (error) {
             console.log(error);
             return next(error);
@@ -99,6 +101,7 @@ exports.getById = function(request, response, next) {
 // @url DELETE /station/remove/:id                                           //
 ///////////////////////////////////////////////////////////////////////////////
 exports.remove = function(request, response, next) {
+    
     response.contentType('application/json');
     Station.remove({_id: request.params.id}, delStation);
     
@@ -106,7 +109,7 @@ exports.remove = function(request, response, next) {
         if (error) {
             return next(error);
         }
-        var stationJSON = JSON.stringify({_id: request.params.id, action: 'remove', result: true});
+        var stationJSON = JSON.stringify({_id: request.params.id, action: 'remove', result: true, station: station});
         return response.send(stationJSON);
     }
 };
