@@ -27,6 +27,8 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/raphael.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/infobubble.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
@@ -325,7 +327,7 @@
                   <li><a href="#/station/{{ id }}/overview">Overview</a></li>
                   <li><a href="#/station/{{ id }}/live">Live Data</a></li>
                   <li><a href="#/station/{{ id }}/traffic" class="traffic">Views and People</a></li>
-                  <li><a href="#/station/{{ id }}/referrers" class="referrers">Referring Sites</a></li>
+                  <li><a href="#/station/{{ id }}/sensors" class="sensors">Sensors</a></li>
                   <li><a href="#/station/{{ id }}/contents" class="contents">Top Content</a></li>
                   <li><a href="#/station/{{ id }}/searches" class="searches">Search Terms</a></li>
                 </ul>
@@ -410,6 +412,20 @@
                     <button class="delete"><span>Yes, Delete this Station</span></button>
                 </div>
             </form>
+        </script>
+        <script id="station_sensors_template" type="text/html">
+            <div class="toolbar top">Sensor data for {{name}}</div>
+                <div id="display_panel" class="display">
+                    <div class="wrapper">
+                        <div id="temperature"></div>
+                        <div id="humidity"></div>
+                        <div id="co2"></div>
+                        <div id="windspeed"></div>
+                    </div>
+                </div>
+            <div class="toolbar bottom submit edit">
+                <p class="secondary delete"><a href="#" class="toggle_delete">Delete this Station</a></p>
+            </div>
         </script>
         <!-- GRAPH TMPL -->
         <script id="technology_template" type="text/html">

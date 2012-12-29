@@ -515,23 +515,30 @@
                 case "live":
                     var e = this;
                     $("#site_content").html(ich.live_data_template(this))
-                    /*
-                    $('#map_wrapper').gmap().bind('init', function(ev, map) {
-                        $('#map_wrapper').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
-                    		$('#map_wrapper').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-                    	});
-                    });
-                    */
                     var options = {
                         zoom: 8,
                         center: new google.maps.LatLng(-34.6036, -58.3817),
                         mapTypeId: google.maps.MapTypeId.ROADMAP
-                    }
+                    };
                     var map = new window.map({id: "map_wrapper", latitude: -34.6036, longitude: -58.3817, mapOptions: options});
                     break;
                 case "settings":
                     console.log("[settings]");
                     $("#site_content").html(ich.station_settings_template(MyApp.subscription.getStationById(data.id)));
+                    break;
+                case "sensors":
+                    $("#site_content").html(ich.station_sensors_template(MyApp.subscription.getStationById(data.id)));
+                    var g1 = new JustGage({
+                      id: "g1", 
+                      value: getRandomInt(0, 100), 
+                      min: -30,
+                      max: 100,
+                      title: "Temperature",
+                      label: "C°"
+                    });
+                    setInterval(function() {
+                      g1.refresh(getRandomInt(50, 100));
+                    }, 2500);
                     break;
             }
             $("body").addClass("view-panel");
@@ -588,9 +595,9 @@
                     $("#clients_list").removeClass("loading").html(ich.clients_list_template(MyApp))
                 },
                 error: function(jqXHR, status, error) {
-                    $("#clients_list").removeClass("loading").addClass("empty").text("Could not load API Keys")
+                    $("#clients_list").removeClass("loading").addClass("empty").text("Could not load API Keys");
                 }
-            }) : $("#clients_list").removeClass("loading").html(ich.clients_list_template(MyApp))
+            }) : $("#clients_list").removeClass("loading").html(ich.clients_list_template(MyApp));
         });
         this.post("#/account/clients", function() {
             console.log("targent: " + this.target);
@@ -714,6 +721,7 @@
             }), !1;
         });
         this.get("#/station/:id/:path", function () {
+            //return;
             //var a = MyApp.stations[this.params.id];
             console.log("sammy route: #/station/%s/$s", this.params.id, this.params.path);
             //var a = MyApp.subscription.getStationById(this.params.id);
