@@ -539,9 +539,11 @@
         });
         this.bind("station_teardown.g", function(event, data) {
             console.log("station_teardown.g id: " + JSON.stringify(data));
-            var a = $("#s" + data.id).css({height: 0,opacity: 0});
+            var a = $("#s" + data.id);//.css({height: 0,opacity: 0});
             setTimeout(function() {
-                a.remove()
+                a.hide('slow', function(){ $(this).remove();});
+                //a.hide('slow', function(){ $(this).remove();});
+                //a.remove()
             }, 500);
             //delete Gauges.sites[this.id]
         });
