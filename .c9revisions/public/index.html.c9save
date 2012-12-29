@@ -468,3 +468,4 @@
 {"ts":1356752205815,"patch":[[{"diffs":[[0,"div id=\""],[-1,"wi"],[1,"co2"],[0,"\"></div>"]],"start1":22190,"start2":22190,"length1":18,"length2":19},{"diffs":[[0,"       <div id=\""],[-1,"co2"],[1,"temperature"],[0,"\"></div>\n       "]],"start1":22227,"start2":22227,"length1":35,"length2":43}]],"length":26569,"saved":false}
 {"ts":1356752208518,"patch":[[{"diffs":[[0,"   <div id=\""],[-1,"temperatur"],[1,"windspe"],[0,"e\"></div>\n  "]],"start1":22231,"start2":22231,"length1":34,"length2":31}]],"length":26566,"saved":false}
 {"ts":1356752213872,"patch":[[{"diffs":[[0,"windspee"],[1,"d"],[0,"\"></div>"]],"start1":22243,"start2":22243,"length1":16,"length2":17}]],"length":26567,"saved":false}
+{"ts":1356752273177,"patch":[[{"diffs":[[0,"id=\""],[-1,"windspeed"],[1,"pressure"],[0,"\"></"]],"start1":22239,"start2":22239,"length1":17,"length2":16}]],"length":26566,"saved":false}

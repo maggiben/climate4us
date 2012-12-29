@@ -528,16 +528,26 @@
                     break;
                 case "sensors":
                     $("#site_content").html(ich.station_sensors_template(MyApp.subscription.getStationById(data.id)));
-                    var g1 = new JustGage({
-                      id: "g1", 
+                    var temperature_gauge = new JustGage({
+                      id: "temperature.gauge", 
                       value: getRandomInt(0, 100), 
                       min: -30,
                       max: 100,
                       title: "Temperature",
                       label: "C°"
                     });
+                    var humidith_gauge = new JustGage({
+                      id: "humidity.gauge", 
+                      value: getRandomInt(0, 100), 
+                      min: 0,
+                      max: 100,
+                      levelColors: ["#6996D3", "#0F4FA8", "#05316D"], 
+                      title: "Humidity",
+                      label: "RH"
+                    });
                     setInterval(function() {
-                      g1.refresh(getRandomInt(50, 100));
+                        temperature_gauge.refresh(getRandomInt(50, 100));
+                        humidith_gauge.refresh(getRandomInt(70, 100));
                     }, 2500);
                     break;
             }

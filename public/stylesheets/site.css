@@ -3274,7 +3274,13 @@ td.sharing.none span {
   font-weight: bold;
   background: url("../images/arrow.png") 95% 50% no-repeat;
 }
-#g1 {
+#temperature.gauge {
+  width: 200px;
+  height: 120px;
+  display: inline-block;
+  margin: 1em;
+}
+#humidity.gauge {
   width: 200px;
   height: 120px;
   display: inline-block;
