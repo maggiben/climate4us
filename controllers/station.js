@@ -200,10 +200,6 @@ exports.update = function (request, response, next) {
 ///////////////////////////////////////////////////////////////////////////////
 exports.create = function (request, response, next) {
     
-    var name = request.body.name;
-    console.log("name: ", name);
-
-    //console.log("para: " + JSON.stringify(request.params));
     console.log('create-body: ' + JSON.stringify(request.body));
     
     var station = new Station({
@@ -213,8 +209,8 @@ exports.create = function (request, response, next) {
         country: request.body.country,
         state: 'CABA',
         city: 'CABA',
-        latitude: -34.6036,
-        longitude: -58.3817,
+        latitude: request.body.latitude,
+        longitude: request.body.longitude,
         magic: Math.floor(Math.random() * 99999999999999),
         sensors: [1, 2, 3, 4],
         created: new Date(),

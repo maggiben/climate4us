@@ -329,10 +329,10 @@ app.get('/signout', function(req, res) {
 ///////////////////////////////////////////////////////////////////////////////
 app.get('/subscription/getall', Subscription.getAll);
 app.get('/subscription/getbyid/:id', Subscription.getById);
-app.get('/subscription/create', Subscription.create);
+app.post('/subscription/create', Subscription.create);
 app.delete('/subscription/remove/:id', Subscription.remove);
 app.put('/subscription/reorder', Subscription.reorder);
-app.put('/subscription/update', Subscription.update);
+app.put('/subscription/update/:id', Subscription.update);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Station rutes                                                             //

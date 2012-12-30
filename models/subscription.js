@@ -36,14 +36,9 @@ var Subscription = new Schema({
     lastUpdate: { type: Date, default: Date.now },
     lastAccess: { type: Date, default: Date.now },
     isReady: Boolean,
-    stations: [],
-    order: [],
-    selected: Number,
-    humidity: { 
-        value: Number, 
-        dewpoint: Number, 
-        unit: String
-    }
+    stations: { type: Array, required: false },
+    order: { type: Array, required: false },
+    selected:  { type: String, required: false },
 });
 
 module.exports = mongoose.model('Subscription', Subscription);

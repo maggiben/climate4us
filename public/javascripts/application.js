@@ -47,71 +47,101 @@
         this.setup(arg);
     };   
     $.extend(Station.prototype, {
-        name: '',
-        id: 0,
-        _id: 0,
-        type: '',
-        country: '',
-        state: '',
-        city: '',
-        latitude: 0,
-        longitude: 0,
-        magic: 1234,
-        sensors: [],
-        created: null,
-        lastUpdate: new Date(),
-        lastAccess: new Date(),
-        isReady: false,
-        overview: true,
-        mine: true,
-        temperature: {
-            value: 0, 
-            unit: 'C'
+        module: { 
+            VERSION: "0.11",
+            license: {},
+            dependencies: {},
+            author: "BM",
         },
-        feelslike: {},
-        humidity: { 
-            value: 0, 
-            dewpoint: 0, 
-            unit: 'RH' 
-        },
-        wind: { 
-            value: 0, 
-            direction: 'SE', 
-            degrees: 150, 
-            unit: 'KMH' 
-        },
-        rainfall: { 
-            value: 0, 
-            unit: 'MM' 
-        },
-        pressure: { 
-            value: 0, 
-            unit: 'INHG', 
-            type: 'relative' 
-        }, 
-        visibility: { 
-            value: 0, 
-            unit: 'KM' 
-        },
-        astronomy: { 
-            sunrise: "08:01", 
-            sunset: "16:42" 
-        },
-        forecast:[
-            {
-                day: "Today",
-                condition: "",
-                high_temperature: 0.00,
-                low_temperature: 0.00
+        properties: {
+            name: '',
+            id: 0,
+            _id: 0,
+            type: '',
+            country: '',
+            state: '',
+            city: '',
+            latitude: 0,
+            longitude: 0,
+            magic: 1234,
+            sensors: [],
+            created: null,
+            lastUpdate: new Date(),
+            lastAccess: new Date(),
+            isReady: false,
+            overview: true,
+            mine: true,
+            temperature: {
+                value: 0, 
+                unit: 'C'
             },
-            {
-                day: "Tomorrow",
-                condition: "",
-                high_temperature: 0.00,
-                low_temperature: 0.00
-            }
-        ],
-        setup: function (a) {
+            feelslike: {},
+            humidity: { 
+                value: 0, 
+                dewpoint: 0, 
+                unit: 'RH' 
+            },
+            wind: { 
+                value: 0, 
+                direction: 'SE', 
+                degrees: 150, 
+                unit: 'KMH' 
+            },
+            rainfall: { 
+                value: 0, 
+                unit: 'MM' 
+            },
+            pressure: { 
+                value: 0, 
+                unit: 'INHG', 
+                type: 'relative' 
+            }, 
+            visibility: { 
+                value: 0, 
+                unit: 'KM' 
+            },
+            astronomy: { 
+                sunrise: "08:01", 
+                sunset: "16:42" 
+            },
+            forecast:[
+                {
+                    day: "Today",
+                    condition: "",
+                    high_temperature: 0.00,
+                    low_temperature: 0.00
+                },
+                {
+                    day: "Tomorrow",
+                    condition: "",
+                    high_temperature: 0.00,
+                    low_temperature: 0.00
+                }
+            ],
+        },
+        setup: function (options) {
+            var options = $.extend({}, this.properties, options);
+            var that = this;
+            that.id = options._id;
+            $.ajax({
+                url: "/station/getbyid/" + options._id,
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    that.properties = $.extend({}, that.properties, data);
+                    that.properties.id = that.properties._id;
+                    options.onLoad(that.properties);
+                },
+                
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+                complete: function () {                                
+                }
+            });
+        },
+        /*
+        setupx: function (a) {
             var that = this;
             that.id = a._id;
             $.ajax({
@@ -141,6 +171,7 @@
                 }
             });
         },
+        */
         update: function (a) {
             var that = this;
             $.ajax({
@@ -202,11 +233,39 @@
             dependencies: {},
             author: "",
         },
-        _id: null,
-        stations: [],
-        order: [],
-        selected: null,
+        properties: {
+            _id: "50df9fb209556aa365000002",
+            name: 'lab',
+            type: 'subscription',
+            magic: null,
+            created: null,
+            lastUpdate: null,
+            lastAccess: null,
+            isReady: false,
+            stations: [],
+            order: [],
+            selected: null,
+        },
         onSetup: null,
+        init: function (options) {
+            var that = this;
+            //Preserve the original defaults by passing an empty object as the target
+            var options = $.extend({}, this.properties, options);
+            console.log("init options: " + JSON.stringify(options));
+            $.ajax({
+                url: "/subscription/getbyid/" + options._id,
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                   that.properties = $.extend({}, that.properties, data);
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+                complete: function () {                                
+                }
+            });
+        },
         setup: function (a) {
             this.onSetup = a.onSetup;
             var that = this;
@@ -216,12 +275,12 @@
                 dataType: "json",
                 success: function (b) {
                     for (var i = 0; i < b.length; i++) {
-                        that.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad}); //that.stations[b[i]._id] = 
-                        console.log("Attaching station id: " + that.stations[b[i]._id].id);
+                        that.properties.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad}); //that.stations[b[i]._id] = 
+                        console.log("Attaching station id: " + that.properties.stations[b[i]._id].id);
                     }
                     function onLoad(station) {
                         station.isReady = true;
-                        //console.log("is onLoad ready: " + that.stations[station._id].isReady + " id: " + that.stations[station._id]._id);
+                        console.log("is onLoad ready: " + that.properties.stations[station._id].isReady + " id: " + that.properties.stations[station._id]._id);
                         a.onSetup(station);
                     }
                 },
@@ -245,8 +304,8 @@
         },
         getStationById: function(id) {
             console.log("getStationById(%s)", id);
-            console.log("getStationById(%s) = %s", id, JSON.stringify(this.stations[id]));
-            return this.stations[id];
+            console.log("getStationById(%s) = %s", id, JSON.stringify(this.properties.stations[id]));
+            return this.properties.stations[id];
         },
         getAllStationsIds: function() {
             var stations = [];
@@ -309,10 +368,11 @@
             var that = this;
             $.ajax({
                 url: "/station/add",
-                type: "post",
+                type: "POST",
                 dataType: "json",
                 data: station,
                 success: function (data, textStatus, jqXHR) {
+                    //new Station({_id: data._id, type: data.type, onLoad: onLoad});
                     that.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
                     function onLoad(station) {
                         station.isReady = true;
@@ -320,7 +380,6 @@
                     }
                 },
                 error: function (jqXHR, status, error) {
-                    //var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
                 }
             }), !1;
@@ -336,10 +395,8 @@
         },
         update: function(callback) {
             var that = this;
-            callback("coso")
-            /*
             $.ajax({
-                url: "/subscription/update",
+                url: "/subscription/update/" + this._id,
                 dataType: "json",
                 type: "put",
                 data: that,
@@ -351,7 +408,6 @@
                     console.log(jqXHR.responseText);
                 },
             });
-            */
         },
     });
 
@@ -408,7 +464,7 @@
             //console.log("getSubscription");
             MyApp.subscription = new myApplication({onSetup: onSetup});
             function onSetup(a) {
-                //console.log("onSetup: " + JSON.stringify(a));
+                console.log("onSetup: " + JSON.stringify(a));
                 $("#sites").append(ich.site_template(a));
                 $("#s" + a.id).html(ich.station_preview_template(a));
                 MyApp.meldSidebar();
@@ -452,7 +508,7 @@
             }
             $("div.site.current").removeClass("current");
             station.addClass("current");
-            $("#data").html(ich.site_data_template(MyApp.subscription.stations[data.id])); 
+            $("#data").html(ich.site_data_template(MyApp.subscription.getStationById(data.id))); 
             $("body").addClass("view-nav");
         });
         this.bind("show_panel.g", function (e, data) {
@@ -467,7 +523,7 @@
             switch (data.path) {
                 case "overview":
                     console.log("[overview]");
-                    $("#site_content").html(ich.overview_template(MyApp.subscription.stations[data.id]));
+                    $("#site_content").html(ich.overview_template(MyApp.subscription.getStationById(data.id)));
                     var placeholder = $("#placeholder");
                     var d1 = [];
                     for (var i = 0; i < Math.PI * 2; i += 0.25)
@@ -706,6 +762,7 @@
                 success: function (data, textStatus, jqXHR) {
                     //console.log("server respose: " + JSON.stringify(b));
                     var c = data;
+                    // todo use getters instead of direct property access in this case the array 
                     MyApp.subscription.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //
                     function onLoad(station) {
                         $("#new_title").val("");
@@ -733,13 +790,13 @@
         this.get("#/station/:id/:path", function () {
             //return;
             //var a = MyApp.stations[this.params.id];
-            console.log("sammy route: #/station/%s/$s", this.params.id, this.params.path);
+            console.log("sammy route: #/station/%s/%s", this.params.id, this.params.path);
             //var a = MyApp.subscription.getStationById(this.params.id);
             //console.log("MyApp.subscription.getStationById = " + JSON.stringify(a));
             //alert(typeof this.params.id);
             //alert(MyApp.subscription.stations[this.params.id].name);
-            var station = MyApp.subscription.stations[this.params.id];
-            MyApp.subscription.setSelected(this.params.id);
+            var station = MyApp.subscription.getStationById(this.params.id);//stations[this.params.id];
+            //MyApp.subscription.setSelected(this.params.id);
             console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
             //alert("#/station/%s/%s",typeof a, this.params.path);
             //this.params.path == "overview" && a.setRecentTraffic();
@@ -794,16 +851,24 @@
     // Main Client application                                               //
     ///////////////////////////////////////////////////////////////////////////
     var MyApp = {
-        VERSION: 1.23,
+        module: { 
+            VERSION: "0.1.2.3",
+            license: {},
+            dependencies: {},
+            author: "",
+        },
         $: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null,
         timeout: null,
         clients: null,
-        hit_timeout: null,
         connection_count: 0,
         subscription: {},
         mousecoords: {
             pageX: 0, 
             pageY: 0,
+        },
+        properties: {
+            delay: 10,
+            name: "abc"
         },
         user: {
                 name:"pirulo12345@mailinator.com", 
@@ -817,23 +882,43 @@
                 first_name: null, 
                 email: "pirulo12345@mailinator.com"
         },
-        start: function (a) {
+        start: function (options) {
+            var that = this;
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
             //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
             $.ajax({
-                url: 'http://climate4us.aws.af.cm',
+                url: '/application/start',
                 type: 'GET',
                 dataType: "json",
-                success: function (data) {
-
+                success: function(data, textStatus, jqXHR) {
+                    that.subscription subscription: {},
+                },
+                error: function (jqXHR, status, error) {
+                    //c.removeClass("loading")
                 },
                 complete: function () {
                 
                 },
-                error: function () {
-                    //c.removeClass("loading")
-                }
             });
+        },
+        createSubscription: function(options) {
+            var that = this;
+            var options = $.extend({}, this.properties, options);
+            $.ajax({
+                url: "/subscription/create",
+                type: "POST",
+                dataType: "json",
+                data: options,
+                success: function (data, textStatus, jqXHR) {
+                    that.properties = $.extend({}, that.properties, data);
+                    that.properties.isReady = true;
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+                complete: function () {                                
+                }
+            });    
         },
         reset: function () {},
         setUser: function (a) {

@@ -36,8 +36,8 @@ var subscription_schema = require('../models/subscription')
 ///////////////////////////////////////////////////////////////////////////////
 // Route to get all Subscriptions                                            //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                       //
+// @param {Object} response                                                       //
 // @param {Object} next                                                      //
 // @return {Object} JSON Collection of Subscriptions                         //
 //                                                                           //
@@ -45,9 +45,9 @@ var subscription_schema = require('../models/subscription')
 //                                                                           //
 // @url GET /subscription/getall                                             //
 ///////////////////////////////////////////////////////////////////////////////
-exports.getAll = function (req, res, next) {
+exports.getAll = function (request, response, next) {
     
-    res.contentType('application/json');
+    response.contentType('application/json');
     Subscription.find(gotSubscriptions);
     
     function gotSubscriptions(err, subscriptions) {
@@ -56,15 +56,15 @@ exports.getAll = function (req, res, next) {
             return next();
         }
         var subscriptionsJSON = JSON.stringify(subscriptions);
-        return res.send(subscriptionsJSON);
+        return response.send(subscriptionsJSON);
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to a specific Subscription                                          //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                       //
+// @param {Object} response                                                       //
 // @param {Object} next                                                      //
 // @return {Object} JSON Subscription                                        //
 //                                                                           //
@@ -72,25 +72,25 @@ exports.getAll = function (req, res, next) {
 //                                                                           //
 // @url GET /subscription/getbyid                                            //
 ///////////////////////////////////////////////////////////////////////////////
-exports.getById = function (req, res, next) {
+exports.getById = function (request, response, next) {
     
-    res.contentType('application/json');
-    Subscription.findById(req.params.id, gotSubscription);
+    response.contentType('application/json');
+    Subscription.findById(request.params.id, gotSubscription);
     
     function gotSubscription(err, subscription) {
         if (err) {
             return next(err);
         }
         var subscriptionJSON = JSON.stringify(subscription);
-        return res.send(subscriptionJSON);
+        return response.send(subscriptionJSON);
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to add a Subscription                                               //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                       //
+// @param {Object} response                                                       //
 // @param {Object} next                                                      //
 // @return {Object} JSON result                                              //
 //                                                                           //
@@ -98,33 +98,23 @@ exports.getById = function (req, res, next) {
 //                                                                           //
 // @url GET /subscription/create                                             //
 ///////////////////////////////////////////////////////////////////////////////
-exports.create = function (req, res, next) {
-    
-    var name = req.body.name;
-    console.log("name: ", name);
+exports.create = function (request, response, next) {
 
-    //console.log("para: " + JSON.stringify(req.params));
-    console.log('create-body: ' + JSON.stringify(req.body));
-    
+    console.log('create-body: ' + JSON.stringify(request.body));
     var subscription = new Subscription({
-        name: "name",
-        type: "String",
-        magic: 1234,
+        name: request.body.name,
+        type: request.body.type,
+        magic: Math.floor(Math.random() * 99999),
         created: new Date(),
         lastUpdate: new Date(),
         lastAccess: new Date(),
         isReady: false,
-        stations: [],
-        order: [],
-        selected: null,
-        humidity: { 
-            value: 5, 
-            dewpoint: 5, 
-            unit: 'A'
-        }
+        stations: request.body.stations,
+        order: request.body.order,
+        selected: request.body.selected,
     });
     
-    res.contentType('application/json');
+    response.contentType('application/json');
     subscription.save(onSaved);
 
     function onSaved(err) {
@@ -133,15 +123,15 @@ exports.create = function (req, res, next) {
             return next(err);
         }
         console.log("onSaved");
-        return res.send(JSON.stringify(subscription));
+        return response.send(JSON.stringify(subscription));
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to update a Subscription                                            //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                       //
+// @param {Object} response                                                       //
 // @param {Object} next                                                      //
 // @return {Object} JSON updated document                                    //
 //                                                                           //
@@ -149,10 +139,10 @@ exports.create = function (req, res, next) {
 //                                                                           //
 // @url POST /station/update/:id                                             //
 ///////////////////////////////////////////////////////////////////////////////
-exports.update = function (req, res, next) {
+exports.update = function (request, response, next) {
     
-    res.contentType('application/json');
-    Subscription.findByIdAndUpdate({_id : req.params.id}, req.body, updateSubscription);
+    response.contentType('application/json');
+    Subscription.findByIdAndUpdate({_id : request.params.id}, request.body, updateSubscription);
     
     function updateSubscription (err, station) {
         if (err) {
@@ -164,18 +154,18 @@ exports.update = function (req, res, next) {
             return next(err);
         } 
         else {
-            console.log(JSON.stringify(req.body));
+            console.log(JSON.stringify(request.body));
         }
         var subscriptionJSON = JSON.stringify(station);
-        return res.send(subscriptionJSON);
+        return response.send(subscriptionJSON);
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to remove a Subscription                                            //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                       //
+// @param {Object} response                                                       //
 // @param {Object} next                                                      //
 // @return {Object} JSON result                                              //
 //                                                                           //
@@ -183,25 +173,25 @@ exports.update = function (req, res, next) {
 //                                                                           //
 // @url GET /subscription/remove/:id                                         //
 ///////////////////////////////////////////////////////////////////////////////
-exports.remove = function (req, res, next) {
+exports.remove = function (request, response, next) {
     
-    res.contentType('application/json');
-    Subscription.remove({_id: req.params.id}, delSubscription);
+    response.contentType('application/json');
+    Subscription.remove({_id: request.params.id}, delSubscription);
     
     function delSubscription(err) {
         if (err) {
             return next(err);
         }
         var msgJSON = JSON.stringify({action: 'remove', result: 0});
-        return res.send(msgJSON);
+        return response.send(msgJSON);
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Route to remove all Subscriptions                                         //
 //                                                                           //
-// @param {Object} req                                                       //
-// @param {Object} res                                                       //
+// @param {Object} request                                                       //
+// @param {Object} response                                                       //
 // @param {Object} next                                                      //
 // @return {Object} JSON result                                              //
 //                                                                           //
@@ -209,9 +199,9 @@ exports.remove = function (req, res, next) {
 //                                                                           //
 // @url GET /subscription/removeall                                          //
 ///////////////////////////////////////////////////////////////////////////////
-exports.removeall = function (req, res, next) {
+exports.removeall = function (request, response, next) {
     
-    res.contentType('application/json');
+    response.contentType('application/json');
     Subscription.find(gotSubscriptions);
 
     function gotSubscriptions(err, subscriptions) {
@@ -231,7 +221,7 @@ exports.removeall = function (req, res, next) {
             });
         });
         var msgJSON = JSON.stringify({action: 'removeall', result: true});
-        return res.send(msgJSON);
+        return response.send(msgJSON);
     }
 };
 
