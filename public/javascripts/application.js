@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : application.js                                            //
 // @summary      : client side application                                   //
-// @version      : 0.1      3                                                //
+// @version      : 0.14                                                      //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //
@@ -243,7 +243,7 @@
             lastAccess: null,
             isReady: false,
             stations: [],
-            order: [],
+            order: ["50de69d35916580b68000001", "50de37d8bcbf544840000002", "50de37dcbcbf544840000003"], //"50df9c0bf06709637a000001", "50dfa42409556aa365000005", "50dfa7a309556aa365000006", "50dfaf0e09556aa365000007"],
             selected: null,
         },
         onSetup: null,
@@ -269,6 +269,34 @@
         setup: function (a) {
             this.onSetup = a.onSetup;
             var that = this;
+            this.properties.order.forEach(function(_id) {
+                console.log("loading station _id: " + _id);
+                $.ajax({
+                    url: "/station/getbyid/" + _id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        
+                        that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] = 
+                        console.log("Attaching station id: " + that.properties.stations[data._id].id);
+                        
+                        function onLoad(station) {
+                            station.isReady = true;
+                            console.log("is onLoad ready: " + station.isReady + " id: " + station._id);
+                            a.onSetup(station);
+                        }
+                    },
+                    error: function (jqXHR, status, error) {
+                        console.log(jqXHR.responseText);
+                    },
+                    complete: function () {
+                    }
+                });
+            });
+        },
+        setupOLD: function (a) {
+            this.onSetup = a.onSetup;
+            var that = this;
             $.ajax({
                 url: "/station/getall",
                 type: "GET",
@@ -280,12 +308,11 @@
                     }
                     function onLoad(station) {
                         station.isReady = true;
-                        console.log("is onLoad ready: " + that.properties.stations[station._id].isReady + " id: " + that.properties.stations[station._id]._id);
+                        console.log("is onLoad ready: " + station.isReady + " id: " + station._id);
                         a.onSetup(station);
                     }
                 },
                 error: function (jqXHR, status, error) {
-                    //var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
                 },
                 complete: function () {                                
@@ -293,9 +320,9 @@
             });
         },
         listStations: function (a) {
-            for (var key in this.stations)
+            for (var key in this.properties.stations)
             {
-                if (this.stations.hasOwnProperty(key))
+                if (this.properties.stations.hasOwnProperty(key))
                 {
                     console.log("key: " + key);
                 }
@@ -305,13 +332,13 @@
         getStationById: function(id) {
             console.log("getStationById(%s)", id);
             console.log("getStationById(%s) = %s", id, JSON.stringify(this.properties.stations[id]));
-            return this.properties.stations[id];
+            return this.properties.stations[id].properties;
         },
         getAllStationsIds: function() {
             var stations = [];
-            for (var station in this.stations)
+            for (var station in this.properties.stations)
             {
-                if (this.stations.hasOwnProperty(station))
+                if (this.properties.stations.hasOwnProperty(station))
                 {
                     stations.push(station);
                 }
@@ -334,7 +361,7 @@
             });
         },
         getSelected: function() {
-          return this.selected;
+          return this.properties.selected;
         },
         removeStations: function(ids, callback) {
             for (var id in ids)
@@ -354,7 +381,7 @@
                 dataType: "json",
                 data: {},
                 success: function (data, textStatus, jqXHR) {
-                    delete that.stations[data._id];
+                    delete that.properties.stations[data._id];
                     console.log("removed id: " + JSON.stringify(data));
                     callback(data);
                 },
@@ -373,7 +400,7 @@
                 data: station,
                 success: function (data, textStatus, jqXHR) {
                     //new Station({_id: data._id, type: data.type, onLoad: onLoad});
-                    that.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
+                    that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
                     function onLoad(station) {
                         station.isReady = true;
                         callback(data);
@@ -395,6 +422,7 @@
         },
         update: function(callback) {
             var that = this;
+            console.log("subscription update");
             $.ajax({
                 url: "/subscription/update/" + this._id,
                 dataType: "json",
@@ -891,7 +919,7 @@
                 type: 'GET',
                 dataType: "json",
                 success: function(data, textStatus, jqXHR) {
-                    that.subscription subscription: {},
+                    //that.subscription subscription: {},
                 },
                 error: function (jqXHR, status, error) {
                     //c.removeClass("loading")
@@ -1022,11 +1050,12 @@ $(document).ready(function() {
         },
         stop: function () {
             $.ajax({
-                url: "/stations/reorder",
+                url: "/subscription/reorder/" + "50dfa3ce09556aa365000004",
                 dataType: "json",
                 type: "put",
                 data: {
                     ids: $.map($(this).sortable("toArray"), function (a) {
+                        console.log("reorder: %s", a.replace(/^s/, ""));
                         return a.replace(/^s/, "");
                     })
                 }

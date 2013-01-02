@@ -331,7 +331,7 @@ app.get('/subscription/getall', Subscription.getAll);
 app.get('/subscription/getbyid/:id', Subscription.getById);
 app.post('/subscription/create', Subscription.create);
 app.delete('/subscription/remove/:id', Subscription.remove);
-app.put('/subscription/reorder', Subscription.reorder);
+app.put('/subscription/reorder/:id', Subscription.reorder);
 app.put('/subscription/update/:id', Subscription.update);
 
 ///////////////////////////////////////////////////////////////////////////////

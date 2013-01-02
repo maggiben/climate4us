@@ -254,7 +254,7 @@ exports.create = function (request, response, next) {
     response.contentType('application/json');
     station.save(onSaved);
 
-    function onSaved (error) {
+    function onSaved (error, station) {
         if (error) {
             console.log(error);
             return next(error);
