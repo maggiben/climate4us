@@ -3300,3 +3300,7 @@ td.sharing.none span {
   padding: 10px;
   position: relative;
 }
+.ui-menu {
+  position: absolute;
+  width: 100px;
+}

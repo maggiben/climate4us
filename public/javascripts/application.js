@@ -233,6 +233,12 @@
             dependencies: {},
             author: "",
         },
+        settings: $.observable({
+            timeout: 500,
+            debug: true,
+            producction: false,
+            instances: 1
+        }),
         properties: {
             _id: "50df9fb209556aa365000002",
             name: 'lab',
@@ -243,7 +249,14 @@
             lastAccess: null,
             isReady: false,
             stations: [],
-            order: ["50de69d35916580b68000001", "50de37d8bcbf544840000002", "50de37dcbcbf544840000003"], //"50df9c0bf06709637a000001", "50dfa42409556aa365000005", "50dfa7a309556aa365000006", "50dfaf0e09556aa365000007"],
+            order: ["50de69d35916580b68000001", 
+                //"50de37d8bcbf544840000002", 
+                //"50de37dcbcbf544840000003",
+                //"50df9c0bf06709637a000001", 
+                //"50dfa42409556aa365000005", 
+                //"50dfa7a309556aa365000006", 
+                //"50dfaf0e09556aa365000007"
+            ],
             selected: null,
         },
         onSetup: null,
@@ -262,13 +275,14 @@
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
                 },
-                complete: function () {                                
+                complete: function () {
                 }
             });
         },
         setup: function (a) {
-            this.onSetup = a.onSetup;
             var that = this;
+            //this.properties = $.observable(this.properties);
+            this.onSetup = a.onSetup;
             this.properties.order.forEach(function(_id) {
                 console.log("loading station _id: " + _id);
                 $.ajax({
@@ -483,6 +497,16 @@
         })
     };
     
+    /*var station = MyApp.subscription.getStationById(this.params.id);//stations[this.params.id];
+            //MyApp.subscription.setSelected(this.params.id);
+            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
+            //alert("#/station/%s/%s",typeof a, this.params.path);
+            //this.params.path == "overview" && a.setRecentTraffic();
+            //this.trigger('station.setup', station);
+            //this.trigger('station.setup', MyApp.subscription.stations[this.params.id]);
+            this.trigger("show_panel.g", this.params); 
+            MyApp.meldSidebar();
+    */        
     ///////////////////////////////////////////////////////////////////////////
     // Sammy.JS application                                                  //
     ///////////////////////////////////////////////////////////////////////////
@@ -495,7 +519,7 @@
                 console.log("onSetup: " + JSON.stringify(a));
                 $("#sites").append(ich.site_template(a));
                 $("#s" + a.id).html(ich.station_preview_template(a));
-                MyApp.meldSidebar();
+                //MyApp.meldSidebar();
             };
         });
         this.bind("station.setup", function(e, data) {
@@ -655,6 +679,13 @@
                         name: 'node_term',
                         height: 400,
                         prompt: '# '});
+                    });
+                    break;
+                case "srcedit":
+                    $("#site_content").html(ich.station_srceditor_template(MyApp.subscription.getStationById(data.id)));
+                    var editor = CodeMirror.fromTextArea(document.getElementById("code_editor"), {
+                        lineNumbers: true,
+                        theme: 'monokai'
                     });
                     break;
             }

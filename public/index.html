@@ -25,6 +25,7 @@
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery.terminal.css"/>
         <!-- INCLUDE SCRIPTS -->
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.observable.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.scrollTo.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.mousewheel.js"></script>
@@ -330,8 +331,8 @@
                   <li><a href="#/station/{{ id }}/live">Live Data</a></li>
                   <li><a href="#/station/{{ id }}/traffic" class="traffic">Views and People</a></li>
                   <li><a href="#/station/{{ id }}/sensors" class="sensors">Sensors</a></li>
-                  <li><a href="#/station/{{ id }}/terminal" class="contents">Terminal</a></li>
-                  <li><a href="#/station/{{ id }}/searches" class="searches">Search Terms</a></li>
+                  <li><a href="#/station/{{ id }}/terminal" class="sensors">Terminal</a></li>
+                  <li><a href="#/station/{{ id }}/srcedit" class="srcedit">Source Editor</a></li>
                 </ul>
                 <h2>Demographics</h2>
                 <ul>
@@ -429,15 +430,32 @@
                 <p class="secondary delete"><a href="#" class="toggle_delete">Delete this Station</a></p>
             </div>
         </script>
-            <script id="station_terminal_template" type="text/html">
-            <div class="toolbar top">Sensor data for {{name}}</div>
+        <script id="station_terminal_template" type="text/html">
+            <div class="toolbar top">Console service for {{name}}</div>
                 <div id="display_panel" class="display">
                     <div class="wrapper">
                         <div id="terminal" class="terminal"></div>
                     </div>
                 </div>
             <div class="toolbar bottom submit edit">
-                <p class="secondary delete"><a href="#" class="toggle_delete">Delete this Station</a></p>
+                <p class="secondary">
+                    <button><span>Status</span></button>
+                </p>
+            </div>
+        </script>
+        <script id="station_srceditor_template" type="text/html">
+            <div class="toolbar top">Source editor for {{name}}</div>
+                <div id="display_panel" class="display">
+                    <div class="wrapper">
+                        <form>
+                            <textarea id="code_editor" name="code_editor"></textarea>
+                        </form>
+                    </div>
+                </div>
+            <div class="toolbar bottom submit edit">
+                <p class="secondary">
+                    <button><span>Status</span></button>
+                </p>
             </div>
         </script>
         <!-- GRAPH TMPL -->

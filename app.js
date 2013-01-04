@@ -38,6 +38,7 @@ var express = require('express'),
     Account = require('./models/account'),
     Station = require('./controllers/station'),
     Subscription = require('./controllers/subscription'),
+    sio = require('socket.io'),
     LocalStrategy = require('passport-local').Strategy;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -141,12 +142,12 @@ app.all('/', function(req, res, next) {
     next();
 });
 // reusable middleware to test authenticated sessions
-function ensureAuthenticated(req, res, next) {
+function ensureAuthenticated(request, response, next) {
     console.log(ensureAuthenticated);
-    if(req.isAuthenticated()) {
+    if(request.isAuthenticated()) {
         return next();
     }
-    res.redirect('/signin'); // if failed...
+    response.redirect('/signin'); // if failed...
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -373,6 +374,32 @@ app.post('/clients',  function(request, response, next) {
     return response.send(retJSON);
 });
 
+var io = sio.listen(app);
+var nicknames = {};
+
+io.sockets.on('connection', function (socket) {
+  socket.on('user message', function (msg) {
+    socket.broadcast.emit('user message', socket.nickname, msg);
+  });
+
+socket.on('nickname', function (nick, fn) {
+if (nicknames[nick]) {
+  fn(true);
+} else {
+  fn(false);
+  nicknames[nick] = socket.nickname = nick;
+  socket.broadcast.emit('announcement', nick + ' connected');
+  io.sockets.emit('nicknames', nicknames);
+}
+});
+
+socket.on('disconnect', function () {
+if (!socket.nickname) return;
+
+delete nicknames[socket.nickname];
+    socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+    socket.broadcast.emit('nicknames', nicknames);
+});
 
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
