@@ -21,17 +21,24 @@
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.css" />
         <!-- CODEMIRROR THEMES -->
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.themes/monokai.css" />
+        <!-- TERMINAL THEME -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery.terminal.css"/>
         <!-- INCLUDE SCRIPTS -->
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.scrollTo.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.mousewheel.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.flot.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.ui.map.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
+        <!-- Codemirror PLUGIN -->
         <script type="text/javascript" charset="utf-8" src="javascripts/codemirror.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/mode/javascript/javascript.js"></script>
+        <!-- Terminal PLUGIN -->
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.terminal-0.4.22.js"></script>
+        <!-- Raphael PLUGIN -->
         <script type="text/javascript" charset="utf-8" src="javascripts/raphael.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -323,7 +330,7 @@
                   <li><a href="#/station/{{ id }}/live">Live Data</a></li>
                   <li><a href="#/station/{{ id }}/traffic" class="traffic">Views and People</a></li>
                   <li><a href="#/station/{{ id }}/sensors" class="sensors">Sensors</a></li>
-                  <li><a href="#/station/{{ id }}/contents" class="contents">Top Content</a></li>
+                  <li><a href="#/station/{{ id }}/terminal" class="contents">Terminal</a></li>
                   <li><a href="#/station/{{ id }}/searches" class="searches">Search Terms</a></li>
                 </ul>
                 <h2>Demographics</h2>
@@ -416,6 +423,17 @@
                         <div id="humidity.gauge"></div>
                         <div id="co2.gauge"></div>
                         <div id="pressure.gauge"></div>
+                    </div>
+                </div>
+            <div class="toolbar bottom submit edit">
+                <p class="secondary delete"><a href="#" class="toggle_delete">Delete this Station</a></p>
+            </div>
+        </script>
+            <script id="station_terminal_template" type="text/html">
+            <div class="toolbar top">Sensor data for {{name}}</div>
+                <div id="display_panel" class="display">
+                    <div class="wrapper">
+                        <div id="terminal" class="terminal"></div>
                     </div>
                 </div>
             <div class="toolbar bottom submit edit">

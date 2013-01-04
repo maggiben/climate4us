@@ -634,6 +634,29 @@
                         humidith_gauge.refresh(getRandomInt(70, 100));
                     }, 2500);
                     break;
+                case "terminal":
+                    $("#site_content").html(ich.station_terminal_template(MyApp.subscription.getStationById(data.id)));
+                    $(function($, undefined) {
+                        $('#terminal').terminal(function(command, term) {
+                            if (command !== '') {
+                                try {
+                                    var result = window.eval(command);
+                                    if (result !== undefined) {
+                                        term.echo(new String(result));
+                                    }
+                                } catch(e) {
+                                    term.error(new String(e));
+                                }
+                            } else {
+                                term.echo('');
+                            }
+                        }, {
+                        greetings: '[[b;#ccc;#750775]Node Terminal]',
+                        name: 'node_term',
+                        height: 400,
+                        prompt: '# '});
+                    });
+                    break;
             }
             $("body").addClass("view-panel");
             $("#site_content div.display").scrollTop(d);
