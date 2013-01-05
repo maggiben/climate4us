@@ -416,7 +416,7 @@
                 <h2>Management</h2>
                 <ul>
                   {{#mine}}
-                  <li><a href="#/station/{{ id }}/settings">Gauge Settings</a></li>
+                  <li><a href="#/station/{{ id }}/settings">Station Settings</a></li>
                   <li><a href="#/station/{{ id }}/sharing" class="sharing unloaded">Sharing</a></li>
                   {{/mine}}
                   <li><a href="#/station/{{ id }}/code">Tracking Code</a></li>
@@ -435,7 +435,7 @@
             <div class="toolbar bottom"></div>
         </script>
         <script id="sharing_template" type="text/html">
-            <div class="toolbar top">Share this Gauge with Friends or Colleagues</div>
+            <div class="toolbar top">Share this Station with Friends or Colleagues</div>
             <div id="display_panel" class="display">
                 <div class="wrapper">
                 {{#allow_sharing}}
@@ -454,7 +454,7 @@
                     <h2>Sharing Not Enabled</h2>
                     <p>Sorry, sharing is not allowed on your current plan</p>
                 </div>
-                <div class="empty">To enable sharing on this gauge, please <a href="#/account/plan">upgrade to a larger plan</a>.
+                <div class="empty">To enable sharing on this station, please <a href="#/account/plan">upgrade to a larger plan</a>.
                     {{/allow_sharing}}
                 </div>
             </div>
