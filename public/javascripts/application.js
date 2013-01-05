@@ -661,8 +661,9 @@
                 case "terminal":
                     $("#site_content").html(ich.station_terminal_template(MyApp.subscription.getStationById(data.id)));
                     $(function($, undefined) {
-                        $('#terminal').terminal(function(command, term) {
+                        $('#terminal').terminal( function(command, term) {
                             if (command !== '') {
+                                /*
                                 try {
                                     var result = window.eval(command);
                                     if (result !== undefined) {
@@ -671,14 +672,25 @@
                                 } catch(e) {
                                     term.error(new String(e));
                                 }
+                                */
+                                var shellstring = command.split(" ");
+                                var cmd = shellstring.splice(0,1).toString();
+                                var args = [];
+                                shellstring.forEach(function(arg) {
+                                    args.push(arg);
+                                });
+                                MyApp.properties.socket.emit('consoleio', { message: 'exec', command: cmd, arguments: args})
+                                term.pause();
                             } else {
                                 term.echo('');
                             }
                         }, {
                         greetings: '[[b;#ccc;#750775]Node Terminal]',
-                        name: 'node_term',
+                        name: 'consoleio',
                         height: 400,
-                        prompt: '# '});
+                        prompt: '# ',
+                        onInit: function(terminal) { console.log("console.init()"); window.terminal = terminal || {} }
+                        });
                     });
                     break;
                 case "srcedit":
@@ -950,7 +962,11 @@
         },
         properties: {
             delay: 10,
-            name: "abc"
+            reconnect: true,
+            socket: null,
+            stdinp: null,
+            stdout: null,
+            stderr: null,
         },
         user: {
                 name:"pirulo12345@mailinator.com", 
@@ -1125,6 +1141,9 @@ $(document).ready(function() {
             }, 0);
         }
     }).val($.datepicker.formatDate('dd/m/yy', new Date()));
+    $("li.live .status").text("off");
+    $("html").removeClass("live");
+    
     $(window).scroll(function() {
         var a = $(window).height()
         , docHeight = $(document).height()

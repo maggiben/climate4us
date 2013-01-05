@@ -284,7 +284,7 @@ header ul li span.indicator {
   -moz-background-clip: padding;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
-  background: url("../images/refresh_dark-823e76dc88f88b3c48fd89d0a58d4859.png");
+  background: url("../images/refresh_dark.png");
 }
 header ul li span.indicator span {
   -webkit-transition: 0.2s linear;
@@ -3287,12 +3287,12 @@ td.sharing.none span {
   margin: 1em;
 }
 .terminal {
-  font-family: FreeMono, monospace;
-  color: #aaa;
-  background-color: #000;
+  font-family: monospace, FreeMono;
+  color: #f8f8f2;
+  background-color: #272822;
   font-size: 12px;
   line-height: 14px;
-  border: 1px solid #aaa;
+  border: 1px solid #000;
   -webkit-border-radius: 5px 5px 5px 5px;
   -moz-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;

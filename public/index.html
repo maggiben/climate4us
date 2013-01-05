@@ -17,12 +17,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <!-- INCLUDE STYLES -->
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery-ui.css" />
-        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/site.css" />
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.css" />
         <!-- CODEMIRROR THEMES -->
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.themes/monokai.css" />
         <!-- TERMINAL THEME -->
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery.terminal.css"/>
+        <!-- TERMINAL THEME -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/site.css" />
         <!-- INCLUDE SCRIPTS -->
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.observable.js"></script>
@@ -39,7 +40,79 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/mode/javascript/javascript.js"></script>
         <!-- Terminal PLUGIN -->
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.terminal-0.4.22.js"></script>
-        <!-- Raphael PLUGIN -->
+        <!-- SOCKET.IO -->
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+        $(document).ready(function() {
+            "use strict";
+            var timer = null;
+            var socket = io.connect('http://climate4us.aws.af.cm', {
+                closeTimeout: 2000,
+                });
+            socket.on('news', function (data) {
+                console.log(data);
+                socket.emit('my other event', { message: 'data' });
+            });
+            socket.on('consoleio', function (data) {
+                switch(data.message)
+                {
+                    case 'heartbeat':
+                        echo("[[b;#777;]heartbeat]")
+                        break;
+                    case 'exec':
+                        switch(data.io)
+                        {
+                            case 'stdout': 
+                                echo(data.result);
+                                console.log(data);
+                                break;
+                            case 'stderr':
+                                echo("[[b;#f00;]" + data.result +"]");
+                                console.log(data.result);
+                                break;
+                            
+                        }
+                        break;
+                }
+                function echo(message)
+                {
+                    // TODO setup a proper debug console
+                    // outp !== '' ? outp : JSON.stringify(data)
+                    if(typeof window.terminal !== 'undefined') {
+                        window.terminal.echo(message);
+                        window.terminal.resume();
+                    }
+                    else {
+                        console.log(message);
+                    }
+                }
+            });
+            socket.on('connect', function() {
+                console.log("socket.connected");
+                $("html").addClass("live");
+                $("li.live .status").text("on");
+                timer = setInterval(function() {
+                    $(".indicator span").animate({backgroundColor:'##F511F5'})
+                    socket.emit('consoleio', { message: 'heartbeat' });
+                    setTimeout(function() {
+                        $(".indicator span").animate({backgroundColor:'#750775'})
+                    }, 1000);
+                }, 2000);
+            });
+            socket.on('disconnect', function() {
+                console.log("socket.disconnected")
+                clearTimeout(timer);
+                if(MyApp.properties.reconnect)
+                {
+                    socket.socket.reconnect();
+                }
+                $("li.live .status").text("off");
+                $("html").removeClass("live");
+            });
+            MyApp.properties.socket = socket || {};
+        });
+        </script>
+        <!-- Raphael PLUGIN -->        
         <script type="text/javascript" charset="utf-8" src="javascripts/raphael.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -68,7 +141,7 @@
                 <li><a href="#/temp">temp</a></li>
 				<li><a href="#" id="feedback_link" style="visibility: visible;">Feedback</a></li>
 				<li><a href="#/sign_out">Sign Out</a></li>
-				<li class="live">Live: <span class="status">on</span> <span class="indicator"><span></span></span></li>
+				<li class="live">Live: <span class="status">off</span> <span class="indicator"><span></span></span></li>
 			</ul>
 			<a href="#/map" class="button map_view">MAP</a>
 			<a href="https://secure.gaug.es/dashboard#" class="back">Back</a>

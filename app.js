@@ -38,7 +38,6 @@ var express = require('express'),
     Account = require('./models/account'),
     Station = require('./controllers/station'),
     Subscription = require('./controllers/subscription'),
-    sio = require('socket.io'),
     LocalStrategy = require('passport-local').Strategy;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,10 +86,10 @@ var allowCrossDomain = function(req, res, next) {
 
     // intercept OPTIONS method
     if ('OPTIONS' == req.method) {
-      res.send(200);
+        res.send(200);
     }
     else {
-      next();
+        next();
     }
 };
 
@@ -130,7 +129,7 @@ passport.deserializeUser(Account.deserializeUser());
 mongoose.connect(mongourl);
 // Check if connected
 mongoose.connection.on("open", function(){
-  console.log("mongodb connected at: %s", mongourl);
+    console.log("mongodb connected at: %s", mongourl);
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -374,6 +373,7 @@ app.post('/clients',  function(request, response, next) {
     return response.send(retJSON);
 });
 
+/*
 var io = sio.listen(app);
 var nicknames = {};
 
@@ -401,6 +401,73 @@ delete nicknames[socket.nickname];
     socket.broadcast.emit('nicknames', nicknames);
 });
 
+*/
+
+/*
 app.listen(conf.listenPort, function(){
   console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
+});
+*/
+
+var server = require('http').createServer(app)
+var io = require('socket.io').listen(server);
+
+server.listen(process.env.PORT);
+
+io.sockets.on('connection', function (socket) {
+    
+    io.sockets.emit('this', { will: 'be received by everyone'});
+    
+    socket.on('message', function (message) {
+        console.log("Got message: " + message);
+        ip = socket.handshake.address.address;
+        url = message;
+        io.sockets.emit('news', { 'connections': Object.keys(io.connected).length, 'ip': '***.***.***.' + ip.substring(ip.lastIndexOf('.') + 1), 'url': url, 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
+    });
+    socket.on('my other event', function (data) {
+        console.log('my other event' + data);
+    });
+    socket.on('consoleio', function (data) {
+        console.log('consoleio' + JSON.stringify(data));
+        data.message = data.message || {};
+        switch(data.message)
+        {
+            case 'exec':
+                
+                var spawn = require('child_process').spawn;
+                var exec = spawn(data.command, data.arguments); //spawn(data.command, data.arguments);
+                exec.stdout.setEncoding('ascii');
+                exec.stderr.setEncoding('ascii');
+                
+                exec.stdout.on('data', function (data) {
+                  console.log('stdout: ' + data);
+                  io.sockets.emit('consoleio', { message: 'exec', io: 'stdout', command: data.command, result: data });
+                });
+                
+                exec.stderr.on('data', function (data) {
+                    console.log('stderr: ' + data);
+                    io.sockets.emit('consoleio', { message: 'exec', io: 'stderr', command: data.command, result: data });
+                });
+                
+                exec.on('exit', function (code) {
+                    console.log('child process exited with code ' + code);
+                    io.sockets.emit('consoleio', { message: 'exec', command: data.command, result: 'exit' });
+                });
+                break;
+                
+        }
+        io.sockets.emit('consoleio', { event: 'message received', data: data});
+    });
+    socket.on('disconnect', function () {
+        console.log("Socket disconnected");
+        io.sockets.emit('pageview', { 'connections': Object.keys(io.connected).length });
+    });
+
+    /*
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function (data) {
+        socket.emit('news', { event: 'heartbeat' });
+        console.log(data);
+    });
+    */
 });
