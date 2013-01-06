@@ -7,8 +7,8 @@ var Account = new Schema({
     email: String,
     country: String,
     birthdate: Date,
+    subscription: String,
     subscriptions: { type: Array, required: false },
-    
 });
 
 Account.plugin(passportLocalMongoose);

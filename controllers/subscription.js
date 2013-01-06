@@ -210,16 +210,16 @@ exports.reorder = function (request, response, next) {
         if (error) {
             return next(error);
         }
-            subscription.order = request.body.ids;
-            subscription.save(onSaved);
-            function onSaved(error, subscription) {
-                if (error) {
-                    console.log(error);
-                    return next(error);
-                }
-                console.log('subscription %s', JSON.stringify(subscription));
-                return response.send(JSON.stringify(subscription));
+        subscription.order = request.body.ids;
+        subscription.save(onSaved);
+        function onSaved(error, subscription) {
+            if (error) {
+                console.log(error);
+                return next(error);
             }
+            console.log('subscription %s', JSON.stringify(subscription));
+            return response.send(JSON.stringify(subscription));
+        }
     }
 };
 ///////////////////////////////////////////////////////////////////////////////

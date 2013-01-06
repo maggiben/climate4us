@@ -37,7 +37,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 ;(function($) {
     "use strict";
-
     ///////////////////////////////////////////////////////////////////////////
     // Station class                                                         //
     // This object stores all information regarding the weather station      //
@@ -223,8 +222,8 @@
     ///////////////////////////////////////////////////////////////////////////
     // Subscription class                                                    //
     ///////////////////////////////////////////////////////////////////////////
-    var myApplication = function(a) {
-        this.setup(a);
+    var myApplication = function(options) {
+        this.init(options);
     };
     $.extend(myApplication.prototype, {
         module: { 
@@ -249,13 +248,13 @@
             lastAccess: null,
             isReady: false,
             stations: [],
-            order: ["50de69d35916580b68000001", 
-                "50de37d8bcbf544840000002", 
-                "50de37dcbcbf544840000003",
-                "50df9c0bf06709637a000001", 
-                "50dfa42409556aa365000005", 
-                "50dfa7a309556aa365000006", 
-                "50dfaf0e09556aa365000007"
+            order: ["50e9be722eda7b7a55000002", 
+                //"50de37d8bcbf544840000002", 
+                //"50de37dcbcbf544840000003",
+                //"50df9c0bf06709637a000001", 
+                //"50dfa42409556aa365000005", 
+                //"50dfa7a309556aa365000006", 
+                //"50dfaf0e09556aa365000007"
             ],
             selected: null,
         },
@@ -264,13 +263,15 @@
             var that = this;
             //Preserve the original defaults by passing an empty object as the target
             var options = $.extend({}, this.properties, options);
-            console.log("init options: " + JSON.stringify(options));
             $.ajax({
                 url: "/subscription/getbyid/" + options._id,
                 type: "GET",
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {
-                   that.properties = $.extend({}, that.properties, data);
+                    console.log(data);
+                    that.properties = $.extend({}, that.properties, data);
+                    console.log("init options: " + JSON.stringify(that.properties));
+                    options.callback(data);
                 },
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
@@ -290,7 +291,7 @@
                     type: "GET",
                     dataType: "json",
                     success: function (data, textStatus, jqXHR) {
-                        
+                        console.log("/station/getbyid---: " + JSON.stringify(data._id));
                         that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] = 
                         console.log("Attaching station id: " + that.properties.stations[data._id].id);
                         
@@ -938,7 +939,7 @@
     });
     $(function() {
         app.run();
-        app.trigger('getSubscription', {time: new Date()});
+        //app.trigger('getSubscription', {time: new Date()});
     });
     
     ///////////////////////////////////////////////////////////////////////////
@@ -978,12 +979,49 @@
                 id: "50c9e8b9f5a1f56713000002", 
                 last_name: null, 
                 first_name: null, 
-                email: "pirulo12345@mailinator.com"
+                email: "pirulo12345@mailinator.com",
+                subscriptions: [],
+                subscription: null,
         },
-        start: function (options) {
+        init: function(options) {
+            var that = this;
+            console.log("MyApp.options")
+            this.getUser({callback: onUserSuccess})
+            
+            function onUserSuccess(account)
+            {
+                MyApp.subscription = new myApplication({_id: that.user.subscription, callback: onInit});
+                function onInit(subscription) {
+                    console.log(subscription);
+                }
+                /*
+                function onSetup(a) {
+                    console.log("onSetup: " + JSON.stringify(a));
+                    $("#sites").append(ich.site_template(a));
+                    $("#s" + a.id).html(ich.station_preview_template(a));
+                    //MyApp.meldSidebar();
+                };
+                */
+                /*
+                that.user.subscriptions.forEach(function(_id) {
+                    console.log("subscription._id: " + _id);
+                });
+                */
+            }
+            return;
+            var that = this;
+            MyApp.subscription = new myApplication({onSetup: onSetup});
+            function onSetup(a) {
+                $("#sites").append(ich.site_template(a));
+                $("#s" + a.id).html(ich.station_preview_template(a));
+            };
+        },
+        start: function(options) {
             var that = this;
             //a === 0 ? app.runRoute("get", "#/map") : window.location.hash == "#/" && (window.location.hash = "");
             //jQuery.get('http://laboratory.bmaggi.c9.io/cors.php', null, function(data){alert(data);});
+            // new myApplication({onSetup: onSetup});
+            
             $.ajax({
                 url: '/application/start',
                 type: 'GET',
@@ -998,6 +1036,39 @@
                 
                 },
             });
+        },
+        getSubscription: function(options) {
+            var that = this;
+            $.ajax({
+                url: "/subscription/getbyid/" + options._id,
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data);
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+                complete: function () {
+                }
+            });
+        },
+        setSubscription: function(_id) {
+            var that = this;
+            $.ajax({
+                url: "/account/subscription",
+                type: "PUT",
+                dataType: "json",
+                data: {subscription: _id},
+                success: function (data, textStatus, jqXHR) {
+                    that.user.subscription = data.subscription;
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+                complete: function () {                                
+                }
+            });      
         },
         createSubscription: function(options) {
             var that = this;
@@ -1021,6 +1092,22 @@
         reset: function () {},
         setUser: function (a) {
             //this.user = a.user, a.subscription && (this.subscription = new Subscription(a.subscription))
+        },
+        getUser: function(options) {
+            var that = this;
+            console.log("getUser");
+            $.ajax({
+                url: "/account/getAccount",
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    that.user = $.extend({}, that.user, data);
+                    options.callback(that.user);
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+            });    
         },
         getSettings: function(a) {
                 /*
@@ -1073,8 +1160,10 @@
             }
         },
         domready: function() {
-            console.log("DOMContentLoaded starting MyApp.version: %f", this.VERSION);
+            console.log("DOMContentLoaded starting MyApp.version: %f", this.module.VERSION);
+            this.init({user: 'uid'});
             $("body").height(0);
+            $("#data").html(ich.greetings_template(this));
         }
     };
     MyApp = MyApp || {};
@@ -1082,10 +1171,12 @@
     ///////////////////////////////////////////////////////////////////////////
     // Use CommonJS if applicable                                            //
     ///////////////////////////////////////////////////////////////////////////
+    console.log("using commons")
     if (typeof require !== 'undefined') {
         //module.exports = myApplication;
     } else {
         // else attach it to the window
+        console.log("attachinng plugin")
         window.MyApp = MyApp;
     }
     if (typeof document !== 'undefined') {
@@ -1120,10 +1211,11 @@ $(document).ready(function() {
         },
         stop: function () {
             $.ajax({
-                url: "/subscription/reorder/" + "50dfa3ce09556aa365000004",
+                url: "/subscription/reorder/" + MyApp.user.subscription,
                 dataType: "json",
                 type: "put",
                 data: {
+                    _id: MyApp.user.subscription,
                     ids: $.map($(this).sortable("toArray"), function (a) {
                         console.log("reorder: %s", a.replace(/^s/, ""));
                         return a.replace(/^s/, "");
@@ -1171,76 +1263,7 @@ $(document).ready(function() {
     });
 });
 
-///////////////////////////////////////////////////////////////////////////////
-// Plus Object template                                                      //
-///////////////////////////////////////////////////////////////////////////////
-(function($) {
-    
-    "use strict";
-    
-    var fernet = function (method) {
-        if (methods[method]) {
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === 'object' || !method) {
-            return methods.init.apply(this, arguments);
-        } else {
-            $.error('Method ' + method + ' does not exists.');
-        }
-    };
-    var VERSION = 1.0;
-    var methods = {};
-    //Set defauls for the control
-    var defaults = {
-        data: [],
-        magic: 911,
-        icon: 'images/markers/anniversary.png',
-        title: 'fernet',
-        loggers: []
-    };
-    //Public methods 
-    methods.init = function (object, callback, options) {
-        //Preserve the original defaults by passing an empty object as the target
-        var options = $.extend({}, defaults, options);
-        var io = document.getElementById(object);
-        io.addEventListener("input", _onInput, false);
-    };
-    //Public:
-    methods.addLogger = function(logger) {
-        loggers.push(logger);
-    };
-    //Private:
-    function _onInput(options)
-    {
-        console.log("io has new input")
-    };
-    function _domready()
-    {
-        console.log("Starting fernet.version: %f", VERSION);
-    };
-    
-    ///////////////////////////////////////////////////////////////////////////
-    // Use CommonJS if applicable                                            //
-    ///////////////////////////////////////////////////////////////////////////
-    if (typeof require !== 'undefined') {
-        //module.exports = myApplication;
-    } else {
-        // else attach it to the window
-        window.fernet = fernet;
-    }
-    if (typeof document !== 'undefined') {
-        if (fernet.$) {
-            fernet.$(function () {
-                fernet.domready();
-            });
-        } else {
-            document.addEventListener('DOMContentLoaded', function () {
-                _domready();
-            }, true);
-        }
-    }
-})(window.jQuery || window.Zepto);      
-      
-      
+
 ///////////////////////////////////////////////////////////////////////////////
 // Google MAPS bindings                                                      //
 ///////////////////////////////////////////////////////////////////////////////

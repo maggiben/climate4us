@@ -3304,3 +3304,30 @@ td.sharing.none span {
   position: absolute;
   width: 100px;
 }
+article {
+  margin: 20px 0;
+  display: block;
+  padding: 20px 0 60px 0;
+}
+article div.empty {
+  background: #f4f4f4;
+  background: rgba(0,0,0,0.05);
+  text-align: center;
+  color: #777;
+  text-shadow: #fff 0 1px 1px;
+  padding: 10px 15px;
+  margin: 0 0 10px;
+  font-size: 11px;
+  clear: both;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+article div.empty a {
+  color: #cc66bc;
+}

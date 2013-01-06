@@ -276,3 +276,4 @@
 {"ts":1357105991401,"patch":[[{"diffs":[[0,"cation/json');\r\n"],[1,"    \r\n"],[0,"    Subscription"]],"start1":11123,"start2":11123,"length1":32,"length2":38}]],"length":13638,"saved":false}
 {"ts":1357105992575,"patch":[[{"diffs":[[0,"son');\r\n    "],[1,"console.log('new order: %s', JSON.stringify(request.body));"],[0,"\r\n    Subscr"]],"start1":11131,"start2":11131,"length1":24,"length2":83}]],"length":13697,"saved":false}
 {"ts":1357105993711,"patch":[[{"diffs":[[0,"st.body));\r\n"],[1,"    \r\n"],[0,"    Subscrip"]],"start1":11192,"start2":11192,"length1":24,"length2":30}]],"length":13703,"saved":false}
+{"ts":1357498953768,"patch":[[{"diffs":[[0," }\r\n"],[-1,"        console.log('subscription %s', JSON.stringify(subscription));\r\n        return response.send(JSON.stringify(subscription));\r\n        \r\n"],[0,"    "]],"start1":11394,"start2":11394,"length1":150,"length2":8}]],"length":13663,"saved":false}

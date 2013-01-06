@@ -37,6 +37,7 @@ var express = require('express'),
     passport = require('passport'),
     Account = require('./models/account'),
     Station = require('./controllers/station'),
+    Account_controller = require('./controllers/account');
     Subscription = require('./controllers/subscription'),
     LocalStrategy = require('passport-local').Strategy;
 
@@ -324,11 +325,16 @@ app.get('/signout', function(req, res) {
     res.redirect('/');
 });
 
+app.get('/account/getbyid/:id', ensureAuthenticated, Account_controller.getAccountById);
+app.get('/account/getAccount', ensureAuthenticated, Account_controller.getAccount);
+app.put('/account/subscription', ensureAuthenticated, Account_controller.setSubscription);
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Subscription rutes                                                        //
 ///////////////////////////////////////////////////////////////////////////////
 app.get('/subscription/getall', Subscription.getAll);
-app.get('/subscription/getbyid/:id', Subscription.getById);
+app.get('/subscription/getbyid/:id', ensureAuthenticated, Subscription.getById);
 app.post('/subscription/create', Subscription.create);
 app.delete('/subscription/remove/:id', Subscription.remove);
 app.put('/subscription/reorder/:id', Subscription.reorder);
@@ -373,42 +379,9 @@ app.post('/clients',  function(request, response, next) {
     return response.send(retJSON);
 });
 
-/*
-var io = sio.listen(app);
-var nicknames = {};
-
-io.sockets.on('connection', function (socket) {
-  socket.on('user message', function (msg) {
-    socket.broadcast.emit('user message', socket.nickname, msg);
-  });
-
-socket.on('nickname', function (nick, fn) {
-if (nicknames[nick]) {
-  fn(true);
-} else {
-  fn(false);
-  nicknames[nick] = socket.nickname = nick;
-  socket.broadcast.emit('announcement', nick + ' connected');
-  io.sockets.emit('nicknames', nicknames);
-}
-});
-
-socket.on('disconnect', function () {
-if (!socket.nickname) return;
-
-delete nicknames[socket.nickname];
-    socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
-    socket.broadcast.emit('nicknames', nicknames);
-});
-
-*/
-
-/*
-app.listen(conf.listenPort, function(){
-  console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
-});
-*/
-
+///////////////////////////////////////////////////////////////////////////////
+// socket.io                                                                 //
+///////////////////////////////////////////////////////////////////////////////
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(server);
 
@@ -463,11 +436,4 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('pageview', { 'connections': Object.keys(io.connected).length });
     });
 
-    /*
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-        socket.emit('news', { event: 'heartbeat' });
-        console.log(data);
-    });
-    */
 });

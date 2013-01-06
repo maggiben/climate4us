@@ -40,84 +40,18 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/mode/javascript/javascript.js"></script>
         <!-- Terminal PLUGIN -->
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.terminal-0.4.22.js"></script>
-        <!-- SOCKET.IO -->
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
-        $(document).ready(function() {
-            "use strict";
-            var timer = null;
-            var socket = io.connect('http://climate4us.bmaggi.c9.io', {
-                closeTimeout: 2000,
-                });
-            socket.on('news', function (data) {
-                console.log(data);
-                socket.emit('my other event', { message: 'data' });
-            });
-            socket.on('consoleio', function (data) {
-                switch(data.message)
-                {
-                    case 'heartbeat':
-                        echo("[[b;#777;]heartbeat]")
-                        break;
-                    case 'exec':
-                        switch(data.io)
-                        {
-                            case 'stdout': 
-                                echo(data.result);
-                                console.log(data);
-                                break;
-                            case 'stderr':
-                                echo("[[b;#f00;]" + data.result +"]");
-                                console.log(data.result);
-                                break;
-                            
-                        }
-                        break;
-                }
-                function echo(message)
-                {
-                    // TODO setup a proper debug console
-                    // outp !== '' ? outp : JSON.stringify(data)
-                    if(typeof window.terminal !== 'undefined') {
-                        window.terminal.echo(message);
-                        window.terminal.resume();
-                    }
-                    else {
-                        console.log(message);
-                    }
-                }
-            });
-            socket.on('connect', function() {
-                console.log("socket.connected");
-                $("html").addClass("live");
-                $("li.live .status").text("on");
-                timer = setInterval(function() {
-                    $(".indicator span").animate({backgroundColor:'##F511F5'})
-                    socket.emit('consoleio', { message: 'heartbeat' });
-                    setTimeout(function() {
-                        $(".indicator span").animate({backgroundColor:'#750775'})
-                    }, 1000);
-                }, 2000);
-            });
-            socket.on('disconnect', function() {
-                console.log("socket.disconnected")
-                clearTimeout(timer);
-                if(MyApp.properties.reconnect)
-                {
-                    socket.socket.reconnect();
-                }
-                $("li.live .status").text("off");
-                $("html").removeClass("live");
-            });
-            MyApp.properties.socket = socket || {};
-        });
-        </script>
-        <!-- Raphael PLUGIN -->        
+        <!-- Raphael PLUGIN -->     
         <script type="text/javascript" charset="utf-8" src="javascripts/raphael.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/infobubble.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
+        <script type="text/javascript">
+            console.log("cosasdasdasd")
+        </script>
+        <!-- SOCKET.IO -->
+        <script src="/socket.io/socket.io.js"></script>
+        <!-- <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script> -->
         <!-- jQuery Masonry -->
         <!-- Adobe Edge Web Fonts -->
         <!-- DEV VERSION -->
@@ -143,8 +77,6 @@
 				<li><a href="#/sign_out">Sign Out</a></li>
 				<li class="live">Live: <span class="status">off</span> <span class="indicator"><span></span></span></li>
 			</ul>
-			<a href="#/map" class="button map_view">MAP</a>
-			<a href="https://secure.gaug.es/dashboard#" class="back">Back</a>
 		</header>
         <!-- MAIN -->
         <div id="main"></div>
@@ -423,6 +355,12 @@
                 </ul>
             </div>
             <div id="site_content"></div>
+        </script>
+        <script id="greetings_template" type="text/html">
+            <a href="https://github.com/maggiben"><img style="position: relative; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub"></a>
+            <article>
+                <div class="empty"><span>Hello and wellcome to <strong>gipsy.com</strong> enter your <a href="#/account">account</a></span></div>
+            </article>
         </script>
         <script id="overview_template" type="text/html">
             <div class="toolbar top">Overview for {{name}} <a href="#" class="live refresh"><span>Refresh</span></a></div>
