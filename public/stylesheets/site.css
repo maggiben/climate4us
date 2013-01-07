@@ -3023,9 +3023,9 @@ article div.empty h1 a {
   background-image: linear-gradient(#1a1a19, #1f1f1e);
   -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
   -moz-box-shadow: inset 0 0 1px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
-  -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 rgba(255,255,255,0.8), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
-  -moz-box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 rgba(255,255,255,0.8), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 rgba(255,255,255,0.8), transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -moz-box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   -o-border-radius: 5px;
@@ -3052,10 +3052,10 @@ article div.empty h1 a {
   background: center 0 no-repeat;
 }
 .features ul li.keyboard-nav span {
-  background-image: url("img/keyboard_navigation.png");
+  background-image: url("../images/nodejs.png");
 }
 .features ul li.css-animation span {
-  background-image: url("img/css_animation.png");
+  background-image: url("../images/html5.png");
 }
 .features ul li.viewport-scaling span {
   background-image: url("img/viewport_scaling.png");
