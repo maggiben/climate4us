@@ -69,7 +69,7 @@ var generate_mongo_url = function(obj){
         return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
     }
 };
-var mongourl = generate_mongo_url(conf.mongo);
+var mongourl = generate_mongo_url(conf.mongohq);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Run app                                                                   //
@@ -385,7 +385,7 @@ app.post('/clients',  function(request, response, next) {
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(server);
 
-server.listen(conf.listenPort);
+server.listen(process.env.PORT);
 
 io.sockets.on('connection', function (socket) {
     
