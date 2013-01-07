@@ -54,8 +54,8 @@
         },
         properties: {
             name: '',
-            id: 0,
-            _id: 0,
+            id: null,
+            _id: null,
             type: '',
             country: '',
             state: '',
@@ -207,7 +207,7 @@
             instances: 1
         }),
         properties: {
-            _id: "50df9fb209556aa365000002",
+            _id: "50ea18635db888d66d000002",
             name: 'lab',
             type: 'subscription',
             magic: null,
@@ -216,17 +216,11 @@
             lastAccess: null,
             isReady: false,
             stations: [],
-            order: ["50ea19565db888d66d000003", 
-                //"50de37d8bcbf544840000002", 
-                //"50de37dcbcbf544840000003",
-                //"50df9c0bf06709637a000001", 
-                //"50dfa42409556aa365000005", 
-                //"50dfa7a309556aa365000006", 
-                //"50dfaf0e09556aa365000007"
-            ],
+            order: [],
             selected: null,
         },
         onSetup: null,
+        // MyApp.subscription.init({_id: '50ea18635db888d66d000002', callback: function(a) { console.log(a) }})
         init: function (options) {
             var that = this;
             //Preserve the original defaults by passing an empty object as the target
@@ -323,8 +317,52 @@
                 }
             });
         },
+        //mock MyApp.subscription.create({name: "pirulo", type: "h", country: "Arg"}, function(n) {console.log(n)})
+        create: function(factory, callback) {
+            var that = this;
+            $.ajax({
+                url: "/station/add",
+                type: "POST",
+                dataType: "json",
+                data: { 
+                    name: factory.name,
+                    type: factory.type,
+                    country: factory.country,
+                },
+                success: function (data, textStatus, jqXHR) {
+                    that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
+                    function onLoad(station) {
+                        that.properties.order.push(station._id);
+                        station.isReady = true;
+                        callback(data);
+                    }
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                }
+            }), !1;
+        },
         createStation: function(options) {
 
+        },
+        setOrder: function(order) {
+            var that = this;
+            $.ajax({
+                url: "/subscription/reorder/" + that.properties._id,
+                dataType: "json",
+                type: "PUT",
+                data: { _id: that.properties._id, ids: order },
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data);
+                    that.properties.order = data.order;
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+            });
+        },
+        getOrder: function() {
+            return this.properties.order;
         },
         listStations: function (a) {
             for (var key in this.properties.stations)
@@ -863,6 +901,7 @@
                     b.text(b.data("text"));
                 }
             }), !1;
+
         });
         this.get("#/station/:id/:path", function () {
             //return;
@@ -980,28 +1019,13 @@
                 function onInit(subscription) {
                     console.log("subscription: ");
                     console.log(subscription);
+                    MyApp.subscription.setup({}, function (station) {
+                        $("#sites").append(ich.site_template(station));
+                        $("#s" + station.id).html(ich.station_preview_template(station));
+                    });
                 }
-                /*
-                function onSetup(a) {
-                    console.log("onSetup: " + JSON.stringify(a));
-                    $("#sites").append(ich.site_template(a));
-                    $("#s" + a.id).html(ich.station_preview_template(a));
-                    //MyApp.meldSidebar();
-                };
-                */
-                /*
-                that.user.subscriptions.forEach(function(_id) {
-                    console.log("subscription._id: " + _id);
-                });
-                */
             }
             return;
-            var that = this;
-            MyApp.subscription = new myApplication({onSetup: onSetup});
-            function onSetup(a) {
-                $("#sites").append(ich.site_template(a));
-                $("#s" + a.id).html(ich.station_preview_template(a));
-            };
         },
         start: function(options) {
             var that = this;
@@ -1023,6 +1047,15 @@
                 
                 },
             });
+        },
+        getStationsOrder: function() {
+            return $.map($('#sites').sortable("toArray"), function (_id) { 
+                return _id.replace(/^s/, "");
+            });
+        },
+        saveStationOrder: function() {
+            var that = this;
+            MyApp.subscription.setOrder(this.getStationsOrder());
         },
         getSubscription: function(options) {
             var that = this;
