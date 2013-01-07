@@ -42,8 +42,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {
     "use strict";
+    console.log("starting sockets")
     var timer = null;
-    var socket = io.connect('http://climate4us.aws.af.cm', {
+    var socket = io.connect('http://localhost:8080', {
         closeTimeout: 2000,
         });
     socket.on('news', function (data) {

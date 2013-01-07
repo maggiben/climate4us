@@ -139,38 +139,6 @@
                 }
             });
         },
-        /*
-        setupx: function (a) {
-            var that = this;
-            that.id = a._id;
-            $.ajax({
-                url: "/station/getbyid/" + a._id,
-                type: "GET",
-                dataType: "json",
-                success: function (data, textStatus, jqXHR) {
-                    //console.log("Station[" + data._id + "] successfully created");
-                    that._id = data._id,
-                    that.id = data._id,
-                    that.name = data.name;
-                    that.type = data.type;
-                    that.temperature = data.temperature;
-                    that.humidity = data.humidity;
-                    that.latitude = data.latitude;
-                    that.longitude = data.longitude;
-                    //Preserve the original defaults by passing an empty object as the target
-                    //that = $.extend({}, that, data);
-                    a.onLoad(that);
-                },
-                
-                error: function (b) {
-                    var c = $.parseJSON(b.responseText);
-                    alert(c.errors);
-                },
-                complete: function () {                                
-                }
-            });
-        },
-        */
         update: function (a) {
             var that = this;
             $.ajax({
@@ -248,7 +216,7 @@
             lastAccess: null,
             isReady: false,
             stations: [],
-            order: ["50e9be722eda7b7a55000002", 
+            order: ["50ea19565db888d66d000003", 
                 //"50de37d8bcbf544840000002", 
                 //"50de37dcbcbf544840000003",
                 //"50df9c0bf06709637a000001", 
@@ -269,7 +237,7 @@
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {
                     that.properties = $.extend({}, that.properties, data);
-                    that.setup(that.properties);
+                    //that.setup(that.properties);
                     options.callback(that.properties);
                 },
                 error: function (jqXHR, status, error) {
@@ -279,7 +247,7 @@
                 }
             });
         },
-        setup: function (properties) {
+        setup: function (properties, callback) {
             var that = this;
             this.properties.order.forEach(function(_id) {
                 $.ajax({
@@ -290,7 +258,7 @@
                         that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =                   
                         function onLoad(station) {
                             station.isReady = true;
-                            //callback(station);
+                            callback(station);
                         }
                     },
                     error: function (jqXHR, status, error) {
@@ -354,6 +322,9 @@
                 complete: function () {                                
                 }
             });
+        },
+        createStation: function(options) {
+
         },
         listStations: function (a) {
             for (var key in this.properties.stations)
@@ -518,17 +489,7 @@
             })
         })
     };
-    
-    /*var station = MyApp.subscription.getStationById(this.params.id);//stations[this.params.id];
-            //MyApp.subscription.setSelected(this.params.id);
-            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
-            //alert("#/station/%s/%s",typeof a, this.params.path);
-            //this.params.path == "overview" && a.setRecentTraffic();
-            //this.trigger('station.setup', station);
-            //this.trigger('station.setup', MyApp.subscription.stations[this.params.id]);
-            this.trigger("show_panel.g", this.params); 
-            MyApp.meldSidebar();
-    */        
+          
     ///////////////////////////////////////////////////////////////////////////
     // Sammy.JS application                                                  //
     ///////////////////////////////////////////////////////////////////////////
@@ -1011,6 +972,10 @@
             
             function onUserSuccess(account)
             {
+                if(!that.user.subscription)
+                {
+                    //that.createSubscription({name: 'carlitox', type: 'arduino', stations: [], order: [], selected: 123});
+                }
                 MyApp.subscription = new myApplication({_id: that.user.subscription, callback: onInit});
                 function onInit(subscription) {
                     console.log("subscription: ");
@@ -1083,7 +1048,8 @@
                 dataType: "json",
                 data: {subscription: _id},
                 success: function (data, textStatus, jqXHR) {
-                    that.user.subscription = data.subscription;
+                    that.user = $.extend({}, that.user, data);
+                    console.log(data);
                 },
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);

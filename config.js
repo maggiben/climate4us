@@ -1,15 +1,15 @@
 var conf = {
     "sessionSecret": "secret",
-    "listenPort": process.env.PORT,
+    "listenPort": process.env.PORT || 8080,
     "ip": process.env.IP,
     "allowCrossDomain": false,
     "mongo" : {
-        "hostname": "alex.mongohq.com",
-        "port": 10062,
+        "hostname": "localhost",
+        "port": 27017,
         "username": "admin",
         "password": "12345",
         "name": "",
-        "db": "cloud-db"
+        "db": "climate4us"
     }
 };
 

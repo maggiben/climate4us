@@ -385,7 +385,7 @@ app.post('/clients',  function(request, response, next) {
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(server);
 
-server.listen(process.env.PORT);
+server.listen(conf.listenPort);
 
 io.sockets.on('connection', function (socket) {
     
