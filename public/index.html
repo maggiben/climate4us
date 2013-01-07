@@ -51,7 +51,7 @@
         </script>
         <!-- SOCKET.IO -->
         <script src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script>
+        <!-- <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script> -->
         <!-- jQuery Masonry -->
         <!-- Adobe Edge Web Fonts -->
         <!-- DEV VERSION -->
@@ -90,7 +90,7 @@
 		</div>
         <!-- FOOTER -->
         <footer>
-            <p>Copyright 2012 <a href="https://github.com/maggiben">GitHub</a> All Rights Reserved</p>
+            <p>Copyright 2012 <a href="http://github.com/">GitHub</a> All Rights Reserved</p>
             <ul>
                 <li><a href="http://twitter.com/#!/">Twitter</a></li>
                 <li><a href="/tos">Terms &amp; Conditions</a></li>
@@ -226,6 +226,7 @@
             </form>
             <div class="toolbar bottom"></div>
         </script>
+        
         <script id="live_data_template" type="text/html">
             <div class="toolbar top options">
                 <ul class="group_options">
@@ -238,7 +239,8 @@
             <div class="toolbar bottom">
             </div>
         </script>
-        <!-- SINGLE PAGE TEMPLATES -->
+        <!-- <div id="map_canvas" class="map"><a href="#" class="hide_map toggle_map">Hide Map</a></div> -->
+        <!-- CLIENTS -->
         <script id="clients_template" type="text/html">
             <div class="toolbar top">Generate API Keys</div>
             <div id="display_panel" class="display">
@@ -326,7 +328,6 @@
                 <a href="#/gauges/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
             </div>
         </script>
-
         <script id="site_data_template" type="text/html">
             <div id="site_nav" class="nav">
                 <h2>{{name}}</h2>
@@ -357,8 +358,26 @@
         </script>
         <script id="greetings_template" type="text/html">
             <a href="https://github.com/maggiben"><img style="position: relative; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub"></a>
+            <section class="features">
+                <header>
+                        <h2>Features</h2>
+                </header>
+                <ul>
+                    <li class="keyboard-nav">
+                        <span>Keyboard Navigation</span>
+                    </li>
+                    <li class="css-animation">
+                        <span>Animate with CSS</span>
+                    </li>
+                    <li class="mobile-ready">
+                        <span>Mobile Ready</span>
+                    </li>
+                    <li class="smart-loading">
+                        <span>Smart Loading</span>
+                    </li>
+                </ul>
+            </section>
             <article>
-                <h1><a href="/">gipsy</a></h1>
                 <div class="empty"><span>Hello and wellcome to <strong>gipsy.com</strong> enter your <a href="#/account">account</a></span></div>
             </article>
         </script>

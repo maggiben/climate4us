@@ -54,8 +54,8 @@
         },
         properties: {
             name: '',
-            id: null,
-            _id: null,
+            id: 0,
+            _id: 0,
             type: '',
             country: '',
             state: '',
@@ -139,6 +139,38 @@
                 }
             });
         },
+        /*
+        setupx: function (a) {
+            var that = this;
+            that.id = a._id;
+            $.ajax({
+                url: "/station/getbyid/" + a._id,
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    //console.log("Station[" + data._id + "] successfully created");
+                    that._id = data._id,
+                    that.id = data._id,
+                    that.name = data.name;
+                    that.type = data.type;
+                    that.temperature = data.temperature;
+                    that.humidity = data.humidity;
+                    that.latitude = data.latitude;
+                    that.longitude = data.longitude;
+                    //Preserve the original defaults by passing an empty object as the target
+                    //that = $.extend({}, that, data);
+                    a.onLoad(that);
+                },
+                
+                error: function (b) {
+                    var c = $.parseJSON(b.responseText);
+                    alert(c.errors);
+                },
+                complete: function () {                                
+                }
+            });
+        },
+        */
         update: function (a) {
             var that = this;
             $.ajax({
@@ -207,7 +239,7 @@
             instances: 1
         }),
         properties: {
-            _id: "50ea18635db888d66d000002",
+            _id: "50df9fb209556aa365000002",
             name: 'lab',
             type: 'subscription',
             magic: null,
@@ -216,11 +248,17 @@
             lastAccess: null,
             isReady: false,
             stations: [],
-            order: [],
+            order: ["50e9be722eda7b7a55000002", 
+                //"50de37d8bcbf544840000002", 
+                //"50de37dcbcbf544840000003",
+                //"50df9c0bf06709637a000001", 
+                //"50dfa42409556aa365000005", 
+                //"50dfa7a309556aa365000006", 
+                //"50dfaf0e09556aa365000007"
+            ],
             selected: null,
         },
         onSetup: null,
-        // MyApp.subscription.init({_id: '50ea18635db888d66d000002', callback: function(a) { console.log(a) }})
         init: function (options) {
             var that = this;
             //Preserve the original defaults by passing an empty object as the target
@@ -231,7 +269,7 @@
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {
                     that.properties = $.extend({}, that.properties, data);
-                    //that.setup(that.properties);
+                    that.setup(that.properties);
                     options.callback(that.properties);
                 },
                 error: function (jqXHR, status, error) {
@@ -241,7 +279,7 @@
                 }
             });
         },
-        setup: function (properties, callback) {
+        setup: function (properties) {
             var that = this;
             this.properties.order.forEach(function(_id) {
                 $.ajax({
@@ -252,7 +290,7 @@
                         that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =                   
                         function onLoad(station) {
                             station.isReady = true;
-                            callback(station);
+                            //callback(station);
                         }
                     },
                     error: function (jqXHR, status, error) {
@@ -316,53 +354,6 @@
                 complete: function () {                                
                 }
             });
-        },
-        //mock MyApp.subscription.create({name: "pirulo", type: "h", country: "Arg"}, function(n) {console.log(n)})
-        create: function(factory, callback) {
-            var that = this;
-            $.ajax({
-                url: "/station/add",
-                type: "POST",
-                dataType: "json",
-                data: { 
-                    name: factory.name,
-                    type: factory.type,
-                    country: factory.country,
-                },
-                success: function (data, textStatus, jqXHR) {
-                    that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
-                    function onLoad(station) {
-                        that.properties.order.push(station._id);
-                        station.isReady = true;
-                        callback(data);
-                    }
-                },
-                error: function (jqXHR, status, error) {
-                    console.log(jqXHR.responseText);
-                }
-            }), !1;
-        },
-        createStation: function(options) {
-
-        },
-        setOrder: function(order) {
-            var that = this;
-            $.ajax({
-                url: "/subscription/reorder/" + that.properties._id,
-                dataType: "json",
-                type: "PUT",
-                data: { _id: that.properties._id, ids: order },
-                success: function (data, textStatus, jqXHR) {
-                    console.log(data);
-                    that.properties.order = data.order;
-                },
-                error: function (jqXHR, status, error) {
-                    console.log(jqXHR.responseText);
-                },
-            });
-        },
-        getOrder: function() {
-            return this.properties.order;
         },
         listStations: function (a) {
             for (var key in this.properties.stations)
@@ -484,50 +475,7 @@
         },
     });
 
-    ///////////////////////////////////////////////////////////////////////////
-    // UI Events & UI transformations                                        //
-    ///////////////////////////////////////////////////////////////////////////
-    $("#new_site a.cancel").live("click", function () {
-        return window.location.hash = "#/", $("body").removeClass("adding"), !1;
-    });
-    $("a.toggle_delete").live("click", function () {
-        return $("#site_content").toggleClass("delete"), !1;
-    });
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Custom jQuery Functions                                               //
-    ///////////////////////////////////////////////////////////////////////////
-    $.fn.displayErrors = function(a, b) {
-        var c = this.removeErrors();
-        c.parent().addClass("error");
-        for (var key in a) {
-            var d = b ? b + "[" + key + "]" : key;
-            var e = a[key].join(", ");
-            console.log("a[%s] = %s", key, e);            
-            var f = '<strong class="error_explanation">' + e + "</strong>";
-            c.find('[name="' + d + '"]').addClass("error").closest("p").append(f);
-        }
-        var g = c.closest("section");
-        return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this;
-    };
-    $.fn.removeErrors = function() {
-        this.parent().removeClass("error").find("input.error").removeClass("error"), this.find("strong.error_explanation").remove();
-        var a = this.closest("section");
-        return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this;
-    };
-    $.fn.labelize = function() {
-        return this.focus(function() {
-            $(this).val() == $(this).attr("title") && ($(this).removeClass("labelized"), $(this).val(""))
-        }).blur(function() {
-            $.trim($(this).val()) == "" && ($(this).addClass("labelized"), $(this).val($(this).attr("title")))
-        }).blur().each(function() {
-            var b = $(this);
-            $(this.form).submit(function($) {
-                b.focus()
-            })
-        })
-    };
-          
     ///////////////////////////////////////////////////////////////////////////
     // Sammy.JS application                                                  //
     ///////////////////////////////////////////////////////////////////////////
@@ -901,7 +849,6 @@
                     b.text(b.data("text"));
                 }
             }), !1;
-
         });
         this.get("#/station/:id/:path", function () {
             //return;
@@ -1011,21 +958,32 @@
             
             function onUserSuccess(account)
             {
-                if(!that.user.subscription)
-                {
-                    //that.createSubscription({name: 'carlitox', type: 'arduino', stations: [], order: [], selected: 123});
-                }
                 MyApp.subscription = new myApplication({_id: that.user.subscription, callback: onInit});
                 function onInit(subscription) {
                     console.log("subscription: ");
                     console.log(subscription);
-                    MyApp.subscription.setup({}, function (station) {
-                        $("#sites").append(ich.site_template(station));
-                        $("#s" + station.id).html(ich.station_preview_template(station));
-                    });
                 }
+                /*
+                function onSetup(a) {
+                    console.log("onSetup: " + JSON.stringify(a));
+                    $("#sites").append(ich.site_template(a));
+                    $("#s" + a.id).html(ich.station_preview_template(a));
+                    //MyApp.meldSidebar();
+                };
+                */
+                /*
+                that.user.subscriptions.forEach(function(_id) {
+                    console.log("subscription._id: " + _id);
+                });
+                */
             }
             return;
+            var that = this;
+            MyApp.subscription = new myApplication({onSetup: onSetup});
+            function onSetup(a) {
+                $("#sites").append(ich.site_template(a));
+                $("#s" + a.id).html(ich.station_preview_template(a));
+            };
         },
         start: function(options) {
             var that = this;
@@ -1047,15 +1005,6 @@
                 
                 },
             });
-        },
-        getStationsOrder: function() {
-            return $.map($('#sites').sortable("toArray"), function (_id) { 
-                return _id.replace(/^s/, "");
-            });
-        },
-        saveStationOrder: function() {
-            var that = this;
-            MyApp.subscription.setOrder(this.getStationsOrder());
         },
         getSubscription: function(options) {
             var that = this;
@@ -1081,8 +1030,7 @@
                 dataType: "json",
                 data: {subscription: _id},
                 success: function (data, textStatus, jqXHR) {
-                    that.user = $.extend({}, that.user, data);
-                    console.log(data);
+                    that.user.subscription = data.subscription;
                 },
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
@@ -1220,6 +1168,50 @@
 ///////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {
     "use strict";
+    
+        ///////////////////////////////////////////////////////////////////////////
+    // UI Events & UI transformations                                        //
+    ///////////////////////////////////////////////////////////////////////////
+    $("#new_site a.cancel").live("click", function () {
+        return window.location.hash = "#/", $("body").removeClass("adding"), !1;
+    });
+    $("a.toggle_delete").live("click", function () {
+        return $("#site_content").toggleClass("delete"), !1;
+    });
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Custom jQuery Functions                                               //
+    ///////////////////////////////////////////////////////////////////////////
+    $.fn.displayErrors = function(a, b) {
+        var c = this.removeErrors();
+        c.parent().addClass("error");
+        for (var key in a) {
+            var d = b ? b + "[" + key + "]" : key;
+            var e = a[key].join(", ");
+            console.log("a[%s] = %s", key, e);            
+            var f = '<strong class="error_explanation">' + e + "</strong>";
+            c.find('[name="' + d + '"]').addClass("error").closest("p").append(f);
+        }
+        var g = c.closest("section");
+        return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this;
+    };
+    $.fn.removeErrors = function() {
+        this.parent().removeClass("error").find("input.error").removeClass("error"), this.find("strong.error_explanation").remove();
+        var a = this.closest("section");
+        return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this;
+    };
+    $.fn.labelize = function() {
+        return this.focus(function() {
+            $(this).val() == $(this).attr("title") && ($(this).removeClass("labelized"), $(this).val(""))
+        }).blur(function() {
+            $.trim($(this).val()) == "" && ($(this).addClass("labelized"), $(this).val($(this).attr("title")))
+        }).blur().each(function() {
+            var b = $(this);
+            $(this.form).submit(function($) {
+                b.focus()
+            })
+        })
+    };
     
     $("#sites").sortable({
         axis: "y",
