@@ -1,9 +1,9 @@
 var conf = {
     "sessionSecret": "secret",
     "listenPort": process.env.PORT || 8080,
-    "ip": process.env.IP || localhost,
+    "ip": process.env.IP || '127.0.0.1',
     "allowCrossDomain": false,
-    "mongo": {
+    mongo_local: {
         "hostname": "localhost",
         "port": 27017,
         "username": "admin",

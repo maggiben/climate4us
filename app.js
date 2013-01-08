@@ -69,7 +69,7 @@ var generate_mongo_url = function(obj){
         return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
     }
 };
-var mongourl = generate_mongo_url(conf.mongohq);
+var mongourl = generate_mongo_url(conf.mongo_local);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Run app                                                                   //
