@@ -1,7 +1,7 @@
 var conf = {
     "sessionSecret": "secret",
     "listenPort": process.env.PORT || 8080,
-    "ip": process.env.IP || '127.0.0.1',
+    "ip": process.env.IP || 'localhost',
     "allowCrossDomain": false,
     mongo_local: {
         "hostname": "localhost",
@@ -11,7 +11,7 @@ var conf = {
         "name": "",
         "db": "climate4us"
     },
-    "mongohq"": {
+    mongohq: {
         hostname: "alex.mongohq.com",
         port: 10062,
         username: "admin",

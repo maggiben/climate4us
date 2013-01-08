@@ -3163,11 +3163,11 @@ endColor endInterval) {
   background-image: url("../images/html5.png");
 }
 .features ul li.viewport-scaling span {
-  -webkit-background-image: url("img/viewport_scaling.png");
-  -moz-background-image: url("img/viewport_scaling.png");
-  -ms-background-image: url("img/viewport_scaling.png");
-  -o-background-image: url("img/viewport_scaling.png");
-  background-image: url("img/viewport_scaling.png");
+  -webkit-background-image: url("../images/html5.png");
+  -moz-background-image: url("../images/html5.png");
+  -ms-background-image: url("../images/html5.png");
+  -o-background-image: url("../images/html5.png");
+  background-image: url("../images/html5.png");
 }
 .features ul li.mobile-ready span {
   -webkit-background-image: url("../images/mobile_ready.png");
@@ -3177,18 +3177,18 @@ endColor endInterval) {
   background-image: url("../images/mobile_ready.png");
 }
 .features ul li.smart-loading span {
-  -webkit-background-image: url("img/smart_loading.png");
-  -moz-background-image: url("img/smart_loading.png");
-  -ms-background-image: url("img/smart_loading.png");
-  -o-background-image: url("img/smart_loading.png");
-  background-image: url("img/smart_loading.png");
+  -webkit-background-image: url("../images/html5.png");
+  -moz-background-image: url("../images/html5.png");
+  -ms-background-image: url("../images/html5.png");
+  -o-background-image: url("../images/html5.png");
+  background-image: url("../images/html5.png");
 }
 .features ul li.swipe span {
-  -webkit-background-image: url("img/swipe.png");
-  -moz-background-image: url("img/swipe.png");
-  -ms-background-image: url("img/swipe.png");
-  -o-background-image: url("img/swipe.png");
-  background-image: url("img/swipe.png");
+  -webkit-background-image: url("../images/html5.png");
+  -moz-background-image: url("../images/html5.png");
+  -ms-background-image: url("../images/html5.png");
+  -o-background-image: url("../images/html5.png");
+  background-image: url("../images/html5.png");
 }
 .features ul li.v2 span {
   opacity: 0.3;

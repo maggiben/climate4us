@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : application.js                                            //
 // @summary      : client side application                                   //
-// @version      : 0.14                                                      //
+// @version      : 0.15                                                      //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //
