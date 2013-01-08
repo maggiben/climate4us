@@ -11,7 +11,7 @@ var conf = {
         "name": "",
         "db": "climate4us"
     },
-    mongohq: {
+    "mongohq"": {
         hostname: "alex.mongohq.com",
         port: 10062,
         username: "admin",
