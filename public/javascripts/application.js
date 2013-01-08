@@ -239,7 +239,7 @@
             instances: 1
         }),
         properties: {
-            _id: "50df9fb209556aa365000002",
+            _id: null,
             name: 'lab',
             type: 'subscription',
             magic: null,
@@ -248,14 +248,7 @@
             lastAccess: null,
             isReady: false,
             stations: [],
-            order: ["50e9be722eda7b7a55000002", 
-                //"50de37d8bcbf544840000002", 
-                //"50de37dcbcbf544840000003",
-                //"50df9c0bf06709637a000001", 
-                //"50dfa42409556aa365000005", 
-                //"50dfa7a309556aa365000006", 
-                //"50dfaf0e09556aa365000007"
-            ],
+            order: [],
             selected: null,
         },
         onSetup: null,
@@ -291,6 +284,29 @@
                         function onLoad(station) {
                             station.isReady = true;
                             //callback(station);
+                        }
+                    },
+                    error: function (jqXHR, status, error) {
+                        console.log(jqXHR.responseText);
+                    },
+                    complete: function () {
+                    }
+                });
+            });
+        },
+        getAllStations: function(options, callback)
+        {
+            var that = this;
+            this.properties.order.forEach(function(_id) {
+                $.ajax({
+                    url: "/station/getbyid/" + _id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =                   
+                        function onLoad(station) {
+                            station.isReady = true;
+                            callback(station);
                         }
                     },
                     error: function (jqXHR, status, error) {
@@ -925,6 +941,7 @@
         clients: null,
         connection_count: 0,
         subscription: {},
+        subscriptions: [],
         mousecoords: {
             pageX: 0, 
             pageY: 0,
@@ -938,30 +955,47 @@
             stderr: null,
         },
         user: {
-                name:"pirulo12345@mailinator.com", 
-                urls: {
-                    self: "https://secure.gaug.es/me", 
-                    gauges: "https://secure.gaug.es/gauges", 
-                    clients: "https://secure.gaug.es/clients"
-                }, 
-                id: "50c9e8b9f5a1f56713000002", 
+                name: "", 
+                id: "", 
                 last_name: null, 
                 first_name: null, 
-                email: "pirulo12345@mailinator.com",
+                email: "",
                 subscriptions: [],
                 subscription: null,
         },
         init: function(options) {
             var that = this;
             console.log("MyApp.options")
-            this.getUser({callback: onUserSuccess})
+            this.getUser({callback: gotUser})
             
-            function onUserSuccess(account)
+            function gotUser(account)
             {
-                MyApp.subscription = new myApplication({_id: that.user.subscription, callback: onInit});
-                function onInit(subscription) {
-                    console.log("subscription: ");
-                    console.log(subscription);
+                //MyApp.subscription = new myApplication({_id: that.user.subscription, callback: onInit});
+                that.user.subscriptions.forEach(function(_id) {
+                    that.getSubscription({_id: _id, callback: gotSubscription});
+                });
+                
+                function gotSubscription(subscription) {
+                    console.log("subscription._id: " + subscription._id);
+                    MyApp.subscriptions[subscription._id] = new myApplication({_id: subscription._id, callback: onInit});
+                }
+                
+                function onInit(subscription)
+                {
+                    //MyApp.subscriptions['50dfa3ce09556aa365000004'].properties.stations['50e9be722eda7b7a55000002']
+                    console.log("stations: " + JSON.stringify(MyApp.subscriptions[subscription._id].properties.stations     ));
+                    
+                    /*
+                    subscription.order.forEach(function(_id) {
+                        console.log("station._id: " + _id);
+                        console.log("names: " + sub.selected);
+                        //$("#sites").append(ich.site_template(a));
+                        //$("#s" + a.id).html(ich.station_preview_template(a));
+                    });
+                    */
+                    MyApp.subscriptions[subscription._id].properties.stations.forEach(function(_id) {
+                        console.log("XXXXstation._id: " + _id);
+                    });
                 }
                 /*
                 function onSetup(a) {
@@ -970,11 +1004,6 @@
                     $("#s" + a.id).html(ich.station_preview_template(a));
                     //MyApp.meldSidebar();
                 };
-                */
-                /*
-                that.user.subscriptions.forEach(function(_id) {
-                    console.log("subscription._id: " + _id);
-                });
                 */
             }
             return;
@@ -1008,12 +1037,18 @@
         },
         getSubscription: function(options) {
             var that = this;
+            console.log("MyApp.getSubscription(%s)", options._id);
             $.ajax({
                 url: "/subscription/getbyid/" + options._id,
                 type: "GET",
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {
                     console.log(data);
+                    //MyApp.user.subscription = new myApplication({_id: that.user.subscription, callback: onInit});
+                    if($.isFunction(options.callback))
+                    {
+                        options.callback(data);
+                    }
                 },
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
