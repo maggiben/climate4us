@@ -1,0 +1,56 @@
+$.ajax({url: "/subscription/reorder/" + MyApp.user.subscription,dataType: "json", type: "put",data: {_id: MyApp.user.subscription,ids: ['50ea4cd7b08a5ee509000001']}})
+
+
+login
+$.ajax({url: "/account/signin", dataType: "json",type: "post", data: {username: 'p@p.com', password: 'p'},success: function(a) {console.log(a)}, error: function() {console.log("error")}})
+
+MyApp.signin({username: 'p@p.com', password: 'p'})
+
+
+$('#sites').sortable("toArray"), function (a) { console.log("reorder: %s", a.replace(/^s/, "")); return a.replace(/^s/, "")}
+
+
+db.stations.find({_id: ObjectId("50eb5a76d2b1ccda26000001")})
+db.stations.find({_id: ObjectId("50ea4cd7b08a5ee509000001")})
+
+db.accounts.update({_id: ObjectId("50ea178c5db888d66d000001")}, { $set: { 'subscription': ObjectId("50ea18635db888d66d000002") }})
+
+db.stations.find({_id: ObjectId("50ea4cd7b08a5ee509000001")})
+
+
+
+
+50ea18635db888d66d000002
+
+
+
+
+MyApp.createSubscription({ name: 'a', type: 'lab', stations: [], order: [], selected: '', });
+
+
+var queue = $.jqmq({
+                 // Next item will be processed only when queue.next() is called in callback.
+                delay: -1,
+                // Process queue items one-at-a-time.
+                batch: 1,
+                // For each queue item, execute this function, making an AJAX request. Only
+                // continue processing the queue once the AJAX request's callback executes.
+                callback: function( _id ) {
+                    $.ajax({
+                        url: "/station/getbyid/" + _id,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data, textStatus, jqXHR) {
+                                queue.next(false);
+                            }
+                        },
+                        error: function (jqXHR, status, error) {
+                            // If the request was unsuccessful, make another attempt.
+                            queue.next(true);
+                        },
+                    });
+                },
+                // When the queue completes naturally, execute this function.
+                complete: function(){
+                }
+            });
