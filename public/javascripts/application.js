@@ -32,6 +32,43 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
+// Custom jQuery Functions (go first)                                        //
+///////////////////////////////////////////////////////////////////////////////
+$(document).ready(function() {
+    "use strict";
+    
+    $.fn.displayErrors = function(a, b) {
+        var c = this.removeErrors();
+        c.parent().addClass("error");
+        for (var key in a) {
+            var d = b ? b + "[" + key + "]" : key;
+            var e = a[key].join(", ");
+            console.log("a[%s] = %s", key, e);            
+            var f = '<strong class="error_explanation">' + e + "</strong>";
+            c.find('[name="' + d + '"]').addClass("error").closest("p").append(f);
+        }
+        var g = c.closest("section");
+        return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this;
+    };
+    $.fn.removeErrors = function() {
+        this.parent().removeClass("error").find("input.error").removeClass("error"), this.find("strong.error_explanation").remove();
+        var a = this.closest("section");
+        return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this;
+    };
+    $.fn.labelize = function() {
+        return this.focus(function() {
+            $(this).val() == $(this).attr("title") && ($(this).removeClass("labelized"), $(this).val(""))
+        }).blur(function() {
+            $.trim($(this).val()) == "" && ($(this).addClass("labelized"), $(this).val($(this).attr("title")))
+        }).blur().each(function() {
+            var b = $(this);
+            $(this.form).submit(function($) {
+                b.focus()
+            })
+        })
+    };
+});
+///////////////////////////////////////////////////////////////////////////////
 // Main App closure                                                          //
 // @param {Function} window.jQuery || window.Zepto JS libraries              //
 ///////////////////////////////////////////////////////////////////////////////
@@ -274,30 +311,6 @@
         },
         setup: function (properties, callback) {
             var that = this;
-            //console.log(JSON.stringify(properties.order));
-            /*
-            this.properties.order.forEach(function(_id) {
-                console.log("getting stations:")
-                console.log(_id)
-                $.ajax({
-                    url: "/station/getbyid/" + _id,
-                    type: "GET",
-                    dataType: "json",
-                    success: function (data, textStatus, jqXHR) {
-                        that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =                   
-                        function onLoad(station) {
-                            station.isReady = true;
-                            //callback(station);
-                        }
-                    },
-                    error: function (jqXHR, status, error) {
-                        console.log(jqXHR.responseText);
-                    },
-                    complete: function () {
-                    }
-                });
-            });
-            */
             // Create a new queue.
             var queue = $.jqmq({
                  // Next item will be processed only when queue.next() is called in callback.
@@ -531,7 +544,7 @@
         },
     });
 
-
+    window.Subscription = myApplication;
     ///////////////////////////////////////////////////////////////////////////
     // Sammy.JS application                                                  //
     ///////////////////////////////////////////////////////////////////////////
@@ -969,7 +982,7 @@
     ///////////////////////////////////////////////////////////////////////////
     // Main Client application                                               //
     ///////////////////////////////////////////////////////////////////////////
-    var MyApp = {
+    var MyAppXX = {
         module: { 
             VERSION: "0.1.2.3",
             license: {},
@@ -1010,52 +1023,20 @@
             
             function gotUser(account)
             {
-                //MyApp.subscription = new myApplication({_id: that.user.subscription, callback: onInit});
                 that.user.subscriptions.forEach(function(_id) {
                     that.getSubscription({_id: _id, callback: gotSubscription});
                 });
-                
                 function gotSubscription(subscription) {
-                    console.log("subscription._id: " + subscription._id);
                     MyApp.subscriptions[subscription._id] = new myApplication({_id: subscription._id, callback: onInit});
-                    console.log("MyApp.subscriptions[%s] = %s", subscription._id, JSON.stringify(MyApp.subscriptions[subscription._id].module));
                 }
-                
                 function onInit(subscription)
                 {
-                    //MyApp.subscriptions['50dfa3ce09556aa365000004'].properties.stations['50e9be722eda7b7a55000002']
-                    //console.log("stations: " + JSON.stringify(MyApp.subscriptions[subscription._id].properties.stations));
-                    
-                    console.log(JSON.stringify(subscription))
-                    console.log("MyApp.subscriptions[subscription._id].properties.stations");
-                    
-
                     subscription.order.forEach(function(_id) {
-                        console.log("station._id: " + _id);
-                        //console.log("names: " + sub.selected);
-                        //$("#sites").append(ich.site_template(a));
-                        //$("#s" + a.id).html(ich.station_preview_template(a));
                         var station = subscription.stations[_id];
                         $("#sites").append(ich.site_template(station.properties)).hide().fadeIn(200);
                         $("#s" + station.properties._id).html(ich.station_preview_template(station.properties));
                     });
-                    subscription.stations.forEach(function(station) {
-                        console.log("kaka._id: " + JSON.stringify(station));
-                    });
-                    /*
-                    MyApp.subscriptions[subscription._id].properties.stations.forEach(function(_id) {
-                        console.log("XXXXstation._id: " + _id);
-                    });
-                    */
                 }
-                /*
-                function onSetup(a) {
-                    console.log("onSetup: " + JSON.stringify(a));
-                    $("#sites").append(ich.site_template(a));
-                    $("#s" + a.id).html(ich.station_preview_template(a));
-                    //MyApp.meldSidebar();
-                };
-                */
             }
             return;
             var that = this;
@@ -1263,41 +1244,7 @@ $(document).ready(function() {
     $("a.toggle_delete").live("click", function () {
         return $("#site_content").toggleClass("delete"), !1;
     });
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Custom jQuery Functions                                               //
-    ///////////////////////////////////////////////////////////////////////////
-    $.fn.displayErrors = function(a, b) {
-        var c = this.removeErrors();
-        c.parent().addClass("error");
-        for (var key in a) {
-            var d = b ? b + "[" + key + "]" : key;
-            var e = a[key].join(", ");
-            console.log("a[%s] = %s", key, e);            
-            var f = '<strong class="error_explanation">' + e + "</strong>";
-            c.find('[name="' + d + '"]').addClass("error").closest("p").append(f);
-        }
-        var g = c.closest("section");
-        return g.length > 0 && g.trigger("resize.g", [c.closest(".panel").height()]), this;
-    };
-    $.fn.removeErrors = function() {
-        this.parent().removeClass("error").find("input.error").removeClass("error"), this.find("strong.error_explanation").remove();
-        var a = this.closest("section");
-        return a.length > 0 && a.trigger("resize.g", [this.closest(".panel").height()]), this;
-    };
-    $.fn.labelize = function() {
-        return this.focus(function() {
-            $(this).val() == $(this).attr("title") && ($(this).removeClass("labelized"), $(this).val(""))
-        }).blur(function() {
-            $.trim($(this).val()) == "" && ($(this).addClass("labelized"), $(this).val($(this).attr("title")))
-        }).blur().each(function() {
-            var b = $(this);
-            $(this.form).submit(function($) {
-                b.focus()
-            })
-        })
-    };
-    
+  
     $("#sites").sortable({
         axis: "y",
         container: "#sites",
