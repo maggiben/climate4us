@@ -353,8 +353,7 @@ $(document).ready(function() {
             });
             that.properties.order.forEach(function(_id) { queue.add(_id) });
         },
-        getAllStations: function(options, callback)
-        {
+        getAllStations: function(options, callback) {
             var that = this;
             this.properties.order.forEach(function(_id) {
                 $.ajax({
@@ -441,7 +440,6 @@ $(document).ready(function() {
             return !1;
         },
         getStationById: function(id) {
-            console.log("getStationById(%s)", id);
             console.log("getStationById(%s) = %s", id, JSON.stringify(this.properties.stations[id]));
             return this.properties.stations[id].properties;
         },
@@ -543,23 +541,24 @@ $(document).ready(function() {
                 }
             }), !1;
         },
-        setSelected: function(id) {
+        setSelected: function(_id) {
             var that = this;
-            that.update(onUpdate);
+            that.update({_id: _id}, onUpdate);
             function onUpdate(data)
             {
-                that.selected = id;
+                that.selected = data._id;
                 console.log("subscription update ok! result: " + data);
             };
         },
-        update: function(callback) {
+        update: function(properties, callback) {
             var that = this;
+            var properties = $.extend({}, this.properties, properties);
             console.log("subscription update");
             $.ajax({
-                url: "/subscription/update/" + this._id,
+                url: "/subscription/update/" + properties._id,
                 dataType: "json",
                 type: "put",
-                data: that,
+                data: properties,
                 success: function (data, textStatus, jqXHR) {
                     callback(data);
                 },
@@ -577,16 +576,6 @@ $(document).ready(function() {
     ///////////////////////////////////////////////////////////////////////////
     var app = $.sammy(function() {
         //this.element_selector = '#main';
-        this.bind('getSubscription', function(e, data) {
-            //console.log("getSubscription");
-            MyApp.subscription = new myApplication({onSetup: onSetup});
-            function onSetup(a) {
-                console.log("onSetup: " + JSON.stringify(a));
-                $("#sites").append(ich.site_template(a));
-                $("#s" + a.id).html(ich.station_preview_template(a));
-                //MyApp.meldSidebar();
-            };
-        });
         this.bind("station.setup", function(e, data) {
             console.log("station.setup: " + JSON.stringify(data));
             var site = $("#s" + data.id);
@@ -605,17 +594,6 @@ $(document).ready(function() {
             $("#data").html(ich.site_data_template(data)); 
             $("body").addClass("view-nav");
         });
-        this.bind('showSite', function(e, data) {
-            var a = this;
-            var b = $("#s" + data['my_data'].id);
-            if (b.hasClass("current")) return !0;
-            $("div.site.current").removeClass("current");
-            b.addClass("current");
-            $("#data").html(ich.site_data_template({title: "hello", id: 1234, mine: false}));
-            //$("#data").html(ich.site_data_template(this)), 
-            //$("body").addClass("view-nav");
-            //alert(data['my_data'].id);
-        });
         this.bind("show_station.g", function(e, data) {
             console.log("show_station.g: " + JSON.stringify(data));
             var station = $("#s" + data.id);
@@ -633,7 +611,7 @@ $(document).ready(function() {
             var b = this;
             var c = $("#s" + data.id);
             var d = data == c.data("panel") ? $("#site_content div.display").scrollTop() : 0;
-            b.trigger("show_station.g", data), 
+            b.trigger("show_station.g", data),
             c.data("panel", data);
             $("#data div.nav li.current").removeClass("current"); 
             $('#data div.nav a[href="#/station/' + data.id + "/" + data.path + '"]').closest("li").addClass("current");
@@ -872,7 +850,7 @@ $(document).ready(function() {
         });
 
         ///////////////////////////////////////////////////////////////////////
-        // Station Routes                                                    //
+        // Subscription Routes                                               //
         ///////////////////////////////////////////////////////////////////////
         this.post('#/subscription/new', function () {
             var that = this;
@@ -969,20 +947,10 @@ $(document).ready(function() {
             }), !1;
         });
         this.get("#/station/:id/:path", function () {
-            //return;
-            //var a = MyApp.stations[this.params.id];
+            console.log(this.params)
             console.log("sammy route: #/station/%s/%s", this.params.id, this.params.path);
-            //var a = MyApp.subscription.getStationById(this.params.id);
-            //console.log("MyApp.subscription.getStationById = " + JSON.stringify(a));
-            //alert(typeof this.params.id);
-            //alert(MyApp.subscription.stations[this.params.id].name);
             var station = MyApp.subscription.getStationById(this.params.id);//stations[this.params.id];
-            //MyApp.subscription.setSelected(this.params.id);
             console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
-            //alert("#/station/%s/%s",typeof a, this.params.path);
-            //this.params.path == "overview" && a.setRecentTraffic();
-            //this.trigger('station.setup', station);
-            //this.trigger('station.setup', MyApp.subscription.stations[this.params.id]);
             this.trigger("show_panel.g", this.params); 
             MyApp.meldSidebar();
         });
@@ -1024,6 +992,7 @@ $(document).ready(function() {
         // Station routes
     });
     $(function() {
+        window.sammyApp = app;
         app.run();
         //app.trigger('getSubscription', {time: new Date()});
     });

@@ -150,19 +150,19 @@ exports.update = function (request, response, next) {
     response.contentType('application/json');
     Subscription.findByIdAndUpdate({_id : request.params.id}, request.body, updateSubscription);
     
-    function updateSubscription (error, station) {
+    function updateSubscription (error, subscription) {
         if (error) {
             console.log(error);
             return next(error);
         }
-        if (!station) {
+        if (!subscription) {
             console.log(error);
             return next(error);
         } 
         else {
             console.log(JSON.stringify(request.body));
         }
-        var subscriptionJSON = JSON.stringify(station);
+        var subscriptionJSON = JSON.stringify(subscription);
         return response.send(subscriptionJSON);
     }
 };
@@ -228,6 +228,7 @@ exports.reorder = function (request, response, next) {
         }
     }
 };
+
 ///////////////////////////////////////////////////////////////////////////////
 // Route to remove all Subscriptions                                         //
 //                                                                           //

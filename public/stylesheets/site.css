@@ -2,9 +2,9 @@
 /*#339966;*/
 /*#31654b;*/
 /*#393939;*/
+/* #750775; */
 /* FUNCTIONS */
 body {
-  font: 13px/1.231 helvetica, arial, clean, sans-serif;
   *font-size: small;
   *font: x-small;
   overflow-x: hidden;
@@ -160,7 +160,7 @@ html {
 }
 body {
   color: #fff;
-  font: 11px/1.6 "Lucida Grande", Tahoma, Verdana, sans-serif;
+  font: 11.372867587327375px 'Comfortaa', cursive;
   padding-top: 0;
 }
 header h1 a,
@@ -312,6 +312,7 @@ button span {
   text-shadow: rgba(0,0,0,0.8) 0 -1px 0;
   color: #fff;
   text-decoration: none;
+  font-family: 'Comfortaa', cursive;
   font-weight: bold;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -719,7 +720,8 @@ span.overflow {
   left: 104px;
 }
 #sites div.site p strong {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+/* font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; */
+  font-family: 'Comfortaa', cursive;
   font-size: 17px;
   display: block;
   line-height: 1;
@@ -1011,7 +1013,8 @@ a.back {
 }
 #data div.nav h2 {
   font-size: 13px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+/*font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;*/
+  font-family: 'Comfortaa', cursive;
   color: #750775;
   width: 100%;
   white-space: nowrap;
@@ -1088,7 +1091,8 @@ $data_menu_background = rgba(255, 0, 255, 0.44);
 h1,
 h2,
 h3 {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+/* font-family:"Helvetica Neue",Helvetica,Arial,sans-serif */
+  font-family: 'Comfortaa', cursive;
 }
 #top_content {
   margin: 25px 0;
@@ -2336,7 +2340,7 @@ p.instructions {
   margin: 0 0 10px;
 }
 html.live li.live span.status {
-  color: #750775;
+  color: #d30cd3;
 }
 html.live li.live span.indicator {
   background: #222;
@@ -2937,7 +2941,8 @@ td.sharing.none span {
 .phoneytext {
   text-shadow: 0 -1px 0 #000;
   color: #fff;
-  font-family: Helvetica Neue, Helvetica, arial;
+/* font-family: Helvetica Neue, Helvetica, arial; */
+  font-family: 'Comfortaa', cursive;
   font-size: 18px;
   line-height: 25px;
   padding: 4px 45px 4px 15px;
@@ -3242,4 +3247,29 @@ endColor endInterval) {
   border-radius: 5px;
   background: rgba(0,0,0,0.1);
   display: block;
+}
+.formRow input,
+.formRow textarea {
+  padding: 5px 8px;
+  background-color: #565656;
+  border: none;
+  color: #ccc;
+  outline: none;
+  resize: none;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  width: 250px;
+  font-size: 11px;
+  padding: 6px;
+  -moz-box-shadow: 1px 1px 1px #191919 inset, 0 0 1px #181818 inset;
+  -webkit-box-shadow: 1px 1px 1px #191919 inset, 0 0 1px #181818 inset;
+  -webkit-box-shadow: 1px 1px 1px #191919 inset, 0 0 1px #181818 inset;
+  -moz-box-shadow: 1px 1px 1px #191919 inset, 0 0 1px #181818 inset;
+  box-shadow: 1px 1px 1px #191919 inset, 0 0 1px #181818 inset;
 }

@@ -15,6 +15,8 @@
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <!-- CUSTOM FONT -->
+        <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Comfortaa:400,300">
         <!-- INCLUDE STYLES -->
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery-ui.css" />
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.css" />
@@ -47,9 +49,6 @@
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/infobubble.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
-        <script type="text/javascript">
-            console.log("cosasdasdasd")
-        </script>
         <!-- SOCKET.IO -->
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script>
@@ -66,14 +65,13 @@
         <!-- USER SCRIPTS -->
     </head>
 
-    <body class="loaded view-nav view-panel" style="height: 899px;">
+    <body class="loaded view-nav view-panel" onload="createTimeline()" style="height: 899px;">
         <!-- HEADER -->
         <header>
             <h1><a href="/">gipsy</a></h1>
 			<p><a href="#/station/new" class="button new"><i></i> New station</a></p>
 			<ul>
 				<li><a href="#/account">My Account</a></li>
-                <li><a href="#/temp">temp</a></li>
 				<li><a href="#" id="feedback_link" style="visibility: visible;">Feedback</a></li>
 				<li><a href="#/sign_out">Sign Out</a></li>
 				<li class="live">Live: <span class="status">off</span> <span class="indicator"><span></span></span></li>

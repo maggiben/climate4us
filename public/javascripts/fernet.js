@@ -113,18 +113,11 @@
                         },
                         // When the queue completes naturally, execute this function.
                         complete: function(){
+                            var selected = MyApp.subscription.getSelected();
+                            window.sammyApp.trigger("show_panel.g",{id: selected, path:"overview"})
                         }
                     });
-
                     subscription.order.forEach(function(_id) { queue.add(_id) });
-                    
-                    /*
-                    subscription.order.forEach(function(_id) {
-                        var station = subscription.stations[_id];
-                        $("#sites").append(ich.site_template(station.properties));
-                        $("#s" + station.properties._id).html(ich.station_preview_template(station.properties));
-                    });
-                    */
                 }
             }
         },
@@ -282,9 +275,6 @@
         resize: function() {
             console.log("resize");
             MyApp.meldSidebar();
-            
-            //$("#full_map").is(":visible") && (Gauges.resize_timeout && clearTimeout(Gauges.resize_timeout), 
-            //Gauges.resize_timeout = setTimeout(Gauges.showScreenMap, 300));
         },
         formatNumber: function (a) {
             a += "";
@@ -343,7 +333,7 @@ $(document).ready(function() {
     "use strict";
     console.log("starting sockets")
     var timer = null;
-    var socket = io.connect('http://localhost:8080', {
+    var socket = io.connect('http://climate4us.bmaggi.c9.io', {
         closeTimeout: 2000,
         });
     socket.on('news', function (data) {

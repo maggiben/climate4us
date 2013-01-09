@@ -26,7 +26,6 @@
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-
 // Controllers
 var mongoose = require('mongoose')
     , passport = require('passport');
@@ -37,7 +36,7 @@ var account_schema = require('../models/account')
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// Route to signin                                                           //
+// Route to Account signin                                                   //
 //                                                                           //
 // @param {Object} request                                                   //
 // @param {Object} response                                                  //
@@ -71,6 +70,7 @@ exports.signIn = function(request, response, next) {
         return response.send(accountJSON);
     })(request, response, next);
 }
+
 ///////////////////////////////////////////////////////////////////////////////
 // Route to get specific Account by its _id                                  //
 //                                                                           //
@@ -98,7 +98,7 @@ exports.getAccountById = function(request, response, next) {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-// Route to get currently authenticated account                              //
+// Route to get currently authenticated Account                              //
 //                                                                           //
 // @param {Object} request                                                   //
 // @param {Object} response                                                  //
@@ -119,6 +119,18 @@ exports.getAccount = function(request, response, next) {
     return response.send(message);
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Route to create a new Account                                             //
+//                                                                           //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
+// @param {Object} next                                                      //
+// @return {Object} JSON newly created account                               //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url GET /account/createAccount                                           //
+///////////////////////////////////////////////////////////////////////////////
 exports.createAccount = function(request, response, next) {
     
     response.contentType('application/json');
@@ -182,6 +194,18 @@ exports.update = function (request, response, next) {
     }
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Route to create a new Account                                             //
+//                                                                           //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
+// @param {Object} next                                                      //
+// @return {Object} JSON newly created account                               //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url GET /account/getAccount                                              //
+///////////////////////////////////////////////////////////////////////////////
 exports.setSubscription = function(request, response, next) {
     
     response.contentType('application/json');

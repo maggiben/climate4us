@@ -12,10 +12,12 @@ $data_menu_color = #1A001B;
 $data_menu_text_shadow =  #F599E3 0 1px 0;
 $data_menu_border = 1px solid rgba(71, 0, 63, 0.7);
 $data_menu_background = rgba(255, 0, 255, 0.44);
-$status_color = #750775;
+$status_color = #d30cd3; /* #750775; */
 
 $menu_data_current = rgba(186,186,186,0.8);
 
+$font = 14px/1.231 'Comfortaa', cursive;
+$font_family = 'Comfortaa', cursive;
 /* FUNCTIONS */
 
 box-shadow()
@@ -25,9 +27,10 @@ box-shadow()
 
 
 body {
-    font:13px/1.231 helvetica,arial,clean,sans-serif;
+    //font:13px/1.231 helvetica,arial,clean,sans-serif;
+    //font-family: 'Comfortaa', cursive;
     *font-size:small;
-    *font:x-small
+    *font:x-small;
     overflow-x:hidden;
     overflow-y:auto;
 }
@@ -125,7 +128,8 @@ html {
 }
 body {
 	color:#fff;
-	font:11px/1.6 "Lucida Grande",Tahoma,Verdana,sans-serif;
+	//font:11px/1.6 "Lucida Grande",Tahoma,Verdana,sans-serif;
+    font: $font;
 	padding-top:0
 }
 header h1 a,#signin form h2,#signup form h2,#forgot_password h2,#password_reset_sent h2,#full_map h1 {
@@ -269,6 +273,7 @@ header {
 	text-shadow:rgba(0,0,0,0.8) 0 -1px 0;
 	color:#fff;
 	text-decoration:none;
+    font-family: $font_family;
 	font-weight:bold;
 	-webkit-border-radius:5px;
 	-moz-border-radius:5px;
@@ -649,7 +654,8 @@ span.overflow {
 				left:104px
 			};
 			strong {
-				font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+				/* font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; */
+                font-family: $font_family;
 				font-size:17px;
 				display:block;
 				line-height:1;
@@ -941,7 +947,8 @@ a.back {
 }
 #data div.nav h2 {
 	font-size:13px;
-	font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+	/*font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;*/
+    font-family: $font_family;
 	color: $data_h2_color;
 	width:100%;
 	white-space:nowrap;
@@ -1017,7 +1024,8 @@ $data_menu_background = rgba(255, 0, 255, 0.44);
     text-shadow: $data_menu_text_shadow;
 }
 h1,h2,h3 {
-	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif
+	/* font-family:"Helvetica Neue",Helvetica,Arial,sans-serif */
+    font-family: $font_family;
 }
 #top_content {
 	margin:25px 0
@@ -2352,6 +2360,8 @@ form p.text input,form p.text textarea {
 	width:250px;
 	font-size:11px;
 	padding:6px;
+
+
     /* BENJA */
 	/*-webkit-box-shadow:rgba(255,255,255,0.15) 0 1px 0,rgba(0,0,0,0.5) 0 -1px 0;*/
 	/*-moz-box-shadow:rgba(255,255,255,0.15) 0 1px 0,rgba(0,0,0,0.5) 0 -1px 0*/
@@ -2793,7 +2803,8 @@ td.sharing.none span {
 .phoneytext {
     text-shadow: 0 -1px 0 #000;
     color: #fff;
-    font-family: Helvetica Neue, Helvetica, arial;
+    /* font-family: Helvetica Neue, Helvetica, arial; */
+    font-family: $font_family;
     font-size: 18px;
     line-height: 25px;
     padding: 4px 45px 4px 15px;
@@ -3042,4 +3053,27 @@ site-border-radius()
     display:block;
 }
 
+.formRow input, .formRow textarea {
+    padding: 5px 8px;
+	background-color:#565656;
+	border:none;
+	color:#ccc;
+	outline:none;
+	resize:none;
+	
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    width: 250px;
+    font-size: 11px;
+    padding: 6px;
+
+	-moz-box-shadow: 1px 1px 1px #191919 inset, 0 0 1px #181818 inset;
+	-webkit-box-shadow: 1px 1px 1px #191919 inset, 0 0 1px #181818 inset;
+	box-shadow: 1px 1px 1px #191919 inset, 0 0 1px #181818 inset;
+}
 
