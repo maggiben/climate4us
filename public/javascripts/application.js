@@ -468,6 +468,25 @@ $(document).ready(function() {
         getSelected: function() {
           return this.properties.selected;
         },
+        getOrder: function() {
+            return this.properties.order;
+        },
+        setOrder: function(order) {
+            var that = this;
+            $.ajax({
+                url: "/subscription/reorder/" + that.properties._id,
+                dataType: "json",
+                type: "put",
+                data: {
+                    _id: that.properties._id,
+                    ids: order,
+                },
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data)
+                    that.properties.order = order;
+                }
+            })
+        },
         removeStations: function(ids, callback) {
             for (var id in ids)
             {
@@ -504,10 +523,12 @@ $(document).ready(function() {
                 dataType: "json",
                 data: station,
                 success: function (data, textStatus, jqXHR) {
-                    //new Station({_id: data._id, type: data.type, onLoad: onLoad});
                     that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
                     function onLoad(station) {
                         station.isReady = true;
+                        that.properties.order.push(data._id);
+                        var order = that.getOrder();
+                        that.setOrder(order);
                         callback(data);
                     }
                 },
@@ -882,6 +903,31 @@ $(document).ready(function() {
             clearTimeout(b.data("timeout"));
             b.data("text") === undefined && b.data("text", b.text()); 
             b.text("Adding...");
+            MyApp.subscription.addStation({
+                name: that.params.name,
+                type: that.params.type,
+                country: that.params.country
+            }, function(station) {
+                $("#new_title").val("");
+                that.trigger('station.setup', station);
+                setTimeout(function () {
+                    window.location.hash = "/station/" + station._id + "/code";
+                    $.scrollTo("#s" + station._id, 800);
+                }, 400); 
+                console.log("onLoad id: " + station._id);
+                //$.scrollTo("#s" + station._id, 800);
+                $("body").removeClass("adding");
+                a.removeErrors();
+            });
+
+        });
+        this.post('#/stationXX', function () {
+            var that = this;
+            var a = $(this.target).removeErrors();
+            var b = a.find(".submit button span");
+            clearTimeout(b.data("timeout"));
+            b.data("text") === undefined && b.data("text", b.text()); 
+            b.text("Adding...");
             $.ajax({
                 url: "/station/add",
                 type: "post",
@@ -895,7 +941,8 @@ $(document).ready(function() {
                     //console.log("server respose: " + JSON.stringify(b));
                     var c = data;
                     // todo use getters instead of direct property access in this case the array 
-                    MyApp.subscription.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //
+                    MyApp.subscription.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //
+                    //properties.stations
                     function onLoad(station) {
                         $("#new_title").val("");
                         that.trigger('station.setup', station);
@@ -1201,7 +1248,7 @@ $(document).ready(function() {
             $("#data").html(ich.greetings_template(this));
         }
     };
-    MyApp = MyApp || {};
+    MyAppXX = MyAppXX || {};
 
     ///////////////////////////////////////////////////////////////////////////
     // Use CommonJS if applicable                                            //
@@ -1212,16 +1259,16 @@ $(document).ready(function() {
     } else {
         // else attach it to the window
         console.log("attachinng plugin")
-        window.MyApp = MyApp;
+        window.MyAppXX = MyAppXX;
     }
     if (typeof document !== 'undefined') {
-        if (MyApp.$) {
-            MyApp.$(function () {
-                MyApp.domready();
+        if (MyAppXX.$) {
+            MyAppXX.$(function () {
+                //MyAppXX.domready();
             });
         } else {
             document.addEventListener('DOMContentLoaded', function () {
-                MyApp.domready();
+                //MyAppXX.domready();
             }, true);
         }
     }

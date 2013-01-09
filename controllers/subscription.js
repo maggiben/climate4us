@@ -81,6 +81,12 @@ exports.getById = function (request, response, next) {
         if (err) {
             return next(err);
         }
+        if(!subscription)
+        {
+            response.statusCode = 404;
+            errJSON = JSON.stringify({"title": "error", "message":"Not Found","status":"fail"});
+            return response.send(errJSON);
+        }
         var subscriptionJSON = JSON.stringify(subscription);
         return response.send(subscriptionJSON);
     }

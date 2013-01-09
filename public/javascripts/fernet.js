@@ -85,10 +85,12 @@
             this.getUser({callback: gotUser})
             function gotUser(account)
             {
+                console.log("account")
                 that.user.subscriptions.forEach(function(_id) {
                     that.getSubscription({_id: _id, callback: gotSubscription});
                 });
                 function gotSubscription(subscription) {
+                    console.log("subscription")
                     MyApp.subscriptions[subscription._id] = new Subscription({_id: subscription._id, callback: onInit});
                     MyApp.subscription = MyApp.subscriptions[subscription._id];
                 }
@@ -127,7 +129,6 @@
                 type: "GET",
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {
-                    console.log(data);
                     if($.isFunction(options.callback))
                     {
                         options.callback(data);
