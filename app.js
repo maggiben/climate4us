@@ -325,6 +325,7 @@ app.get('/signout', function(req, res) {
     res.redirect('/');
 });
 
+app.post('/account/signin', Account_controller.signIn);
 app.get('/account/getbyid/:id', ensureAuthenticated, Account_controller.getAccountById);
 app.get('/account/getAccount', ensureAuthenticated, Account_controller.getAccount);
 app.put('/account/subscription', ensureAuthenticated, Account_controller.setSubscription);

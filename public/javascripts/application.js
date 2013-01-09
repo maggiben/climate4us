@@ -262,8 +262,8 @@
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {
                     that.properties = $.extend({}, that.properties, data);
-                    that.setup(that.properties);
-                    options.callback(that.properties);
+                    that.setup(that.properties, options.callback);
+                    //options.callback(that.properties);
                 },
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
@@ -272,9 +272,12 @@
                 }
             });
         },
-        setup: function (properties) {
+        setup: function (properties, callback) {
             var that = this;
+            /*
             this.properties.order.forEach(function(_id) {
+                console.log("getting stations:")
+                console.log(_id)
                 $.ajax({
                     url: "/station/getbyid/" + _id,
                     type: "GET",
@@ -293,6 +296,33 @@
                     }
                 });
             });
+            */
+            var queue = $.jqmq({
+                delay: -1,
+                batch: 1,
+                callback: function( _id ) {
+                    $.ajax({
+                        url: "/station/getbyid/" + _id,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data, textStatus, jqXHR) {
+                            that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =                   
+                            function onLoad(station) {
+                                console.log("data is in queue");
+                                station.isReady = true;
+                            }
+                        },
+                        error: function (jqXHR, status, error) {
+                            console.log(jqXHR.responseText);
+                            queue.next(true);
+                        },
+                    });
+                },
+                complete: function(){
+                    callback(that.properties);
+                }
+            });
+            this.properties.order.forEach(function(_id) { queue.add(_id) });
         },
         getAllStations: function(options, callback)
         {
@@ -978,12 +1008,15 @@
                 function gotSubscription(subscription) {
                     console.log("subscription._id: " + subscription._id);
                     MyApp.subscriptions[subscription._id] = new myApplication({_id: subscription._id, callback: onInit});
+                    console.log("MyApp.subscriptions[%s] = %s", subscription._id, JSON.stringify(MyApp.subscriptions[subscription._id].module));
                 }
                 
                 function onInit(subscription)
                 {
                     //MyApp.subscriptions['50dfa3ce09556aa365000004'].properties.stations['50e9be722eda7b7a55000002']
-                    console.log("stations: " + JSON.stringify(MyApp.subscriptions[subscription._id].properties.stations     ));
+                    console.log("stations: " + JSON.stringify(MyApp.subscriptions[subscription._id].properties.stations));
+                    
+                    console.log(MyApp.subscriptions[subscription._id].properties.stations);
                     
                     /*
                     subscription.order.forEach(function(_id) {
@@ -1099,7 +1132,6 @@
         },
         getUser: function(options) {
             var that = this;
-            console.log("getUser");
             $.ajax({
                 url: "/account/getAccount",
                 type: "GET",

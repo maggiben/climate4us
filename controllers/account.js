@@ -28,13 +28,49 @@
 
 
 // Controllers
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
+    , passport = require('passport');
 
 // Load model
 var account_schema = require('../models/account')
   , Account = mongoose.model('Account', account_schema);
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Route to signin                                                           //
+//                                                                           //
+// @param {Object} request                                                   //
+// @param {Object} response                                                  //
+// @param {Object} next                                                      //
+// @return {Object} JSON Account                                             //
+//                                                                           //
+// @api public                                                               //
+//                                                                           //
+// @url GET /account/signin                                                  //
+///////////////////////////////////////////////////////////////////////////////
+exports.signIn = function(request, response, next) {
+    
+    console.log(request.headers)
+    response.contentType('application/json');
+    passport.authenticate('local', function(error, user, info) {
+        if (error) { 
+            return next(error); 
+        }
+        if (!user) { 
+            console.log("unauthorized");
+            var nouserJSON = JSON.stringify({title: 'bad login', locale: 'en_US', message: 'invalid username'});
+            return response.send(nouserJSON);
+        }
+        request.logIn(user, function(error) {
+            if (error) { 
+                return next(error);
+            }
+        });
+        console.log("auth okay");
+        var accountJSON = JSON.stringify(request.user);
+        return response.send(accountJSON);
+    })(request, response, next);
+}
 ///////////////////////////////////////////////////////////////////////////////
 // Route to get specific Account by its _id                                  //
 //                                                                           //
