@@ -149,6 +149,42 @@
                 </div>
             </div>
         </div>
+        <div id="new_subscription">
+            <div class="overlay"></div>
+            <div class="dialog">
+                <form action="#/subscription/new" method="post">
+                    <input type="hidden" name="_id" value="" />
+                    <div class="toolbar top">Add a new subscription</div>
+                    <div class="display">
+                        <p class="text">
+                            <label for="new_name">Name</label>
+                            <input type="text" name="name" id="new_name" />
+                        </p>
+                        <p class="text">
+                            <label for="new_subscription_type">Type</label>
+                            <select id="new_subscription_type">
+                                <option value="0" data-imagesrc="images/markers/anniversary.png" data-description="An Aniversary event">Full</option>
+                                <option value="1" data-imagesrc="images/markers/comedyclub.png" data-description="Comedy club">Demo</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="toolbar bottom">
+                        <button><span>Create</span></button>
+                        <a href="#" class="button cancel">Cancel</a>
+                    </div>
+                </form>
+                <div class="upgrade">
+                    <div class="toolbar top">Track a New Subscription</div>
+                    <div class="display">
+                        <p>To <strong>add a gauge</strong>, you must be subscribed to a plan.</p>
+                    </div>
+                    <div class="toolbar bottom">
+                        <a href="#/account/plan" class="button">Sign Up for a Plan</a>
+                        <a href="#" class="button cancel">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- DIALOGS -->
         <!-- LOADING -->
         <div id="loading" class="loading_indicator">

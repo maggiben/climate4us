@@ -92,6 +92,8 @@
                 function gotSubscription(subscription) {
                     console.log("subscription")
                     MyApp.subscriptions[subscription._id] = new Subscription({_id: subscription._id, callback: onInit});
+                    // Because we want one one
+                    // TODO REFACTOR TO SELECTED SUBSCRIPTION
                     MyApp.subscription = MyApp.subscriptions[subscription._id];
                 }
                 function onInit(subscription)
@@ -136,6 +138,7 @@
                 },
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
+                    $("body").addClass("add_subscription");
                 },
                 complete: function () {
                 }
@@ -158,17 +161,30 @@
                 }
             });      
         },
-        createSubscription: function(options) {
+        createSubscription: function(options, callback) {
             var that = this;
-            var options = $.extend({}, this.properties, options);
             $.ajax({
                 url: "/subscription/create",
                 type: "POST",
                 dataType: "json",
                 data: options,
                 success: function (data, textStatus, jqXHR) {
-                    that.properties = $.extend({}, that.properties, data);
-                    that.properties.isReady = true;
+                    console.log("on data()")
+                    that.subscriptions[data._id] = new Subscription({_id: data._id, callback: onInit});
+                    function onInit(subscription)
+                    {
+                        console.log("onInit()");
+
+                        that.subscription = MyApp.subscriptions[subscription._id];
+                        that.user.subscriptions.push(subscription._id);
+                        that.setSubscription(subscription._id);
+                        $("body").removeClass("add_subscription");
+                        $("body").addClass("adding");
+                        if($.isFunction(callback))
+                        {
+                            callback(subscription);
+                        }
+                    }
                 },
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);

@@ -299,8 +299,14 @@ $(document).ready(function() {
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {
                     that.properties = $.extend({}, that.properties, data);
-                    that.setup(that.properties, options.callback);
-                    //options.callback(that.properties);
+                    if(that.properties.order.length > 0)
+                    {
+                        that.setup(that.properties, options.callback);
+                    }
+                    else
+                    {
+                        options.callback(that.properties);
+                    }
                 },
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
@@ -526,10 +532,10 @@ $(document).ready(function() {
                     that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
                     function onLoad(station) {
                         station.isReady = true;
-                        that.properties.order.push(data._id);
+                        that.properties.order.push(station._id);
                         var order = that.getOrder();
                         that.setOrder(order);
-                        callback(data);
+                        callback(station);
                     }
                 },
                 error: function (jqXHR, status, error) {
@@ -890,6 +896,27 @@ $(document).ready(function() {
             });
             $("body").addClass("loading").removeClass("loaded");
         });
+
+        ///////////////////////////////////////////////////////////////////////
+        // Station Routes                                                    //
+        ///////////////////////////////////////////////////////////////////////
+        this.post('#/subscription/new', function () {
+            var that = this;
+            var a = $(this.target).removeErrors();
+            var b = a.find(".submit button span");
+            clearTimeout(b.data("timeout"));
+            b.data("text") === undefined && b.data("text", b.text()); 
+            b.text("Adding...");
+            MyApp.createSubscription({
+                name: that.params.name,
+                type: 'lab',
+                stations: [],
+                order: [],
+                selected: null,
+            }, function(a) {
+                console.log(a);
+            });
+        });
         ///////////////////////////////////////////////////////////////////////
         // Station Routes                                                    //
         ///////////////////////////////////////////////////////////////////////
@@ -908,6 +935,7 @@ $(document).ready(function() {
                 type: that.params.type,
                 country: that.params.country
             }, function(station) {
+                console.log(station)
                 $("#new_title").val("");
                 that.trigger('station.setup', station);
                 setTimeout(function () {
@@ -1282,11 +1310,14 @@ $(document).ready(function() {
 $(document).ready(function() {
     "use strict";
     
-        ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     // UI Events & UI transformations                                        //
     ///////////////////////////////////////////////////////////////////////////
     $("#new_site a.cancel").live("click", function () {
         return window.location.hash = "#/", $("body").removeClass("adding"), !1;
+    });
+    $("#new_subscription a.cancel").on("click", function () {
+        return window.location.hash = "#/", $("body").removeClass("add_subscription"), !1;
     });
     $("a.toggle_delete").live("click", function () {
         return $("#site_content").toggleClass("delete"), !1;

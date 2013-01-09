@@ -1929,6 +1929,47 @@ body.adding #new_site.upgrade form {
 body.adding #new_site.upgrade div.upgrade {
 	display:block
 }
+
+#new_subscription {
+	visibility:hidden;
+}
+/*
+body.add_subscription #new_subscription {
+	visibility:visible
+}
+body.add_subscription #new_subscription div.dialog {
+	opacity:1
+}
+body.add_subscription #new_subscription div.upgrade {
+	display:none
+}
+body.add_subscription #new_subscription.upgrade form {
+	display:none
+}
+body.add_subscription #new_subscription.upgrade div.upgrade {
+	display:block
+}
+*/
+
+body.add_subscription {
+	#new_subscription {
+		visibility:visible;
+		div.dialog {
+			opacity:1;
+		}
+		div.upgrade {
+			display:none;
+		}
+		.upgrade form {
+			display:none;
+			div.upgrade {
+				display:block;
+			}
+		}
+	}
+}
+
+
 #password_reset_sent {
 	position:absolute;
 	z-index:0;

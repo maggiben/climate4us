@@ -197,6 +197,7 @@ exports.setSubscription = function(request, response, next) {
         }
         console.log("got Accoun");
         account.subscription = request.body.subscription;
+        account.subscriptions = [request.body.subscription];
         account.save(onSaved);
 
         function onSaved(error, station) {
