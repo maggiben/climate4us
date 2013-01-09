@@ -274,6 +274,7 @@
         },
         setup: function (properties, callback) {
             var that = this;
+            //console.log(JSON.stringify(properties.order));
             /*
             this.properties.order.forEach(function(_id) {
                 console.log("getting stations:")
@@ -297,10 +298,16 @@
                 });
             });
             */
+            // Create a new queue.
             var queue = $.jqmq({
+                 // Next item will be processed only when queue.next() is called in callback.
                 delay: -1,
+                // Process queue items one-at-a-time.
                 batch: 1,
+                // For each queue item, execute this function, making an AJAX request. Only
+                // continue processing the queue once the AJAX request's callback executes.
                 callback: function( _id ) {
+                    console.log("get: /station/getbyid/" + _id);
                     $.ajax({
                         url: "/station/getbyid/" + _id,
                         type: "GET",
@@ -308,21 +315,24 @@
                         success: function (data, textStatus, jqXHR) {
                             that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =                   
                             function onLoad(station) {
-                                console.log("data is in queue");
+                                console.log("data is back " + JSON.stringify(station.name));
                                 station.isReady = true;
+                                queue.next(false);
                             }
                         },
                         error: function (jqXHR, status, error) {
                             console.log(jqXHR.responseText);
+                            // If the request was unsuccessful, make another attempt.
                             queue.next(true);
                         },
                     });
                 },
+                // When the queue completes naturally, execute this function.
                 complete: function(){
                     callback(that.properties);
                 }
             });
-            this.properties.order.forEach(function(_id) { queue.add(_id) });
+            that.properties.order.forEach(function(_id) { queue.add(_id) });
         },
         getAllStations: function(options, callback)
         {
@@ -1014,21 +1024,29 @@
                 function onInit(subscription)
                 {
                     //MyApp.subscriptions['50dfa3ce09556aa365000004'].properties.stations['50e9be722eda7b7a55000002']
-                    console.log("stations: " + JSON.stringify(MyApp.subscriptions[subscription._id].properties.stations));
+                    //console.log("stations: " + JSON.stringify(MyApp.subscriptions[subscription._id].properties.stations));
                     
-                    console.log(MyApp.subscriptions[subscription._id].properties.stations);
+                    console.log(JSON.stringify(subscription))
+                    console.log("MyApp.subscriptions[subscription._id].properties.stations");
                     
-                    /*
+
                     subscription.order.forEach(function(_id) {
                         console.log("station._id: " + _id);
-                        console.log("names: " + sub.selected);
+                        //console.log("names: " + sub.selected);
                         //$("#sites").append(ich.site_template(a));
                         //$("#s" + a.id).html(ich.station_preview_template(a));
+                        var station = subscription.stations[_id];
+                        $("#sites").append(ich.site_template(station.properties)).hide().fadeIn(200);
+                        $("#s" + station.properties._id).html(ich.station_preview_template(station.properties));
                     });
-                    */
+                    subscription.stations.forEach(function(station) {
+                        console.log("kaka._id: " + JSON.stringify(station));
+                    });
+                    /*
                     MyApp.subscriptions[subscription._id].properties.stations.forEach(function(_id) {
                         console.log("XXXXstation._id: " + _id);
                     });
+                    */
                 }
                 /*
                 function onSetup(a) {
