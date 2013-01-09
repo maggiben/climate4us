@@ -642,44 +642,18 @@ $(document).ready(function() {
                     console.log("[overview]");
                     $("#site_content").html(ich.overview_template(MyApp.subscription.getStationById(data.id)));
                     var placeholder = $("#placeholder");
-                    var d1 = [];
-                    for (var i = 0; i < Math.PI * 2; i += 0.25)
-                        d1.push([i, Math.sin(i)]);
-                    
-                    var d2 = [];
-                    for (var i = 0; i < Math.PI * 2; i += 0.25)
-                        d2.push([i, Math.cos(i)]);
-                
-                    var d3 = [];
-                    for (var i = 0; i < Math.PI * 2; i += 0.1)
-                        d3.push([i, Math.tan(i)]);
-                        
                     var options = {
-                        series: {
-                            lines: { show: true },
-                            points: { show: true }
-                        },
-                        xaxis: {
-                            ticks: [0, [Math.PI/2, "\u03c0/2"], [Math.PI, "\u03c0"], [Math.PI * 3/2, "3\u03c0/2"], [Math.PI * 2, "2\u03c0"]]
-                        },
-                        yaxis: {
-                            ticks: 10,
-                            min: -2,
-                            max: 2
-                        },
-                        grid: {
-                            backgroundColor: { colors: ["#fff", "#eee"] }
-                        }
-                    }
+                        lines: { show: true },
+                        points: { show: true },
+                        xaxis: { tickDecimals: 0, tickSize: 1 }
+                    };
+                    var data = [];
+                    var placeholder = $("#placeholder");
                     
-                    var data = [
-                        { label: "sin(x)",  data: d1},
-                        { label: "cos(x)",  data: d2},
-                        { label: "tan(x)",  data: d3}
-                    ];
-                    //$.plot($("#placeholder"), [ [[0, 0], [1, 1], , [2, 3]] ], { yaxis: { max: 1 } });
-                    var plot = $.plot(placeholder, data, options);
-                    
+                    $.plot(placeholder, data, options);
+
+                    data = [[1999, 3.0], [2000, 3.9], [2001, 2.0], [2002, 1.2], [2003, 1.3], [2004, 2.5], [2005, 2.0], [2006, 3.1], [2007, 2.9], [2008, 0.9]];
+                    $.plot(placeholder, data, options);
                     break;
                 case "code":
                     console.log("[code]");

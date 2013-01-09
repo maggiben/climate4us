@@ -98,11 +98,33 @@
                 }
                 function onInit(subscription)
                 {
+                    
+                    var queue = $.jqmq({
+                         // Next item will be processed only when queue.next() is called in callback.
+                        delay: 100,
+                        // Process queue items one-at-a-time.
+                        batch: 1,
+                        // For each queue item, execute this function, making an AJAX request. Only
+                        // continue processing the queue once the AJAX request's callback executes.
+                        callback: function( _id ) {
+                            var station = subscription.stations[_id];
+                            $("#sites").append(ich.site_template(station.properties));
+                            $("#s" + station.properties._id).html(ich.station_preview_template(station.properties)).hide().fadeIn(100);
+                        },
+                        // When the queue completes naturally, execute this function.
+                        complete: function(){
+                        }
+                    });
+
+                    subscription.order.forEach(function(_id) { queue.add(_id) });
+                    
+                    /*
                     subscription.order.forEach(function(_id) {
                         var station = subscription.stations[_id];
-                        $("#sites").append(ich.site_template(station.properties)).hide().fadeIn(200);
+                        $("#sites").append(ich.site_template(station.properties));
                         $("#s" + station.properties._id).html(ich.station_preview_template(station.properties));
                     });
+                    */
                 }
             }
         },
