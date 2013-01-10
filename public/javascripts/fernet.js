@@ -44,31 +44,6 @@
 // Main App closure                                                          //
 // @param {Function} window.jQuery || window.Zepto JS libraries              //
 ///////////////////////////////////////////////////////////////////////////////
-;(function($){
-  var _trim = String.prototype.trim, trim;
-
-  if (_trim) {
-    window.trim = function (text) {
-      return text == null ? "" : _trim.call(text);
-    }
-  } else {
-    var trimLeft, trimRight;
-
-    // IE doesn't match non-breaking spaces with \s.
-    if ((/\S/).test("\xA0")) {
-      trimLeft = /^[\s\xA0]+/;
-      trimRight = /[\s\xA0]+$/;
-    } else {
-      trimLeft = /^\s+/;
-      trimRight = /\s+$/;
-    }
-
-    window.trim = function (text) {
-      return text == null ? "" :
-        text.toString().replace(trimLeft, "").replace(trimRight, "");
-    }
-  }
-});
 ;(function($) {
     "use strict";
     function trim(stuff) {
@@ -462,6 +437,8 @@ $(document).ready(function() {
                         break;
                     
                 }
+                break;
+            default:
                 break;
         }
         function echo(message)
