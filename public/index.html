@@ -65,7 +65,7 @@
         <!-- USER SCRIPTS -->
     </head>
 
-    <body class="loaded view-nav view-panel" onload="createTimeline()" style="height: 899px;">
+    <body class="loaded view-nav view-panel" style="height: 899px;">
         <!-- HEADER -->
         <header>
             <h1><a href="/">gipsy</a></h1>
@@ -201,6 +201,9 @@
                 $( "#slider" ).slider();
             });
             </script>
+        </script>
+        <script type="text/x-fernet" id="cpu">
+            <div data-type="gauge" data-format="fractional"></div>
         </script>
         <script id="deleted_site_template" type="text/html">
             <div class="deleted">
@@ -486,10 +489,10 @@
             <div class="toolbar top">Sensor data for {{name}}</div>
                 <div id="display_panel" class="display">
                     <div class="wrapper">
-                        <div id="temperature.gauge"></div>
-                        <div id="humidity.gauge"></div>
-                        <div id="co2.gauge"></div>
-                        <div id="pressure.gauge"></div>
+                        <div id="temperature.gauge" style="width:200px;height:200px"></div>
+                        <div id="humidity.gauge" style="width:200px;height:200px"></div>
+                        <div id="co2.gauge" style="width:200px;height:200px"></div>
+                        <div id="pressure.gauge" style="width:200px;height:200px"></div>
                     </div>
                 </div>
             <div class="toolbar bottom submit edit">

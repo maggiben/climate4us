@@ -168,7 +168,6 @@ $(document).ready(function() {
                     that.properties.id = that.properties._id;
                     options.onLoad(that.properties);
                 },
-                
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
                 },
@@ -176,38 +175,6 @@ $(document).ready(function() {
                 }
             });
         },
-        /*
-        setupx: function (a) {
-            var that = this;
-            that.id = a._id;
-            $.ajax({
-                url: "/station/getbyid/" + a._id,
-                type: "GET",
-                dataType: "json",
-                success: function (data, textStatus, jqXHR) {
-                    //console.log("Station[" + data._id + "] successfully created");
-                    that._id = data._id,
-                    that.id = data._id,
-                    that.name = data.name;
-                    that.type = data.type;
-                    that.temperature = data.temperature;
-                    that.humidity = data.humidity;
-                    that.latitude = data.latitude;
-                    that.longitude = data.longitude;
-                    //Preserve the original defaults by passing an empty object as the target
-                    //that = $.extend({}, that, data);
-                    a.onLoad(that);
-                },
-                
-                error: function (b) {
-                    var c = $.parseJSON(b.responseText);
-                    alert(c.errors);
-                },
-                complete: function () {                                
-                }
-            });
-        },
-        */
         update: function (a) {
             var that = this;
             $.ajax({
@@ -218,9 +185,8 @@ $(document).ready(function() {
                 success: function(data, textStatus, jqXHR) {
                     console.log("data back: " + JSON.stringify(data));
                 },
-                error: function (b) {
-                    var c = $.parseJSON(b.responseText);
-                    alert(c.errors);
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
                 },
                 complete: function () {                                
                 }
@@ -375,60 +341,6 @@ $(document).ready(function() {
                 });
             });
         },
-        setup2: function (a) {
-            var that = this;
-            //this.properties = $.observable(this.properties);
-            this.onSetup = a.onSetup;
-            this.properties.order.forEach(function(_id) {
-                console.log("loading station _id: " + _id);
-                $.ajax({
-                    url: "/station/getbyid/" + _id,
-                    type: "GET",
-                    dataType: "json",
-                    success: function (data, textStatus, jqXHR) {
-                        console.log("/station/getbyid---: " + JSON.stringify(data._id));
-                        that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] = 
-                        console.log("Attaching station id: " + that.properties.stations[data._id].id);
-                        
-                        function onLoad(station) {
-                            station.isReady = true;
-                            console.log("is onLoad ready: " + station.isReady + " id: " + station._id);
-                            a.onSetup(station);
-                        }
-                    },
-                    error: function (jqXHR, status, error) {
-                        console.log(jqXHR.responseText);
-                    },
-                    complete: function () {
-                    }
-                });
-            });
-        },
-        setupOLD: function (a) {
-            this.onSetup = a.onSetup;
-            var that = this;
-            $.ajax({
-                url: "/station/getall",
-                type: "GET",
-                dataType: "json",
-                success: function (b) {
-                    for (var i = 0; i < b.length; i++) {
-                        that.properties.stations[b[i]._id] = new Station({_id: b[i]._id, type: b[i].type, onLoad: onLoad}); //that.stations[b[i]._id] = 
-                        console.log("Attaching station id: " + that.properties.stations[b[i]._id].id);
-                    }
-                    function onLoad(station) {
-                        station.isReady = true;
-                        console.log("is onLoad ready: " + station.isReady + " id: " + station._id);
-                        a.onSetup(station);
-                    }
-                },
-                error: function (jqXHR, status, error) {
-                    console.log(jqXHR.responseText);
-                },
-                complete: function () {                                
-                }
-            });
-        },
         listStations: function (a) {
             for (var key in this.properties.stations)
             {
@@ -440,7 +352,6 @@ $(document).ready(function() {
             return !1;
         },
         getStationById: function(id) {
-            console.log("getStationById(%s) = %s", id, JSON.stringify(this.properties.stations[id]));
             return this.properties.stations[id].properties;
         },
         getAllStationsIds: function() {
@@ -454,7 +365,7 @@ $(document).ready(function() {
             }
             return stations;
         },
-        getStations:  function (callback) {
+        getStations: function(callback) {
             var that = this;
             $.ajax({
                 url: "/getStations",
@@ -464,7 +375,6 @@ $(document).ready(function() {
                     callback(data);
                 },
                 error: function (jqXHR, status, error) {
-                    //var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
                 }
             });
@@ -585,10 +495,8 @@ $(document).ready(function() {
             }
             var station_template = ich.site_template(data);
             $(station_template).appendTo('#sites').hide().fadeIn('slow');
-            //$("#sites").append(ich.site_template(data));
             $("#s" + data.id).html(ich.station_preview_template(data));
-            //this.trigger("show_station.g");
-            //this.trigger('showSite', {my_data: this.params});
+
             $("div.site.current").removeClass("current");
             site.addClass("current");
             $("#data").html(ich.site_data_template(data)); 

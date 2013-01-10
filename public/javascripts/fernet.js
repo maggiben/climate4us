@@ -44,8 +44,38 @@
 // Main App closure                                                          //
 // @param {Function} window.jQuery || window.Zepto JS libraries              //
 ///////////////////////////////////////////////////////////////////////////////
+;(function($){
+  var _trim = String.prototype.trim, trim;
+
+  if (_trim) {
+    window.trim = function (text) {
+      return text == null ? "" : _trim.call(text);
+    }
+  } else {
+    var trimLeft, trimRight;
+
+    // IE doesn't match non-breaking spaces with \s.
+    if ((/\S/).test("\xA0")) {
+      trimLeft = /^[\s\xA0]+/;
+      trimRight = /[\s\xA0]+$/;
+    } else {
+      trimLeft = /^\s+/;
+      trimRight = /\s+$/;
+    }
+
+    window.trim = function (text) {
+      return text == null ? "" :
+        text.toString().replace(trimLeft, "").replace(trimRight, "");
+    }
+  }
+});
 ;(function($) {
     "use strict";
+    function trim(stuff) {
+        if (''.trim) return stuff.trim();
+        else return stuff.replace(/^\s+/, '').replace(/\s+$/, '');
+    }
+
     var MyApp = {
         module: { 
             VERSION: "0.1.2.3",
@@ -59,6 +89,9 @@
         connection_count: 0,
         subscription: {},
         subscriptions: [],
+        views: {
+            code: {}
+        },
         mousecoords: {
             pageX: 0, 
             pageY: 0,
@@ -298,8 +331,78 @@
                 people: this.formatNumber(this.today.people)
             }
         },
+        corelator: function(view, data, partials)
+        {
+                switch($(view).attr('data-type')) {
+                    case 'gauge':
+                        console.log("poner un gauge");
+                        break;
+                };
+        },
+        // public function for adding views
+        // can take a name and view string arguments
+        // or can take an object with name/view pairs
+        // We're enforcing uniqueness to avoid accidental view overwrites.
+        // If you want a different view, it should have a different name.
+        addView: function (name, viewString) {
+            var that = this;
+            if (typeof name === 'object') {
+                for (var view in name) {
+                    this.addView(view, name[view]);
+                }
+                return;
+            }
+            if (that.views[name]) {
+                console.error("Invalid name: " + name + "."); 
+            } else if (that.views.code[name]) {
+                console.error("Template \"" + name + "  \" exists");
+            } else {
+                that.views.code[name] = viewString;
+                that.views[name] = function (data, raw) {
+                    data = data || {};
+                    var result = that.corelator(that.views.code[name], data, that.views.code);
+                    return (that.views.$ && !raw) ? that.views.$(result) : result;
+                };
+            }
+        },
+        // clears all retrieval functions and empties cache
+        clearAll: function () {
+            for (var key in that.views.code) {
+                delete that.views[key];
+            }
+            that.views.code = {};
+        },
+        
+        // clears/grabs
+        refresh: function () {
+            that.clearAll();
+            that.grabTemplates();
+        },
+        // grabs views from the DOM and caches them.
+        // Loop through and add views.
+        // Whitespace at beginning and end of all views inside <script> tags will 
+        // be trimmed. If you want whitespace around a partial, add it in the parent, 
+        // not the partial. Or do it explicitly using <br/> or &nbsp;
+        grabTemplates: function () {        
+            var that = this,
+                i, 
+                scripts = document.getElementsByTagName('script'), 
+                script,
+                trash = [];
+            for (i = 0, l = scripts.length; i < l; i++) {
+                script = scripts[i];
+                if (script && script.innerHTML && script.id && (script.type === "text/html" || script.type === "text/x-fernet")) {
+                    that.addView(script.id, trim(script.innerHTML));
+                    trash.unshift(script);
+                }
+            }
+            for (i = 0, l = trash.length; i < l; i++) {
+                trash[i].parentNode.removeChild(trash[i]);
+            }
+        },
         domready: function() {
             console.log("DOMContentLoaded starting MyApp.version: %f", this.module.VERSION);
+            this.grabTemplates();
             this.init({user: 'uid'});
             $("body").height(0);
             $("#data").html(ich.greetings_template(this));
@@ -333,7 +436,7 @@ $(document).ready(function() {
     "use strict";
     console.log("starting sockets")
     var timer = null;
-    var socket = io.connect('http://climate4us.bmaggi.c9.io', {
+    var socket = io.connect('http://127.0.0.1:8080', {
         closeTimeout: 2000,
         });
     socket.on('news', function (data) {
@@ -398,146 +501,152 @@ $(document).ready(function() {
     });
     MyApp.properties.socket = socket || {};
 });
-///////////////////////////////////////////////////////////////////////////////
-// Plus Object template                                                      //
-///////////////////////////////////////////////////////////////////////////////
-/*
-(function($) {
-    
-    "use strict";
-    
-    var fernet = function (method) {
-        if (methods[method]) {
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === 'object' || !method) {
-            return methods.init.apply(this, arguments);
-        } else {
-            $.error('Method ' + method + ' does not exists.');
-        }
-    };
-    var VERSION = 1.0;
-    var methods = {};
-    //Set defauls for the control
+
+// the semi-colon before function invocation is a safety net against concatenated
+// scripts and/or other plugins which may not be closed properly.
+;(function ($, window, document, undefined) {
+
+    // undefined is used here as the undefined global variable in ECMAScript 3 is
+    // mutable (ie. it can be changed by someone else). undefined isn't really being
+    // passed in so we can ensure the value of it is truly undefined. In ES5, undefined
+    // can no longer be modified.
+
+    // window and document are passed through as local variable rather than global
+    // as this (slightly) quickens the resolution process and can be more efficiently
+    // minified (especially when both are regularly referenced in your plugin).
+
+    // Create the defaults once
+    var pluginName = "amaretto";
     var defaults = {
+        VERSION: 1.5,
         data: [],
         magic: 911,
         icon: 'images/markers/anniversary.png',
-        title: 'fernet',
-        loggers: []
-    };
-    var properties = {
-        delay: 10,
-        reconnect: true,
-        socket: null,
-        stdinp: null,
-        stdout: null,
-        stderr: null
-    };
-    var user = {
-        name: "", 
-        id: "", 
-        last_name: null, 
-        first_name: null, 
-        email: "",
+        loggers: [],
+        properties: {
+            delay: 10,
+            reconnect: true,
+            socket: null,
+            stdinp: null,
+            stdout: null,
+            stderr: null
+        },
+        user: {
+            name: "", 
+            id: "", 
+            last_name: null, 
+            first_name: null, 
+            email: "",
+            subscriptions: [],
+            subscription: null
+        },
         subscriptions: [],
-        subscription: null
     };
-    var subscriptions = [];
-    var plugin = this;
-    //Public methods 
-    methods.init = function (object, callback, options) {
-        //Preserve the original defaults by passing an empty object as the target
-        var options = $.extend({}, defaults, options);
-        getUser({callback: gotUser})
-        function gotUser(account)
-        {
-            user.subscriptions.forEach(function(_id) {
-                getSubscription({_id: _id, callback: gotSubscription});
-            });
-            function gotSubscription(subscription) {
-                subscriptions[subscription._id] = new Subscription({_id: subscription._id, callback: onInit});
-            }
-            function onInit(subscription)
+
+    // The actual plugin constructor
+    function Plugin(element, options) {
+        this.element = element;
+        // jQuery has an extend method which merges the contents of two or
+        // more objects, storing the result in the first object. The first object
+        // is generally empty as we don't want to alter the default options for
+        // future instances of the plugin
+        this.options = $.extend({}, defaults, options);
+        this._defaults = defaults;
+        this._name = pluginName;
+        this.init();
+    }
+
+    Plugin.prototype = {
+        init: function(options) {
+            var that = this;
+            this.getUser({callback: gotUser})
+            function gotUser(account)
             {
-                subscription.order.forEach(function(_id) {
-                    var station = subscription.stations[_id];
-                    console.log("hasta acaaaa")
-                    //$("#sites").append(ich.site_template(station.properties)).hide().fadeIn(200);
-                    //$("#s" + station.properties._id).html(ich.station_preview_template(station.properties));
+                console.log("account")
+                that.user.subscriptions.forEach(function(_id) {
+                    that.getSubscription({_id: _id, callback: gotSubscription});
                 });
-            }
-        }
-    };
-    //Public:
-    methods.addLogger = function(logger) {
-        console.log("addLogger")
-        //loggers.push(logger);
-    };
-    //Private:
-    function getSubscription(options) {
-        console.log("fernet.getSubscription(%s)", options._id);
-        $.ajax({
-            url: "/subscription/getbyid/" + options._id,
-            type: "GET",
-            dataType: "json",
-            success: function (data, textStatus, jqXHR) {
-                console.log(data);
-                if($.isFunction(options.callback))
-                {
-                    options.callback(data);
+                function gotSubscription(subscription) {
+                    console.log("subscription")
+                    MyApp.subscriptions[subscription._id] = new Subscription({_id: subscription._id, callback: onInit});
+                    // Because we want one one
+                    // TODO REFACTOR TO SELECTED SUBSCRIPTION
+                    MyApp.subscription = MyApp.subscriptions[subscription._id];
                 }
-            },
-            error: function (jqXHR, status, error) {
-                console.log(jqXHR.responseText);
-            },
-            complete: function () {
+                function onInit(subscription)
+                {
+                    
+                    var queue = $.jqmq({
+                         // Next item will be processed only when queue.next() is called in callback.
+                        delay: 100,
+                        // Process queue items one-at-a-time.
+                        batch: 1,
+                        // For each queue item, execute this function, making an AJAX request. Only
+                        // continue processing the queue once the AJAX request's callback executes.
+                        callback: function( _id ) {
+                            var station = subscription.stations[_id];
+                            $("#sites").append(ich.site_template(station.properties));
+                            $("#s" + station.properties._id).html(ich.station_preview_template(station.properties)).hide().fadeIn(100);
+                        },
+                        // When the queue completes naturally, execute this function.
+                        complete: function(){
+                            var selected = MyApp.subscription.getSelected();
+                            window.sammyApp.trigger("show_panel.g",{id: selected, path:"overview"})
+                        }
+                    });
+                    subscription.order.forEach(function(_id) { queue.add(_id) });
+                }
+            }
+        },
+        yourOtherFunction: function () {
+            // some logic
+        },
+        getSubscription: function(options) {
+            console.log("fernet.getSubscription(%s)", options._id);
+            $.ajax({
+                url: "/subscription/getbyid/" + options._id,
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data);
+                    if($.isFunction(options.callback))
+                    {
+                        options.callback(data);
+                    }
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+                complete: function () {
+                }
+            });
+        },
+        getUser: function(options) {
+            var that = this;
+            $.ajax({
+                url: "/account/getAccount",
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    console.log(that.user)
+                    that.user = $.extend({}, that.options.user, data);
+                    options.callback(that.user);
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+            });
+        },
+    };
+
+    // A really lightweight plugin wrapper around the constructor,
+    // preventing against multiple instantiations
+    $.fn[pluginName] = function (options) {
+        return this.each(function () {
+            if (!$.data(this, "plugin_" + pluginName)) {
+                $.data(this, "plugin_" + pluginName, new Plugin(this, options));
             }
         });
     };
-    function getUser(options) {
-        $.ajax({
-            url: "/account/getAccount",
-            type: "GET",
-            dataType: "json",
-            success: function (data, textStatus, jqXHR) {
-                user = $.extend({}, user, data);
-                options.callback(user);
-            },
-            error: function (jqXHR, status, error) {
-                console.log(jqXHR.responseText);
-            },
-        });    
-    };
-    function _onInput(options)
-    {
-        console.log("io has new input")
-    };
-    function _domready()
-    {
-        console.log("Starting fernet.version: %f", VERSION);
-    };
-    
-    ///////////////////////////////////////////////////////////////////////////
-    // Use CommonJS if applicable                                            //
-    ///////////////////////////////////////////////////////////////////////////
-    if (typeof require !== 'undefined') {
-        //module.exports = Subscription;
-    } else {
-        // else attach it to the window
-        window.fernet = new fernet();
-        window.fernet.addLogger()
-    }
-    if (typeof document !== 'undefined') {
-        if (fernet.$) {
-            fernet.$(function () {
-                fernet.domready();
-            });
-        } else {
-            document.addEventListener('DOMContentLoaded', function () {
-                _domready();
-            }, true);
-        }
-    }
-})(window.jQuery || window.Zepto);
-*/
 
+})(jQuery, window, document);
