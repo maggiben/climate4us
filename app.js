@@ -1,12 +1,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : app.js                                                    //
 // @summary      : main application module                                   //
-// @version      : 0.1                                                       //
+// @version      : 0.1.2                                                     //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //
 // @email        : benjaminmaggi@gmail.com                                   //
 // @date         : 12 Dec 2012                                               //
+// @milestones   :                                                           //
+//                11 Ene 2012 - Account, Subscription and Stations           //
 // ------------------------------------------------------------------------- //
 //                                                                           //
 // @copyright Copyright 2012 Benjamin Maggi, all rights reserved.            //
@@ -153,7 +155,7 @@ function ensureAuthenticated(request, response, next) {
 ///////////////////////////////////////////////////////////////////////////////
 // Application rutes                                                         //
 ///////////////////////////////////////////////////////////////////////////////
-app.get('/', function(request, response) {
+app.get('/', ensureAuthenticated, function(request, response) {
     response.sendfile(__dirname + '/public/index.html');
 });
 app.get('/app', routes.index);

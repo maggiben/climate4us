@@ -54,3 +54,9 @@ var queue = $.jqmq({
                 complete: function(){
                 }
             });
+
+
+software names:
+    80: whos fox chown dir while cat ?
+    90: Office explorer delphi does tango  windows 
+    90: imagine, wonderfull, expressive, processing, clouds, 
