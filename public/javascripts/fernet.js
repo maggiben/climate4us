@@ -11,7 +11,7 @@
 // ------------------------------------------------------------------------- //
 // @file         : fernet.js                                                 //
 // @summary      : Realtime framework                                        //
-// @version      : 0.1.1                                                     //
+// @version      : 0.1.2                                                     //
 // @project      : https://github.com/maggiben                               //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //

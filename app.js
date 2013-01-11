@@ -30,15 +30,15 @@
 // Module dependencies.                                                      //
 ///////////////////////////////////////////////////////////////////////////////
 var express = require('express'),
-    routes = require('./routes'),
-    conf = require('./config'),
     cons = require('consolidate'),
     mongoose = require('mongoose'),
-    passport = require('passport'),
-    Account = require('./models/account'),
+    routes = require('./routes'),
+    conf = require('./config'),    
     Station = require('./controllers/station'),
+    Subscription = require('./controllers/subscription'),    
+    Account = require('./models/account'),    
     Account_controller = require('./controllers/account');
-    Subscription = require('./controllers/subscription'),
+    passport = require('passport'),    
     LocalStrategy = require('passport-local').Strategy;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ var generate_mongo_url = function(obj){
         return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
     }
 };
-var mongourl = generate_mongo_url(conf.mongo_local);
+var mongourl = generate_mongo_url(conf.mongohq);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Run app                                                                   //
@@ -157,87 +157,6 @@ app.get('/', function(request, response) {
     response.sendfile(__dirname + '/public/index.html');
 });
 app.get('/app', routes.index);
-app.post('/station', function(request, response){
-  console.log(request.body);      // your JSON
-  response.send(request.body);    // echo the result back
-});
-app.get('/start', function(request, response) {
-    // We want to set the content-type header so that the browser understands
-    //  the content of the response.
-    response.contentType('application/json');
-
-    // Normally, the would probably come from a database, but we can cheat:
-    var last_7_days = [
-    { views_size: '05px', people_size: '25px' },
-    { views_size: '10px', people_size: '20px' },
-    { views_size: '15px', people_size: '15px' },
-    { views_size: '20px', people_size: '10px' },
-    { views_size: '25px', people_size: '05px' },
-    { views_size: '20px', people_size: '00px' },
-    { views_size: '10px', people_size: '10px' },
-    ];
-    
-  // Since the request is for a JSON representation of the people, we
-  //  should JSON serialize them. The built-in JSON.stringify() function
-  //  does that.
-  var last_7_daysJSON = JSON.stringify(last_7_days);
-
-  // Now, we can use the response object's send method to push that string
-  //  of people JSON back to the browser in response to this request:
-  response.send(last_7_daysJSON);
-});
-app.get('/subscription', function(request, response) {
-    // We want to set the content-type header so that the browser understands
-    //  the content of the response.
-    response.contentType('application/json');
-
-    var user = {
-    "user":
-        {
-        	name: "MrX",
-            last_name:null,
-    		first_name:null,
-            email: "benjaminmaggi@gmail.com",
-            id: "50bc04d3613f5d6105000002",
-    		urls:
-    			{
-    				"self":"https://secure.gaug.es/me",
-    				"gauges":"https://secure.gaug.es/gauges",
-    				"clients":"https://secure.gaug.es/clients"
-    			},
-    	}
-    };
-    // Since the request is for a JSON representation of the people, we
-    //  should JSON serialize them. The built-in JSON.stringify() function
-    //  does that.
-    var userJSON = JSON.stringify(user);
-
-    // Now, we can use the response object's send method to push that string
-    //  of people JSON back to the browser in response to this request:
-    response.send(userJSON);
-});
-// test
-app.get('/test', function(request, response) {
-    console.log("test"); 
-    if(request.isAuthenticated()) {
-        console.log("no auth"); 
-    }
-    else {
-        console.log("no auth"); 
-    }
-    response.contentType('application/json');
-    response.send(JSON.stringify({isAuthenticated: request.isAuthenticated(),message: "what happened"}));
-});
-// Mongoose
-app.post('/station/add', Station.create, function(req, res) {
-    console.log('body: ' + JSON.stringify(req.body));
-    res.contentType('application/json');
-    return res.send(JSON.stringify({ack:{type:"test",message:"received ok", code:"441"}}));
-});
-app.get('/mongo', Station.create);
-app.get('/setupStation/:id', Station.setupStation);
-app.get('/getStations', Station.getStations);
-app.post('/changeStation/:id', Station.update);
 
 ///////////////////////////////////////////////////////////////////////////////
 // User authentication  rutes                                                //

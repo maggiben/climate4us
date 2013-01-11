@@ -52,7 +52,7 @@
         <!-- SOCKET.IO -->
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script>
-        <!-- jQuery Masonry -->
+        <!-- jQuery Isotope http://isotope.metafizzy.co/ -->
         <!-- Adobe Edge Web Fonts -->
         <!-- DEV VERSION -->
         <!--
@@ -196,11 +196,6 @@
                 <input type="text" name="email" id="user_email" value="mail" />
                 <div id="slider"></div>
             </div>
-            <script>
-            $(function() {
-                $( "#slider" ).slider();
-            });
-            </script>
         </script>
         <script type="text/x-fernet" id="cpu">
             <div data-type="gauge" data-format="fractional"></div>
@@ -209,7 +204,7 @@
             <div class="deleted">
                 <strong>{{name}}</strong> was successfully deleted.
             </div>
-        </script>        
+        </script> <!-- deleted_site_template -->
         <script type="text/html" id="trial_template">
             <div class="notice">
                 <a href="#/account/plan">You have <strong>{{ trial_days_left_text }}</strong> remaining in your free trial. Select a plan.</a>
@@ -226,7 +221,7 @@
                 </ul>
             </div>
             <div id="site_content"></div>
-        </script>
+        </script> <!-- account_template -->
         <script type="text/html" id="my_info_template">
             <div class="toolbar top">My Profile Information</div>
             <form action="#/users" method="put">
@@ -263,7 +258,7 @@
                 </div>
             </form>
             <div class="toolbar bottom"></div>
-        </script>
+        </script> <!-- my_info_template -->
         
         <script id="live_data_template" type="text/html">
             <div class="toolbar top options">
@@ -276,9 +271,7 @@
             </div>
             <div class="toolbar bottom">
             </div>
-        </script>
-        <!-- <div id="map_canvas" class="map"><a href="#" class="hide_map toggle_map">Hide Map</a></div> -->
-        <!-- CLIENTS -->
+        </script> <!-- live_data_template -->
         <script id="clients_template" type="text/html">
             <div class="toolbar top">Generate API Keys</div>
             <div id="display_panel" class="display">
@@ -295,7 +288,7 @@
                 </div>
             </div>
             <div class="toolbar bottom"></div>
-        </script>
+        </script> <!-- clients_template -->
         <script id="clients_list_template" type="text/html">
             {{#clients}}
                 <div class="share">
@@ -319,18 +312,37 @@
                     No API Keys have been created for this account.
                 </div>
             {{/clients}}
-        </script>
+        </script> <!-- clients_list_template -->
         <script type="text/html" id="disabled_site_template">
             <div id="s{{id}}" class="site disabled">
                 <h2>{{title}}</h2>
                 <p>This Gauge has been disabled.</p>
             </div>
-        </script>
+        </script> <!-- disabled_site_template -->
         <script type="text/html" id="site_template">
             <div id="s{{id}}" class="site">
             </div>
-        </script>
+        </script> <!-- site_template -->
         <script type="text/html" id="station_preview_template">
+            <h2>{{name}}</h2>
+            {{#overview}}
+            <p class="temperature"><strong>{{#temperature}}{{value}}&#176;{{/temperature}}</strong> temperature</p>
+            <p class="humidity"><strong>{{#humidity}}{{value}}{{unit}}{{/humidity}}</strong> humidity</p>
+            {{/overview}}
+            <div class="graph">
+                <ul>
+                    {{#last_7_days}}
+                    <p>{{temperature_size}}</p>
+                    <li>
+                        <span class="temperature" style="height:{{temperature_size}};">{{temperature}}</span>
+                        <span class="humidity" style="height:10px;">{{people}}</span>
+                    </li>
+                    {{/last_7_days}}
+                </ul>
+                <a href="#/station/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
+            </div>
+        </script> <!-- station_preview_template -->
+        <script type="text/html" id="station_preview_templateXXX">
             <h2>{{name}}</h2>
             {{#overview}}
             <p class="temperature"><strong>{{#temperature}}{{value}}&#176;{{/temperature}}</strong> temperature</p>
@@ -347,7 +359,7 @@
                 </ul>
                 <a href="#/station/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
             </div>
-        </script>        
+        </script> <!-- station_preview_template -->        
         <script type="text/html" id="site_preview_template">
             <h2>{{ title }}</h2>
             {{#overview}}
@@ -591,16 +603,16 @@
     </body>
     <!-- ANALITICS -->
     <script type="text/javascript">
-        var _gauges = _gauges || [];
-        (function() {
-            var t   = document.createElement('script');
-            t.type  = 'text/javascript';
-            t.async = true;
-            t.id    = 'gauges-tracker';
-            t.setAttribute('data-site-id', '50d4ea31613f5d1d80000049');
-            t.src = '//secure.gaug.es/track.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(t, s);
-        })();
+      var _gauges = _gauges || [];
+      (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '50ec5c5f613f5d35e2000009');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+      })();
     </script>
 </html>

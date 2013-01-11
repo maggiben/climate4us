@@ -1,11 +1,618 @@
-<html>
+<!DOCTYPE html>
+<!-- saved from url=(0103)https://secure.gaug.es/dashboard#/gauges/50a94b2af5a1f5407500015f/technology/browser_support/2012-11-19 -->
+<html lang="en" class="no-js live"><!--<![endif]-->
     <head>
-        <title>{{title}}</title>
-        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/{{css}}" />
+        <title>climate4us</title>
+        <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />        
+        <meta charset="utf-8">
+        <meta property="og:title"  name="title" content="laboratory">
+        <meta property="og:url" content="http://html5.laboratory.com/">
+        <meta property="og:image" content="http://laboratory.com/workspace/widget/100.png">
+        <meta property="og:site_name" content="laboratory">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:type" content="website">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <!-- CUSTOM FONT -->
+        <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Comfortaa:400,300">
+        <!-- INCLUDE STYLES -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.css" />
+        <!-- CODEMIRROR THEMES -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.themes/monokai.css" />
+        <!-- TERMINAL THEME -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery.terminal.css"/>
+        <!-- TERMINAL THEME -->
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/site.css" />
+        <!-- INCLUDE SCRIPTS -->
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery-1.8.2.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.observable.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.ba-jqmq.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.scrollTo.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.mousewheel.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.flot.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.ui.map.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/modernizr.js"></script>
+        <!-- Codemirror PLUGIN -->
+        <script type="text/javascript" charset="utf-8" src="javascripts/codemirror.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/mode/javascript.js"></script>
+        <!-- Terminal PLUGIN -->
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.terminal-0.4.22.js"></script>
+        <!-- Raphael PLUGIN -->     
+        <script type="text/javascript" charset="utf-8" src="javascripts/raphael.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
+        <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/infobubble.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
+        <!-- SOCKET.IO -->
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script>
+        <!-- jQuery Isotope http://isotope.metafizzy.co/ -->
+        <!-- Adobe Edge Web Fonts -->
+        <!-- DEV VERSION -->
+        <!--
+        
+        Notes:
+        vimeo tuts on node: http://vimeo.com/52691590
+        
+        -->
+        <!-- USER SCRIPTS -->
+        <!-- USER SCRIPTS -->
     </head>
-    <body>
-        <header>{{header}}</header>
-        <div>{{content}}</div>
-        <footer>{{footer}}</footer>
+
+    <body class="loaded view-nav view-panel" style="height: 899px;">
+        <!-- HEADER -->
+        <header>
+            <h1><a href="/">gipsy</a></h1>
+			<p><a href="#/station/new" class="button new"><i></i> New station</a></p>
+			<ul>
+				<li><a href="#/account">My Account</a></li>
+				<li><a href="#" id="feedback_link" style="visibility: visible;">Feedback</a></li>
+				<li><a href="#/sign_out">Sign Out</a></li>
+				<li class="live">Live: <span class="status">off</span> <span class="indicator"><span></span></span></li>
+			</ul>
+		</header>
+        <!-- MAIN -->
+        <div id="main"></div>
+		<div id="wrapper">
+			<div id="phone">
+			    <div id="sites" class="meld" style="">
+				</div>
+				<div id="data">
+				</div>
+			</div>
+		</div>
+        <!-- FOOTER -->
+        <footer>
+            <p>Copyright 2012 <a href="http://github.com/">GitHub</a> All Rights Reserved</p>
+            <ul>
+                <li><a href="http://twitter.com/#!/">Twitter</a></li>
+                <li><a href="/tos">Terms &amp; Conditions</a></li>
+                <li><a href="/privacy">Privacy Policy</a></li>
+            </ul>
+        </footer>
+        <!-- DIALOGS -->
+        <div id="new_site">
+            <div class="overlay"></div>
+            <div class="dialog">
+                <form action="#/station" method="post">
+                    <input type="hidden" name="_id" value="TW5UZo6WsQHLhi4eu16KtExsx5mJ+IPBp9xNrP1lAlo=" />
+                    <div class="toolbar top">Track a weather station</div>
+                    <div class="display">
+                        <p class="text">
+                            <label for="new_name">Name</label>
+                            <input type="text" name="name" id="new_name" />
+                        </p>
+                        <p class="text">
+                            <label for="new_event_type">Event Type</label>
+                            <!-- <input type="text" name="type" id="new_type" /> -->
+                            <select id="new_event_type">
+                                <option value="0" data-imagesrc="images/markers/anniversary.png" data-description="An Aniversary event">Aniversary</option>
+                                <option value="1" data-imagesrc="images/markers/comedyclub.png" data-description="Comedy club">Comedy</option>
+                                <option value="2" data-imagesrc="images/markers/cinema.png" data-description="Cinema">Cinema</option>
+                                <option value="3" data-imagesrc="images/markers/music_live.png" data-description="Music concert">Music</option>
+                                <option value="4" data-imagesrc="images/markers/poker.png" data-description="Poker">Poker</option>
+                                <option value="5" data-imagesrc="images/markers/theater.png" data-description="theater">Theater</option>
+                            </select>
+                        </p>
+                        <p class="text">
+                            <label for="new_date">Date</label>
+                            <input type="text" name="date" id="new_date" />
+                        </p>                        
+                        <p class="text">
+                            <label for="new_location">Where</label>
+                            <input type="text" name="location" id="new_location" />
+                        </p>
+                        <div id="map_canvas" style="width:100%;height:250px;border: 1px solid #4D2722;"></div>
+                    </div>
+                    <div class="toolbar bottom">
+                        <button><span>Add this Station</span></button>
+                        <a href="#" class="button cancel">Cancel</a>
+                    </div>
+                </form>
+                <div class="upgrade">
+                    <div class="toolbar top">Track a New Station</div>
+                    <div class="display">
+                        <p>To <strong>add a gauge</strong>, you must be subscribed to a plan.</p>
+                    </div>
+                    <div class="toolbar bottom">
+                        <a href="#/account/plan" class="button">Sign Up for a Plan</a>
+                        <a href="#" class="button cancel">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="new_subscription">
+            <div class="overlay"></div>
+            <div class="dialog">
+                <form action="#/subscription/new" method="post">
+                    <input type="hidden" name="_id" value="" />
+                    <div class="toolbar top">Add a new subscription</div>
+                    <div class="display">
+                        <p class="text">
+                            <label for="new_name">Name</label>
+                            <input type="text" name="name" id="new_name" />
+                        </p>
+                        <p class="text">
+                            <label for="new_subscription_type">Type</label>
+                            <select id="new_subscription_type">
+                                <option value="0" data-imagesrc="images/markers/anniversary.png" data-description="An Aniversary event">Full</option>
+                                <option value="1" data-imagesrc="images/markers/comedyclub.png" data-description="Comedy club">Demo</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="toolbar bottom">
+                        <button><span>Create</span></button>
+                        <a href="#" class="button cancel">Cancel</a>
+                    </div>
+                </form>
+                <div class="upgrade">
+                    <div class="toolbar top">Track a New Subscription</div>
+                    <div class="display">
+                        <p>To <strong>add a gauge</strong>, you must be subscribed to a plan.</p>
+                    </div>
+                    <div class="toolbar bottom">
+                        <a href="#/account/plan" class="button">Sign Up for a Plan</a>
+                        <a href="#" class="button cancel">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- DIALOGS -->
+        <!-- LOADING -->
+        <div id="loading" class="loading_indicator">
+            <div></div>
+            <em>Loading</em>
+        </div>
+        <!-- TEMPLATES -->
+        <script type="text/html" id="infobubble_template">
+            <div style="width: 180px;height:80px;overflow:hidden;">
+                <h2>{{name}}</h2>
+                <input type="text" name="email" id="user_email" value="mail" />
+                <div id="slider"></div>
+            </div>
+        </script>
+        <script type="text/x-fernet" id="cpu">
+            <div data-type="gauge" data-format="fractional"></div>
+        </script>
+        <script id="deleted_site_template" type="text/html">
+            <div class="deleted">
+                <strong>{{name}}</strong> was successfully deleted.
+            </div>
+        </script> <!-- deleted_site_template -->
+        <script type="text/html" id="trial_template">
+            <div class="notice">
+                <a href="#/account/plan">You have <strong>{{ trial_days_left_text }}</strong> remaining in your free trial. Select a plan.</a>
+            </div>
+        </script>
+        <script type="text/html" id="account_template">
+            <div class="nav">
+                <h2>My Account</h2>
+                <ul>
+                    <li><a href="#/account">My Profile</a></li>
+                    <li><a href="#/account/plan">Plan &amp; Billing</a></li>
+                    <li><a href="#/account/clients">API Keys</a></li>
+                    <li><a href="#/account/summaries">Email Summaries</a></li>        
+                </ul>
+            </div>
+            <div id="site_content"></div>
+        </script> <!-- account_template -->
+        <script type="text/html" id="my_info_template">
+            <div class="toolbar top">My Profile Information</div>
+            <form action="#/users" method="put">
+                <input type="hidden" name="_csrf" value="" />
+                <div id="display_panel" class="display">
+                    <div class="details">
+                        <p class="text">
+                            <label for="user_email">Email</label>
+                            <input type="text" name="email" id="user_email" value="{{ email }}" />
+                        </p>
+                        <p class="text">
+                            <label for="user_first_name">First Name</label>
+                            <input type="text" name="first_name" id="user_first_name" value="{{ first_name }}" />
+                        </p>
+                        <p class="text">
+                            <label for="user_last_name">Last Name</label>
+                            <input type="text" name="last_name" id="user_last_name" value="{{ last_name }}" />
+                        </p>
+                        <div class="state">
+                            <div class="show">
+                                <p class="support"><a href="#" class="state_toggler">Change my Password</a></p>
+                            </div>
+                            <div class="edit">
+                                <p class="text">
+                                    <label for="user_password">New Password</label>
+                                    <input type="password" name="password" id="user_password" />
+                                </p>
+                            </div>
+                        </div>
+                        <p class="submit">
+                            <button><span>Save my Information</span></button>
+                        </p>
+                    </div>
+                </div>
+            </form>
+            <div class="toolbar bottom"></div>
+        </script> <!-- my_info_template -->
+        
+        <script id="live_data_template" type="text/html">
+            <div class="toolbar top options">
+                <ul class="group_options">
+                    <li class="current"><a href="#/gauges/{{id}}/live">Traffic</a></li>
+                </ul>
+            </div>
+            <div id="map_wrapper">
+               
+            </div>
+            <div class="toolbar bottom">
+            </div>
+        </script> <!-- live_data_template -->
+        <script id="clients_template" type="text/html">
+            <div class="toolbar top">Generate API Keys</div>
+            <div id="display_panel" class="display">
+                <div class="wrapper">
+                    <form action="#/account/clients" method="post" class="add_client">
+                        <input type="hidden" name="_csrf" value="" />
+                        <p class="text">
+                            <label for="new_client_{{id}}">New API Key</label>
+                            <input type="text" name="description" title="Description (Optional)" id="new_client_{{id}}" />
+                            <button><span>Create</span></button>
+                        </p>
+                    </form>
+                    <div id="clients_list" class="loading"></div>
+                </div>
+            </div>
+            <div class="toolbar bottom"></div>
+        </script> <!-- clients_template -->
+        <script id="clients_list_template" type="text/html">
+            {{#clients}}
+                <div class="share">
+                    <form action="#/account/clients/{{key}}" method="delete">
+                        <input type="hidden" name="_csrf" value="GdqXHipFFG/dB6sDpBsLP4NmzqwQYgCUGZMved3qq9o=" />
+                        <p class="share state">
+                            <span class="show">
+                                <span class="info"><strong>{{ key }}</strong>{{#description}}<small>{{ description }}</small>{{/description}}</span>
+                                <a href="#" class="state_toggler button subtle">Remove</a>
+                            </span>
+                            <span class="edit">
+                                <span class="info">Remove this API Key?</span>
+                                <button class="delete"><span>Yes, Remove</span></button> <a href="#" class="state_toggler">Cancel</a>
+                            </span>
+                        </p>
+                    </form>
+                </div>
+                {{/clients}}
+                {{^clients}}
+                <div class="empty">
+                    No API Keys have been created for this account.
+                </div>
+            {{/clients}}
+        </script> <!-- clients_list_template -->
+        <script type="text/html" id="disabled_site_template">
+            <div id="s{{id}}" class="site disabled">
+                <h2>{{title}}</h2>
+                <p>This Gauge has been disabled.</p>
+            </div>
+        </script> <!-- disabled_site_template -->
+        <script type="text/html" id="site_template">
+            <div id="s{{id}}" class="site">
+            </div>
+        </script> <!-- site_template -->
+        <script type="text/html" id="station_preview_template">
+            <h2>{{name}}</h2>
+            {{#overview}}
+            <p class="temperature"><strong>{{#temperature}}{{value}}&#176;{{/temperature}}</strong> temperature</p>
+            <p class="humidity"><strong>{{#humidity}}{{value}}{{unit}}{{/humidity}}</strong> humidity</p>
+            {{/overview}}
+            <div class="graph">
+                <ul>
+                    {{#last_7_days}}
+                    <p>{{temperature_size}}</p>
+                    <li>
+                        <span class="temperature" style="height:{{temperature_size}};">{{temperature}}</span>
+                        <span class="humidity" style="height:10px;">{{people}}</span>
+                    </li>
+                    {{/last_7_days}}
+                </ul>
+                <a href="#/station/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
+            </div>
+        </script> <!-- station_preview_template -->
+        <script type="text/html" id="station_preview_templateXXX">
+            <h2>{{name}}</h2>
+            {{#overview}}
+            <p class="temperature"><strong>{{#temperature}}{{value}}&#176;{{/temperature}}</strong> temperature</p>
+            <p class="humidity"><strong>{{#humidity}}{{value}}{{unit}}{{/humidity}}</strong> humidity</p>
+            {{/overview}}
+            <div class="graph">
+                <ul>
+                    {{#last_7_days}}
+                    <li {{#weekend}} class="weekend"{{/weekend}} data-views="{{temperature}}" data-people="{{humidity}}" data-date="{{date}}">
+                    <span class="temperature" style="height:{{temperature_size}};">{{views}}</span>
+                    <span class="humidity" style="height:{{humidity_size}};">{{people}}</span>
+                    </li>
+                    {{/last_7_days}}
+                </ul>
+                <a href="#/station/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
+            </div>
+        </script> <!-- station_preview_template -->        
+        <script type="text/html" id="site_preview_template">
+            <h2>{{ title }}</h2>
+            {{#overview}}
+            <p class="views"><strong>{{ views }}</strong> views</p>
+            <p class="people"><strong>{{ people }}</strong> people</p>
+            {{/overview}}
+            <div class="graph">
+                <ul>
+                    {{#last_7_days}}
+                    <li {{#weekend}} class="weekend"{{/weekend}} data-views="{{views}}" data-people="{{people}}" data-date="{{date}}">
+                    <span class="views" style="height:{{views_size}};">{{views}}</span>
+                    <span class="people" style="height:{{people_size}};">{{people}}</span>
+                    </li>
+                    {{/last_7_days}}
+                </ul>
+                <a href="#/gauges/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
+            </div>
+        </script>
+        <script id="site_data_template" type="text/html">
+            <div id="site_nav" class="nav">
+                <h2>{{name}}</h2>
+                <ul>
+                  <li><a href="#/station/{{ id }}/overview">Overview</a></li>
+                  <li><a href="#/station/{{ id }}/live">Live Data</a></li>
+                  <li><a href="#/station/{{ id }}/traffic" class="traffic">Views and People</a></li>
+                  <li><a href="#/station/{{ id }}/sensors" class="sensors">Sensors</a></li>
+                  <li><a href="#/station/{{ id }}/terminal" class="sensors">Terminal</a></li>
+                  <li><a href="#/station/{{ id }}/srcedit" class="srcedit">Source Editor</a></li>
+                </ul>
+                <h2>Demographics</h2>
+                <ul>
+                  <li><a href="#/station/{{ id }}/locations" class="locations">GeoLocation</a></li>
+                  <li><a href="#/station/{{ id }}/technology" class="technology">Technology</a></li>
+                  <li><a href="#/station/{{ id }}/resolutions" class="resolutions">Screen Sizes</a></li>
+                </ul>
+                <h2>Management</h2>
+                <ul>
+                  {{#mine}}
+                  <li><a href="#/station/{{ id }}/settings">Station Settings</a></li>
+                  <li><a href="#/station/{{ id }}/sharing" class="sharing unloaded">Sharing</a></li>
+                  {{/mine}}
+                  <li><a href="#/station/{{ id }}/code">Tracking Code</a></li>
+                </ul>
+            </div>
+            <div id="site_content"></div>
+        </script>
+        <script id="greetings_template" type="text/html">
+            <a href="https://github.com/maggiben"><img style="position: relative; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub"></a>
+            <section class="features">
+                <header>
+                        <h2>Features</h2>
+                </header>
+                <ul>
+                    <li class="keyboard-nav">
+                        <span>NODE.JS</span>
+                    </li>
+                    <li class="css-animation">
+                        <span>HTML5</span>
+                    </li>
+                    <li class="mobile-ready">
+                        <span>Mobile Ready</span>
+                    </li>
+                    <li class="smart-loading">
+                        <span>Smart Loading</span>
+                    </li>
+                </ul>
+            </section>
+            <article>
+                <div class="empty"><span>Hello and wellcome to <strong>gipsy.com</strong> enter your <a href="#/account">account</a></span></div>
+            </article>
+        </script>
+        <script id="overview_template" type="text/html">
+            <div class="toolbar top">Overview for {{name}} <a href="#" class="live refresh"><span>Refresh</span></a></div>
+            <div id="display_panel" class="display">
+                <div class="wrapper">
+                    <div id="placeholder" style="width:100%;height:240px;"></div>
+                    <div id="realtime" style="width:100%;height:240px;"></div>
+                    <p class="message"></p>
+                </div>
+            </div>
+            <div class="toolbar bottom"></div>
+        </script>
+        <script id="sharing_template" type="text/html">
+            <div class="toolbar top">Share this Station with Friends or Colleagues</div>
+            <div id="display_panel" class="display">
+                <div class="wrapper">
+                {{#allow_sharing}}
+                    <form action="#/station/{{ id }}/shares" method="post" class="add_share">
+                        <input type="hidden" name="_csrf" value="Z8rrU9h4OlECJwTlIxfxw7Wai8lMPClkejYj1ErVfyQ=" />
+                        <p class="text">
+                            <label for="new_share_{{id}}">Share with</label>
+                            <input type="text" name="email" title="Email Address" />
+                            <button><span>Share</span></button>
+                        </p>
+                    </form>
+                    <div id="sharing_list" class="loading"></div>
+                {{/allow_sharing}}
+                {{^allow_sharing}}
+                <div class="info">
+                    <h2>Sharing Not Enabled</h2>
+                    <p>Sorry, sharing is not allowed on your current plan</p>
+                </div>
+                <div class="empty">To enable sharing on this station, please <a href="#/account/plan">upgrade to a larger plan</a>.
+                    {{/allow_sharing}}
+                </div>
+            </div>
+            <div class="toolbar bottom"></div>
+        </script>
+        <script id="station_settings_template" type="text/html">
+            <form action="#/station/update/{{id}}" method="put">
+                <input type="hidden" name="_csrf" value="WuqJlgIgWDRO3hcvUE1j/R9Ka9AcXNuGK57vEcvR6p0=" />
+                <div class="toolbar top"><p>Edit this Station</p></div>
+                <div id="display_panel" class="display">
+                    <div class="wrapper">
+                        <p class="text">
+                            <label for="station_name_{{id}}">Station Name</label>
+                            <input type="text" id="station_name_{{id}}" name="name" value="{{ name }}" />
+                        </p>
+                        <p class="text">
+                            <label for="station_allowed_hosts_{{id}}">Allowed Hosts</label>
+                            <input type="text" id="station_allowed_hosts_{{id}}" name="allowed_hosts" value="{{ allowed_hosts }}" placeholder="Only track from these domains (a.com b.com)" />
+                        </p>
+                        <p class="submit"><button><span>Save these Settings</span></button></p>
+                    </div>
+                </div>
+                <div class="toolbar bottom submit edit">
+                    <p class="secondary delete"><a href="#" class="toggle_delete">Delete this Station</a></p>
+                </div>
+            </form>
+            <form action="#/station/remove/{{id}}" method="delete">
+                <input type="hidden" name="_csrf" value="WuqJlgIgWDRO3hcvUE1j/R9Ka9AcXNuGK57vEcvR6p0=" />
+                <div class="toolbar bottom submit delete">
+                    <p class="secondary"><a href="#" class="toggle_delete">No, Nevermind</a></p>
+                    <button class="delete"><span>Yes, Delete this Station</span></button>
+                </div>
+            </form>
+        </script>
+        <script id="station_sensors_template" type="text/html">
+            <div class="toolbar top">Sensor data for {{name}}</div>
+                <div id="display_panel" class="display">
+                    <div class="wrapper">
+                        <div id="temperature.gauge" style="width:200px;height:200px"></div>
+                        <div id="humidity.gauge" style="width:200px;height:200px"></div>
+                        <div id="co2.gauge" style="width:200px;height:200px"></div>
+                        <div id="pressure.gauge" style="width:200px;height:200px"></div>
+                    </div>
+                </div>
+            <div class="toolbar bottom submit edit">
+                <p class="secondary delete"><a href="#" class="toggle_delete">Delete this Station</a></p>
+            </div>
+        </script>
+        <script id="station_terminal_template" type="text/html">
+            <div class="toolbar top">Console service for {{name}}</div>
+                <div id="display_panel" class="display">
+                    <div class="wrapper">
+                        <div id="terminal" class="terminal"></div>
+                    </div>
+                </div>
+            <div class="toolbar bottom submit edit">
+                <p class="secondary">
+                    <button><span>Status</span></button>
+                </p>
+            </div>
+        </script>
+        <script id="station_srceditor_template" type="text/html">
+            <div class="toolbar top">Source editor for {{name}}</div>
+                <div id="display_panel" class="display">
+                    <div class="wrapper">
+                        <form>
+                            <textarea id="code_editor" name="code_editor"></textarea>
+                        </form>
+                    </div>
+                </div>
+            <div class="toolbar bottom submit edit">
+                <p class="secondary">
+                    <button><span>Status</span></button>
+                </p>
+            </div>
+        </script>
+        <!-- GRAPH TMPL -->
+        <script id="technology_template" type="text/html">
+            {{#technology_data}}
+                <div class="toolbar top options">
+                    <ul class="group_options">
+                        <li{{#browsers}} class="current"{{/browsers}}><a href="#/gauges/{{site_id}}/technology/browsers/{{date}}">Browsers</a></li>
+                        <li{{#browser_support}} class="current"{{/browser_support}}><a href="#/gauges/{{site_id}}/technology/browser_support/{{date}}">Browser Support</a></li>
+                        <li{{#platforms}} class="current"{{/platforms}}><a href="#/gauges/{{site_id}}/technology/platforms/{{date}}">Platforms</a></li>
+                    </ul>
+                    <ul class="pagination">
+                        {{#has_prev_url}}<li class="previous"><a href="{{prev_url}}" title="Previous Month">Previous</a></li>{{/has_prev_url}}
+                        {{#has_next_url}}<li class="next"><a href="{{next_url}}" title="Next Month">Next</a></li>{{/has_next_url}}
+                    </ul>
+                </div>
+                <div id="display_panel" class="display">
+                    {{#browsers}}{{>technology_list_template}}{{/browsers}}
+                    {{#platforms}}{{>technology_list_template}}{{/platforms}}
+                    {{#browser_support}}{{>browser_support_template}}{{/browser_support}}
+                </div>
+                <div class="toolbar bottom"></div>
+            {{/technology_data}}
+        </script>        
+        <script id="browser_support_template" class="partial" type="text/html">
+            <div class="wrapper">
+                <div class="info">
+                    <h2>{{headline}}</h2>
+                    <p>Browser Support</p>
+                </div>
+                <div class="totals">
+                    <h2>{{views}}</h2>
+                    <p>Total Data Points</p>
+                </div>
+                {{#entries}}
+                    <table>
+                        <tr>
+                            <th class="text">{{title}}</th>
+                            <th>Support</th>
+                            <th width="220"></th>
+                        </tr>
+                        {{#items}}
+                            <tr>
+                                <td class="text focus">{{title}}</td>
+                                <td>{{total}}%</td>
+                                <td class="vertical-bar-holder">
+                                    <div class="vertical-bar {{klass}}" title="{{#has_full}}Full Support: {{full}}%{{/has_full}}{{#has_partial}} Partial Support: {{partial}}%{{/has_partial}}">
+                                        {{#has_full}}
+                                            <div class="full{{#has_partial}} incomplete{{/has_partial}}" style="opacity:{{full_opacity}}; width:{{full_width}}px"></div>
+                                        {{/has_full}}
+                                        {{#has_partial}}
+                                            <div class="partial{{^has_full}} incomplete{{/has_full}}" style="width:{{partial_width}}px; left:{{partial_left}}px;"></div>
+                                        {{/has_partial}}
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/items}}
+                    </table>
+                {{/entries}}
+            </div>
+        </script>
+        <!-- GRAPH TMPL -->
+        <!-- TEMPLATES -->
     </body>
+    <!-- ANALITICS -->
+    <script type="text/javascript">
+      var _gauges = _gauges || [];
+      (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '50ec5c5f613f5d35e2000009');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+      })();
+    </script>
 </html>

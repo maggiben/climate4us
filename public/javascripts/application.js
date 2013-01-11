@@ -154,6 +154,7 @@ $(document).ready(function() {
                     low_temperature: 0.00
                 }
             ],
+            last_7_days: [ {temperature_size: '25px'}, {temperature_size: '25px'} ]
         },
         setup: function (options) {
             var options = $.extend({}, this.properties, options);
@@ -252,7 +253,7 @@ $(document).ready(function() {
             isReady: false,
             stations: [],
             order: [],
-            selected: null,
+            selected: null
         },
         onSetup: null,
         init: function (options) {
@@ -640,6 +641,7 @@ $(document).ready(function() {
             }, 500);
             //delete Gauges.sites[this.id]
         });
+        
         this.get(/\#\/sites\/(.*)/, function () {
             //this.redirect("#", "gauges", this.params.splat)
             alert(this.params.splat);
@@ -757,7 +759,6 @@ $(document).ready(function() {
             });
             $("body").addClass("loading").removeClass("loaded");
         });
-
         ///////////////////////////////////////////////////////////////////////
         // Subscription Routes                                               //
         ///////////////////////////////////////////////////////////////////////
@@ -897,7 +898,6 @@ $(document).ready(function() {
                 }
         });
     })
-        // Station routes
     });
     $(function() {
         window.sammyApp = app;
@@ -1069,4 +1069,3 @@ $(document).ready(function() {
         });  
     };
 })(window.jQuery || window.Zepto);
-
