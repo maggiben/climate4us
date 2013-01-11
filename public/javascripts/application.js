@@ -634,6 +634,7 @@ $(document).ready(function() {
             var a = $("#s" + data.id);//.css({height: 0,opacity: 0});
             setTimeout(function() {
                 a.hide('slow', function(){ $(this).remove();});
+                //a.hide("slide", { direction: "right" }, 'swing');
                 //a.hide('slow', function(){ $(this).remove();});
                 //a.remove()
             }, 500);
