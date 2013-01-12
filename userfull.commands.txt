@@ -22,6 +22,8 @@ db.stations.find({_id: ObjectId("50ea4cd7b08a5ee509000001")})
 
 50ea18635db888d66d000002
 
+$("#sites").append(ich.site_template(this))
+$("#s" + 'kaka').html(ich.site_preview_template(this))
 
 
 

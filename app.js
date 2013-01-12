@@ -159,6 +159,7 @@ app.get('/', ensureAuthenticated, function(request, response) {
     response.sendfile(__dirname + '/public/index.html');
 });
 app.get('/app', routes.index);
+app.get('/mobile', routes.mobile);
 
 ///////////////////////////////////////////////////////////////////////////////
 // User authentication  rutes                                                //

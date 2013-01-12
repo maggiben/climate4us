@@ -358,6 +358,7 @@ $(document).ready(function() {
             return !1;
         },
         getStationById: function(id) {
+            console.log("getStationById: " + id)
             return this.properties.stations[id].properties;
         },
         getAllStationsIds: function() {
@@ -386,7 +387,7 @@ $(document).ready(function() {
             });
         },
         getSelected: function() {
-          return this.properties.selected;
+            return this.properties.selected;
         },
         getOrder: function() {
             return this.properties.order;
@@ -931,7 +932,9 @@ $(document).ready(function() {
     $("a.toggle_delete").live("click", function () {
         return $("#site_content").toggleClass("delete"), !1;
     });
-  
+    $(".notification").on("click", function(){
+        $(this).hide("slide", { direction: "up" }, 'swing');
+    })
     $("#sites").sortable({
         axis: "y",
         container: "#sites",

@@ -93,10 +93,12 @@
             this.getUser({callback: gotUser})
             function gotUser(account)
             {
+                
                 $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow');       
                 $( "#progressbar" ).progressbar({
                     value: 0
                 });
+
                 that.user.subscriptions.forEach(function(_id) {
                     that.getSubscription({_id: _id, callback: gotSubscription});
                 });
@@ -115,7 +117,8 @@
                         $(this).remove();
                     });
                     */
-                    $("#sites .notice").hide(1000, 'swing');
+                    // Remove div.loader from sortable
+                    $("#sites .notice").hide(1000, 'swing', function() {$(this).remove()});
                     //$("#sites .notice").hide("slide", { direction: "up" }, 1000, 'swing');
 
                     var queue = $.jqmq({
@@ -374,15 +377,16 @@
                 i, 
                 scripts = document.getElementsByTagName('script'), 
                 script,
+                length = scripts.length,
                 trash = [];
-            for (i = 0, l = scripts.length; i < l; i++) {
+            for (i = 0; i < length; i++) {
                 script = scripts[i];
                 if (script && script.innerHTML && script.id && (script.type === "text/html" || script.type === "text/x-fernet")) {
                     that.addView(script.id, trim(script.innerHTML));
                     trash.unshift(script);
                 }
             }
-            for (i = 0, l = trash.length; i < l; i++) {
+            for (i = 0; i < trash.length; i++) {
                 trash[i].parentNode.removeChild(trash[i]);
             }
         },
@@ -638,3 +642,71 @@ $(document).ready(function() {
     };
 
 })(jQuery, window, document);
+
+/*
+return [{
+    views:"9", 
+    people:"2", 
+    day:11, 
+    date:"January 11, 2013", 
+    views_size:"40px", 
+    people_size:"10px", 
+    weekend:false
+    }, 
+    {
+    views:"0", 
+    people:"0", 
+    day:10, 
+    date:"January 10, 2013", 
+    views_size:"1px", 
+    people_size:"1px", 
+    weekend:false
+    }, 
+    {
+    views:"0", 
+    people:"0", 
+    day:9, 
+    date:"January 9, 2013", 
+    views_size:"1px", 
+    people_size:"1px", 
+    weekend:false
+    }, 
+    {
+    views:"0", 
+    people:"0", 
+    day:8, 
+    date:"January 8, 2013", 
+    views_size:"1px", 
+    people_size:"1px", 
+    weekend:false
+    }, 
+    {
+    views:"0", 
+    people:"0", 
+    day:7, 
+    date:"January 7, 2013", 
+    views_size:"1px", 
+    people_size:"1px", 
+    weekend:false
+    }, 
+    {
+    views:"0", 
+    people:"0", 
+    day:6, 
+    date:"January 6, 2013", 
+    views_size:"1px", 
+    people_size:"1px", 
+    weekend:true
+    }, 
+    {
+    views:"0", 
+    people:"0", 
+    day:5, 
+    date:"January 5, 2013", 
+    views_size:"1px", 
+    people_size:"1px", 
+    weekend:true
+    }
+]
+
+*/
