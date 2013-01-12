@@ -358,6 +358,7 @@ $(document).ready(function() {
             return !1;
         },
         getStationById: function(id) {
+            console.log("getStationById: " + id)
             return this.properties.stations[id].properties;
         },
         getAllStationsIds: function() {
@@ -386,7 +387,8 @@ $(document).ready(function() {
             });
         },
         getSelected: function() {
-          return this.properties.selected;
+            console.log("getSelected()")
+            return this.properties.selected;
         },
         getOrder: function() {
             return this.properties.order;

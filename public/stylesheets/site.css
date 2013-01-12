@@ -3107,11 +3107,13 @@ endColor endInterval) {
   -o-background-image: linear-gradient(startPoint, startColor startInterval, endColor endInterval);
   background-image: linear-gradient(startPoint, startColor startInterval, endColor endInterval);
 }
-.features header {
-  text-align: center;
+.features,
+ {
+  position: relative;
 }
 .features ul {
   text-align: center;
+  padding-top: 60px;
 }
 .features ul li {
   width: 140px;
