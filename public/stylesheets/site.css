@@ -3119,50 +3119,29 @@ endColor endInterval) {
   display: inline-block;
   margin: 20px 10px;
   position: relative;
+  -webkit-background-image: url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
+  -moz-background-image: url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
+  -ms-background-image: url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
+  -o-background-image: url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
+  background-image: url("../images/stone-d223fd6c4116532b5ee30e4e120185f1.png");
   background-repeat: repeat-x;
-  -webkit-background-image: -khtml-gradient(linear, left top, left bottom, from(#bbbbbe), to(#cccccd));
-  -moz-background-image: -khtml-gradient(linear, left top, left bottom, from(#bbbbbe), to(#cccccd));
-  -ms-background-image: -khtml-gradient(linear, left top, left bottom, from(#bbbbbe), to(#cccccd));
-  -o-background-image: -khtml-gradient(linear, left top, left bottom, from(#bbbbbe), to(#cccccd));
-  background-image: -khtml-gradient(linear, left top, left bottom, from(#bbbbbe), to(#cccccd));
-  -webkit-background-image: -moz-linear-gradient(#bbbbbe, #cccccd);
-  -moz-background-image: -moz-linear-gradient(#bbbbbe, #cccccd);
-  -ms-background-image: -moz-linear-gradient(#bbbbbe, #cccccd);
-  -o-background-image: -moz-linear-gradient(#bbbbbe, #cccccd);
-  background-image: -moz-linear-gradient(#bbbbbe, #cccccd);
-  -webkit-background-image: -ms-linear-gradient(#bbbbbe, #cccccd);
-  -moz-background-image: -ms-linear-gradient(#bbbbbe, #cccccd);
-  -ms-background-image: -ms-linear-gradient(#bbbbbe, #cccccd);
-  -o-background-image: -ms-linear-gradient(#bbbbbe, #cccccd);
-  background-image: -ms-linear-gradient(#bbbbbe, #cccccd);
-  -webkit-background-image: linear-gradient(#bbbbbe, #cccccd);
-  -moz-background-image: linear-gradient(#bbbbbe, #cccccd);
-  -ms-background-image: linear-gradient(#bbbbbe, #cccccd);
-  -o-background-image: linear-gradient(#bbbbbe, #cccccd);
-  background-image: linear-gradient(#bbbbbe, #cccccd);
-  -webkit-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbbbbe), color-stop(100%, #cccccd));
-  -moz-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbbbbe), color-stop(100%, #cccccd));
-  -ms-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbbbbe), color-stop(100%, #cccccd));
-  -o-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbbbbe), color-stop(100%, #cccccd));
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbbbbe), color-stop(100%, #cccccd));
-  -webkit-background-image: -webkit-linear-gradient(#bbbbbe, #cccccd);
-  -moz-background-image: -webkit-linear-gradient(#bbbbbe, #cccccd);
-  -ms-background-image: -webkit-linear-gradient(#bbbbbe, #cccccd);
-  -o-background-image: -webkit-linear-gradient(#bbbbbe, #cccccd);
-  background-image: -webkit-linear-gradient(#bbbbbe, #cccccd);
-  -webkit-background-image: -o-linear-gradient(#bbbbbe, #cccccd);
-  -moz-background-image: -o-linear-gradient(#bbbbbe, #cccccd);
-  -ms-background-image: -o-linear-gradient(#bbbbbe, #cccccd);
-  -o-background-image: -o-linear-gradient(#bbbbbe, #cccccd);
-  background-image: -o-linear-gradient(#bbbbbe, #cccccd);
+/*
+    background-image:-khtml-gradient(linear, left top, left bottom, from($features_bg_grad_fr), to($features_bg_grad_to));
+	background-image:-moz-linear-gradient($features_bg_grad_fr, $features_bg_grad_to);
+	background-image:-ms-linear-gradient($features_bg_grad_fr, $features_bg_grad_to);
+	background-image:linear-gradient($features_bg_grad_fr, $features_bg_grad_to);
+	background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, $features_bg_grad_fr), color-stop(100%, $features_bg_grad_to));
+	background-image:-webkit-linear-gradient($features_bg_grad_fr, $features_bg_grad_to);
+	background-image:-o-linear-gradient($features_bg_grad_fr, $features_bg_grad_to);
+	*/
 /* background-linear-gradient(top, $features_bg_grad_fr, 45%, $features_bg_grad_to, 55%); */
 /*sitex-background-image(5px);*/
-  -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.8) 0 2px 0 #fff transparent 0 0 0 transparent 0 0 0 transparent 0 0 0;
-  -moz-box-shadow: inset 0 0 4px rgba(0,0,0,0.8) 0 2px 0 #fff transparent 0 0 0 transparent 0 0 0 transparent 0 0 0;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.9) 0 4px 0 #fff transparent 0 0 0 transparent 0 0 0 transparent 0 0 0;
+  -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.9) 0 4px 0 #fff transparent 0 0 0 transparent 0 0 0 transparent 0 0 0;
 /* box-shadow arguments */
-  -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
-  -moz-box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.9), 0 4px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.9), 0 4px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.9), 0 4px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -o-border-radius: 5px;
@@ -3171,6 +3150,7 @@ endColor endInterval) {
   border-radius: 5px;
   color: #555;
   text-shadow: 0 1px 1px rgba(255,255,255,0.5);
+  -webkit-transition: 0.25s linear;
 }
 .features ul li:hover {
   -webkit-box-shadow: inset 0 0 4px #000 0 2px 0 #fff transparent 0 0 0 transparent 0 0 0 transparent 0 0 0;
@@ -3179,6 +3159,7 @@ endColor endInterval) {
   -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
   -moz-box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
   box-shadow: inset 0 0 4px rgba(0,0,0,0.8), 0 2px 0 #fff, transparent 0 0 0, transparent 0 0 0, transparent 0 0 0;
+  -webkit-transition: 0.25s linear;
 }
 .ie7 .features ul li {
   display: inline;
@@ -3197,6 +3178,11 @@ endColor endInterval) {
   -ms-background-image: url("../images/nodejs.png");
   -o-background-image: url("../images/nodejs.png");
   background-image: url("../images/nodejs.png");
+  -webkit-transition: 0.25s linear;
+}
+.features ul li.keyboard-nav span:hover {
+  -webkit-filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+  -webkit-transition: 0.15s linear;
 }
 .features ul li.css-animation span {
   -webkit-background-image: url("../images/html5.png");
@@ -3204,6 +3190,11 @@ endColor endInterval) {
   -ms-background-image: url("../images/html5.png");
   -o-background-image: url("../images/html5.png");
   background-image: url("../images/html5.png");
+  -webkit-transition: 0.25s linear;
+}
+.features ul li.css-animation span:hover {
+  -webkit-filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+  -webkit-transition: 0.15s linear;
 }
 .features ul li.viewport-scaling span {
   -webkit-background-image: url("../images/html5.png");
@@ -3211,6 +3202,11 @@ endColor endInterval) {
   -ms-background-image: url("../images/html5.png");
   -o-background-image: url("../images/html5.png");
   background-image: url("../images/html5.png");
+  -webkit-transition: 0.25s linear;
+}
+.features ul li.viewport-scaling span:hover {
+  -webkit-filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+  -webkit-transition: 0.25s linear;
 }
 .features ul li.mobile-ready span {
   -webkit-background-image: url("../images/mobile_ready.png");
@@ -3218,6 +3214,11 @@ endColor endInterval) {
   -ms-background-image: url("../images/mobile_ready.png");
   -o-background-image: url("../images/mobile_ready.png");
   background-image: url("../images/mobile_ready.png");
+  -webkit-transition: 0.25s linear;
+}
+.features ul li.mobile-ready span:hover {
+  -webkit-filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+  -webkit-transition: 0.15s linear;
 }
 .features ul li.smart-loading span {
   -webkit-background-image: url("../images/html5.png");
