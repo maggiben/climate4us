@@ -387,7 +387,6 @@ $(document).ready(function() {
             });
         },
         getSelected: function() {
-            console.log("getSelected()")
             return this.properties.selected;
         },
         getOrder: function() {
@@ -933,7 +932,9 @@ $(document).ready(function() {
     $("a.toggle_delete").live("click", function () {
         return $("#site_content").toggleClass("delete"), !1;
     });
-  
+    $(".notification").on("click", function(){
+        $(this).hide("slide", { direction: "up" }, 'swing');
+    })
     $("#sites").sortable({
         axis: "y",
         container: "#sites",

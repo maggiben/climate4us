@@ -377,15 +377,16 @@
                 i, 
                 scripts = document.getElementsByTagName('script'), 
                 script,
+                length = scripts.length,
                 trash = [];
-            for (i = 0, l = scripts.length; i < l; i++) {
+            for (i = 0; i < length; i++) {
                 script = scripts[i];
                 if (script && script.innerHTML && script.id && (script.type === "text/html" || script.type === "text/x-fernet")) {
                     that.addView(script.id, trim(script.innerHTML));
                     trash.unshift(script);
                 }
             }
-            for (i = 0, l = trash.length; i < l; i++) {
+            for (i = 0; i < trash.length; i++) {
                 trash[i].parentNode.removeChild(trash[i]);
             }
         },

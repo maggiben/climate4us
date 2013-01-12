@@ -71,7 +71,7 @@ var generate_mongo_url = function(obj){
         return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
     }
 };
-var mongourl = generate_mongo_url(conf.mongo_local);
+var mongourl = generate_mongo_url(conf.mongohq);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Run app                                                                   //
@@ -159,6 +159,7 @@ app.get('/', ensureAuthenticated, function(request, response) {
     response.sendfile(__dirname + '/public/index.html');
 });
 app.get('/app', routes.index);
+app.get('/mobile', routes.mobile);
 
 ///////////////////////////////////////////////////////////////////////////////
 // User authentication  rutes                                                //

@@ -26,10 +26,52 @@
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
+var assets = {
+    favicon: ['images/favicon.ico'],
+    styles: ['http://fonts.googleapis.com/css?family=Comfortaa:400,300'
+        , 'stylesheets/jquery-ui.css'
+        , 'stylesheets/codemirror.css'
+        , 'stylesheets/codemirror.themes/monokai.css'
+        , 'stylesheets/jquery.terminal.css'
+        , 'stylesheets/site.css'
+    ],
+    javascripts: ['javascripts/jquery-1.8.2.js'
+        , 'javascripts/jquery.observable.js'
+        , 'javascripts/jquery.ba-jqmq.js'
+        , 'javascripts/jquery-ui.js'
+        , 'javascripts/jquery.scrollTo.js'
+        , 'javascripts/jquery.mousewheel.js'
+        , 'javascripts/jquery.flot.js'
+        , 'javascripts/jquery.ui.map.js'
+        , 'javascripts/ICanHaz.js'
+        , 'javascripts/sammy.js'
+        , 'javascripts/modernizr.js'
+        , 'javascripts/codemirror.js'
+        , 'javascripts/mode/javascript.js'
+        , 'javascripts/jquery.terminal-0.4.22.js'
+        , 'javascripts/raphael.js'
+        , 'javascripts/justgage.js'
+        , 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places'
+        , 'https://maps.gstatic.com/cat_js/intl/en_us/mapfiles/api-3/11/5/%7Bmain,places%7D.js'
+        , 'javascripts/infobubble.js'
+        , 'javascripts/application.js'
+        , '/socket.io/socket.io.js'
+        , 'javascripts/fernet.js'
+    ]
+}
+
 
 exports.index = function(req, res){
     console.log("index");
     res.render('index', {
+        title: 'Express',
+        css: 'style.css',
+        content: 'Hello Wold Express 3.x'
+    });
+};
+exports.mobile = function(req, res){
+    console.log("mobile");
+    res.render('mobile', {
         title: 'Express',
         css: 'style.css',
         content: 'Hello Wold Express 3.x'

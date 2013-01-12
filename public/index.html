@@ -48,11 +48,12 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/infobubble.js"></script>
-        <!-- <script type="text/javascript" charset="utf-8" src="javascripts/subscription.js"></script> -->
-        <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
         <!-- SOCKET.IO -->
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script>
+        <!-- <script type="text/javascript" charset="utf-8" src="javascripts/subscription.js"></script> -->
+        <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
+
         <!-- jQuery Isotope http://isotope.metafizzy.co/ -->
         <!-- Adobe Edge Web Fonts -->
         <!-- DEV VERSION -->
@@ -333,7 +334,7 @@
             </div>
         </script> <!-- site_template -->
         <script type="text/html" id="station_preview_template">
-            <img style="float:left; border: 0;z-index: 999;" src="http://www.breakingnews.ie/images/social/twitter-16x16.png" alt="Fork me on GitHub">
+            <img style="float:left; border: 0;z-index: 999;" src="/images/social.media/twitter.png" alt="Fork me on GitHub">
             <h2>{{name}}</h2>
             {{#overview}}
             <p class="temperature"><strong>{{#temperature}}{{value}}&#176;{{/temperature}}</strong> temperature</p>
@@ -434,6 +435,15 @@
                     </li>
                 </ul>
             </section>
+            <div id="priority" class="notification" class="%priority%" style="width: 220px;visibility:hidden">
+                <div><div>
+                    <span class="icon" style="background-image:url('/images/social.media/twitter.png');">
+                        <img src="/images/social.media/twitter.png" alt="icon" />
+                    </span>
+                    <h1 id="title" class="title">Message</h1>
+                    <p id="text" class="message">An error has occurred</p>
+                </div></div>
+            </div>
             <article>
                 <div class="empty"><span>Hello and wellcome to <strong>gipsy.com</strong> enter your <a href="#/account">account</a></span></div>
             </article>
