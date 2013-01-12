@@ -106,7 +106,9 @@
                 }
                 function onInit(subscription)
                 {
-                    
+                    $("#sites .notice").fadeOut(1000, function () {
+                        $(this).remove();
+                    });
                     var queue = $.jqmq({
                          // Next item will be processed only when queue.next() is called in callback.
                         delay: 100,
@@ -380,7 +382,11 @@
             this.grabTemplates();
             this.init({user: 'uid'});
             $("body").height(0);
+            $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow')
             $("#data").html(ich.greetings_template(this));
+            $( "#progressbar" ).progressbar({
+                value: 0
+            });
         }
     };
 

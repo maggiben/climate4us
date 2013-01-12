@@ -284,6 +284,8 @@ $(document).ready(function() {
         },
         setup: function (properties, callback) {
             var that = this;
+            var total = 100 / that.properties.order.length;
+            var cnt = 1;
             // Create a new queue.
             var queue = $.jqmq({
                  // Next item will be processed only when queue.next() is called in callback.
@@ -303,7 +305,10 @@ $(document).ready(function() {
                             function onLoad(station) {
                                 console.log("data is back " + JSON.stringify(station.name));
                                 station.isReady = true;
+                                $('#progressbar').progressbar('value', cnt * total);
+                                console.log(cnt);
                                 queue.next(false);
+                                cnt++;
                             }
                         },
                         error: function (jqXHR, status, error) {
@@ -433,7 +438,7 @@ $(document).ready(function() {
         addStation: function(station, callback) {
             var that = this;
             $.ajax({
-                url: "/station/add",
+                url: "/station/create",
                 type: "POST",
                 dataType: "json",
                 data: station,

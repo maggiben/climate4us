@@ -71,7 +71,7 @@ var generate_mongo_url = function(obj){
         return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
     }
 };
-var mongourl = generate_mongo_url(conf.mongohq);
+var mongourl = generate_mongo_url(conf.mongo_local);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Run app                                                                   //
@@ -266,7 +266,7 @@ app.put('/subscription/update/:id', Subscription.update);
 ///////////////////////////////////////////////////////////////////////////////
 app.get('/station/getall', Station.getAll);
 app.get('/station/getbyid/:id', Station.getById);
-app.get('/station/create', Station.create);
+app.post('/station/create', Station.create);
 app.post('/station/update/:id', Station.update);
 app.delete('/station/remove/:id', Station.remove);
 app.get('/station/removeall', Station.removeall);

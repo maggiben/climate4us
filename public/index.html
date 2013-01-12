@@ -48,6 +48,7 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/infobubble.js"></script>
+        <!-- <script type="text/javascript" charset="utf-8" src="javascripts/subscription.js"></script> -->
         <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
         <!-- SOCKET.IO -->
         <script src="/socket.io/socket.io.js"></script>
@@ -89,7 +90,7 @@
 		</div>
         <!-- FOOTER -->
         <footer>
-            <p>Copyright 2012 <a href="http://github.com/">GitHub</a> All Rights Reserved</p>
+            <p>Copyright 2013 <a href="http://github.com/maggiben">GitHub</a> All Rights Reserved</p>
             <ul>
                 <li><a href="http://twitter.com/#!/">Twitter</a></li>
                 <li><a href="/tos">Terms &amp; Conditions</a></li>
@@ -208,6 +209,14 @@
         <script type="text/html" id="trial_template">
             <div class="notice">
                 <a href="#/account/plan">You have <strong>{{ trial_days_left_text }}</strong> remaining in your free trial. Select a plan.</a>
+            </div>
+        </script>
+        <script type="text/html" id="stations_loader">
+            <div class="notice">
+            <p>Loading your stations...</p>
+                <div class="wrapper">
+                    <div id="progressbar"></div>
+                </div>
             </div>
         </script>
         <script type="text/html" id="account_template">
@@ -430,6 +439,16 @@
             <article>
                 <div class="empty"><span>Hello and wellcome to <strong>gipsy.com</strong> enter your <a href="#/account">account</a></span></div>
             </article>
+            <dialog>
+            <div class="cdn">
+                <strong>GitHub <em>src</em></strong>
+                <input value="https://github.com/maggiben/climate4us">
+            </div>
+            <div class="cdn">
+                <strong>Author <em>email<em></strong>
+                <input value="benjaminmaggi@gmail.com">
+            </div>
+            </dialog>
         </script>
         <script id="overview_template" type="text/html">
             <div class="toolbar top">Overview for {{name}} <a href="#" class="live refresh"><span>Refresh</span></a></div>
