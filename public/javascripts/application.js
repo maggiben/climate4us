@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : application.js                                            //
 // @summary      : client side application                                   //
-// @version      : 0.15                                                      //
+// @version      : 0.16                                                      //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //
@@ -473,10 +473,10 @@ $(document).ready(function() {
         },
         setSelected: function(_id) {
             var that = this;
-            that.update({_id: _id}, onUpdate);
+            that.update({selected: _id}, onUpdate);
             function onUpdate(data)
             {
-                that.selected = data._id;
+                that.properties.selected = data._id;
                 console.log("subscription update ok! result: " + data);
             };
         },
@@ -531,6 +531,7 @@ $(document).ready(function() {
             }
             $("div.site.current").removeClass("current");
             station.addClass("current");
+            MyApp.subscription.setSelected(data.id);
             $("#data").html(ich.site_data_template(MyApp.subscription.getStationById(data.id))); 
             $("body").addClass("view-nav");
         });
@@ -715,7 +716,7 @@ $(document).ready(function() {
             b.data("text") === undefined && b.data("text", b.text()), 
             b.text("Creating..."), 
             $.ajax({
-                url: "/clients",
+                url: "/clientsX",
                 dataType: "json",
                 type: "post",
                 data: {
@@ -827,6 +828,37 @@ $(document).ready(function() {
                 //$.scrollTo("#s" + station._id, 800);
                 $("body").removeClass("adding");
                 a.removeErrors();
+            });
+        });
+        this.put('#/station/update/:id', function() {
+            var that = this;
+            console.log("targent: " + this.params);
+            var a = $(this.target).removeErrors(), 
+            button = a.find("button span");
+            clearTimeout(button.data("timeout")), 
+            button.data("text") === undefined && button.data("text", button.text()), 
+            button.text("Updating..."),
+            $.ajax({
+                url: "/station/update/" + that.params.id,
+                dataType: "json",
+                type: "POST",
+                data: {name: that.target.name }, //MyApp.subscription.getStationById(this.params.id),
+                success: function(data, textStatus, jqXHR) {
+
+                },
+                error: function (jqXHR, status, error) {
+                    console.log("station/update/error");
+                    console.log(error);
+                    a.displayErrors({name: ["Could not update"]});
+                    console.log(button.text(button.data("text")));
+                },    
+                complete: function() {
+                    button.text("Created"), 
+                    setTimeout(function() {
+                        button.text(button.data("text"));
+                        a.removeErrors();
+                    }, 2e3);
+                }
             });
         });
         this.post('#/stationXX', function () {

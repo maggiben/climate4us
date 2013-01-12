@@ -496,17 +496,13 @@
         </script>
         <script id="station_settings_template" type="text/html">
             <form action="#/station/update/{{id}}" method="put">
-                <input type="hidden" name="_csrf" value="WuqJlgIgWDRO3hcvUE1j/R9Ka9AcXNuGK57vEcvR6p0=" />
+                <input type="hidden" name="_csrf" value="" />
                 <div class="toolbar top"><p>Edit this Station</p></div>
                 <div id="display_panel" class="display">
                     <div class="wrapper">
                         <p class="text">
                             <label for="station_name_{{id}}">Station Name</label>
                             <input type="text" id="station_name_{{id}}" name="name" value="{{ name }}" />
-                        </p>
-                        <p class="text">
-                            <label for="station_allowed_hosts_{{id}}">Allowed Hosts</label>
-                            <input type="text" id="station_allowed_hosts_{{id}}" name="allowed_hosts" value="{{ allowed_hosts }}" placeholder="Only track from these domains (a.com b.com)" />
                         </p>
                         <p class="submit"><button><span>Save these Settings</span></button></p>
                     </div>

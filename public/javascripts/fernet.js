@@ -136,7 +136,10 @@
                         // When the queue completes naturally, execute this function.
                         complete: function(){
                             var selected = MyApp.subscription.getSelected();
-                            window.sammyApp.trigger("show_panel.g",{id: selected, path:"overview"})
+                            if(subscription.stations.hasOwnProperty(selected))
+                            {
+                                window.sammyApp.trigger("show_panel.g",{id: selected, path:"overview"})                            
+                            }
                         }
                     });
                     subscription.order.forEach(function(_id) { queue.add(_id) });

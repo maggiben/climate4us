@@ -164,12 +164,28 @@ exports.removeall = function(request, response, next) {
 //                                                                           //
 // @url POST /station/update/:id                                             //
 ///////////////////////////////////////////////////////////////////////////////
+    
+    /*
+    response.contentType('application/json');
+    Station.findById(request.params.id, gotStation);
+    
+    function gotStation(error, station) {
+        if (error) {
+            console.log(error);
+            return next(error);
+        }
+        var stationJSON = JSON.stringify(station);
+        return response.send(stationJSON);
+    }
+    */
+
 exports.update = function (request, response, next) {
     
     response.contentType('application/json');
-    Station.findByIdAndUpdate({_id : request.params.id}, request.body, updateStation);
+    Station.findById(request.params.id, updateStation);
     
     function updateStation (error, station) {
+        
         if (error) {
             console.log(error);
             return next(error);
@@ -179,8 +195,24 @@ exports.update = function (request, response, next) {
             return next(error);
         } 
         else {
+            console.log("REQUEST BODY")
             console.log(JSON.stringify(request.body));
         }
+            console.log("REQUEST BODY")
+            console.log(JSON.stringify(request.body));
+                    
+        station = extendWithFilters(station, request.body);
+        station.save(onSaved);
+
+        function onSaved (error, station) {
+            if (error) {
+                console.log(error);
+                return next(error);
+            }
+            console.log("onSaved");
+            return response.send(JSON.stringify(station));
+        }
+
         var stationJSON = JSON.stringify(station);
         return response.send(stationJSON);
     }
@@ -283,4 +315,57 @@ exports.setupStation = function(request, response, next) {
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Helpers                                                                   //
+///////////////////////////////////////////////////////////////////////////////
 
+function extend(target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i],
+            keys = Object.keys(source)
+
+        for (var j = 0; j < keys.length; j++) {
+            var name = keys[j]
+            target[name] = source[name]
+        }
+    }
+
+    return target
+}
+
+function extendWithFilters(target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i],
+            keys = Object.keys(source)
+        for (var j = 0; j < keys.length; j++) {
+            var name = keys[j];
+            if(target.hasOwnProperty(name)) {
+                target[name] = source[name];
+            }
+        }
+    }
+    return target;
+}
+
+
+// browser:
+
+/*
+;(function (global) {
+    global.extendWithFilters = extendWithFilters
+
+    function extendWithFilters(target) {
+        for (var i = 1; i < arguments.length; i++) {
+            var source = arguments[i],
+                keys = Object.keys(source)
+            for (var j = 0; j < keys.length; j++) {
+                var name = keys[j];
+                if(target.hasOwnProperty(name)) {
+                    target[name] = source[name];
+                }
+            }
+        }
+        return target;
+    }
+}(window))
+*/
