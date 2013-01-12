@@ -93,7 +93,10 @@
             this.getUser({callback: gotUser})
             function gotUser(account)
             {
-                console.log("account")
+                $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow');       
+                $( "#progressbar" ).progressbar({
+                    value: 0
+                });
                 that.user.subscriptions.forEach(function(_id) {
                     that.getSubscription({_id: _id, callback: gotSubscription});
                 });
@@ -106,9 +109,15 @@
                 }
                 function onInit(subscription)
                 {
+                    //hide("slide", { direction: "right" }, 'swing')  
+                    /*
                     $("#sites .notice").fadeOut(1000, function () {
                         $(this).remove();
                     });
+                    */
+                    $("#sites .notice").hide(1000, 'swing');
+                    //$("#sites .notice").hide("slide", { direction: "up" }, 1000, 'swing');
+
                     var queue = $.jqmq({
                          // Next item will be processed only when queue.next() is called in callback.
                         delay: 100,
@@ -382,11 +391,7 @@
             this.grabTemplates();
             this.init({user: 'uid'});
             $("body").height(0);
-            $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow')
             $("#data").html(ich.greetings_template(this));
-            $( "#progressbar" ).progressbar({
-                value: 0
-            });
         }
     };
 
