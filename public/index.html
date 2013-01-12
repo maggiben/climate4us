@@ -343,10 +343,9 @@
             <div class="graph">
                 <ul>
                     {{#last_7_days}}
-                    <p>{{temperature_size}}</p>
                     <li>
                         <span class="temperature" style="height:{{temperature_size}};">{{temperature}}</span>
-                        <span class="humidity" style="height:10px;">{{people}}</span>
+                        <span class="humidity" style="height:{{humidity_size}};">{{humidity}}</span>
                     </li>
                     {{/last_7_days}}
                 </ul>

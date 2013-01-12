@@ -154,11 +154,24 @@ $(document).ready(function() {
                     low_temperature: 0.00
                 }
             ],
-            last_7_days: [ {temperature_size: '25px'}, {temperature_size: '25px'} ]
+            last_7_days: [ {temperature_size: Math.floor(Math.random() * 25) + "px", humidity_size: Math.floor(Math.random() * 12)+ "px"}, 
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"} ]
         },
         setup: function (options) {
             var options = $.extend({}, this.properties, options);
             var that = this;
+            this.properties.last_7_days = [ {temperature_size: Math.floor(Math.random() * 25) + "px", humidity_size: Math.floor(Math.random() * 12)+ "px"}, 
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"} ];            
             that.id = options._id;
             $.ajax({
                 url: "/station/getbyid/" + options._id,
