@@ -164,26 +164,11 @@ exports.removeall = function(request, response, next) {
 //                                                                           //
 // @url POST /station/update/:id                                             //
 ///////////////////////////////////////////////////////////////////////////////
-    
-    /*
-    response.contentType('application/json');
-    Station.findById(request.params.id, gotStation);
-    
-    function gotStation(error, station) {
-        if (error) {
-            console.log(error);
-            return next(error);
-        }
-        var stationJSON = JSON.stringify(station);
-        return response.send(stationJSON);
-    }
-    */
-
 exports.update = function (request, response, next) {
     
     response.contentType('application/json');
     Station.findById(request.params.id, updateStation);
-    
+                
     function updateStation (error, station) {
         
         if (error) {
@@ -195,13 +180,25 @@ exports.update = function (request, response, next) {
             return next(error);
         } 
         else {
-            console.log("REQUEST BODY")
-            console.log(JSON.stringify(request.body));
+                // is Ok
         }
-            console.log("REQUEST BODY")
-            console.log(JSON.stringify(request.body));
-                    
-        station = extendWithFilters(station, request.body);
+        // ilterate through each root level schema key 
+        for(var key in station.schema.tree)
+        {
+            // key is property and not _id nor id (to avoid overwrites)
+            if(station.schema.tree.hasOwnProperty(key) && key != '_id' && key != 'id')
+            {
+                // If key is a property of the JSON body
+                if(request.body.hasOwnProperty(key))
+                {
+                    // do not overwrite with empty values
+                    station[key] = request.body[key] || station[key];
+                }
+            }
+        }
+
+        station.lastUpdate = new Date();
+        station.lastAccess = new Date();
         station.save(onSaved);
 
         function onSaved (error, station) {
@@ -209,10 +206,8 @@ exports.update = function (request, response, next) {
                 console.log(error);
                 return next(error);
             }
-            console.log("onSaved");
             return response.send(JSON.stringify(station));
         }
-
         var stationJSON = JSON.stringify(station);
         return response.send(stationJSON);
     }
@@ -319,20 +314,6 @@ exports.setupStation = function(request, response, next) {
 // Helpers                                                                   //
 ///////////////////////////////////////////////////////////////////////////////
 
-function extend(target) {
-    for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i],
-            keys = Object.keys(source)
-
-        for (var j = 0; j < keys.length; j++) {
-            var name = keys[j]
-            target[name] = source[name]
-        }
-    }
-
-    return target
-}
-
 function extendWithFilters(target) {
     for (var i = 1; i < arguments.length; i++) {
         var source = arguments[i],
@@ -341,12 +322,14 @@ function extendWithFilters(target) {
             var name = keys[j];
             if(target.hasOwnProperty(name)) {
                 target[name] = source[name];
+                console.log("updating: " + JSON.stringify(name))
             }
         }
     }
     return target;
 }
 
+//StationSH.findById('50f0ddfba8d82b016700000f', function(e,s){s = extendWithFilters(s, cosa); console.log(cosa); s.save(function(e,s){console.log(s)})})
 
 // browser:
 

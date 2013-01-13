@@ -189,7 +189,25 @@ $(document).ready(function() {
                 }
             });
         },
-        update: function (a) {
+        update: function(properties, callback) {
+            var that = this;
+            var properties = $.extend({}, this.properties, properties);
+            console.log("subscription update");
+            $.ajax({
+                url: "/station/update/" + properties._id,
+                dataType: "json",
+                type: "PUT",
+                data: properties,
+                success: function (data, textStatus, jqXHR) {
+                    callback(data);
+                },
+                error: function (jqXHR, status, error) {
+                    var c = $.parseJSON(jqXHR);
+                    console.log(jqXHR.responseText);
+                },
+            });
+        },        
+        updatexxx: function (a) {
             var that = this;
             $.ajax({
                 url: "/station/update/" + that.id,
@@ -224,7 +242,13 @@ $(document).ready(function() {
         },
         // setters
         setTemperature: function (temperature) {
-            this.temperature = temperature; 
+            var that = this;
+            that.update({temperature: { value: temperature, unit: 'C'}}, onUpdate);
+            function onUpdate(data)
+            {
+                that.properties.temperature = data.temperature;
+                console.log("setTemperature update ok! result: " + JSON.stringify(data));
+            };            
         },
         setPressure: function (pressure) { 
             this.pressure = pressure; 
@@ -841,7 +865,7 @@ $(document).ready(function() {
             $.ajax({
                 url: "/station/update/" + that.params.id,
                 dataType: "json",
-                type: "POST",
+                type: "PUT",
                 data: {name: that.target.name }, //MyApp.subscription.getStationById(this.params.id),
                 success: function(data, textStatus, jqXHR) {
 
