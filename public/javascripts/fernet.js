@@ -138,7 +138,11 @@
                             var selected = MyApp.subscription.getSelected();
                             if(subscription.stations.hasOwnProperty(selected))
                             {
-                                window.sammyApp.trigger("show_panel.g",{id: selected, path:"overview"})                            
+                                window.sammyApp.run();
+                                if(window.sammyApp.last_location[1] == '/')
+                                {
+                                    window.sammyApp.trigger("show_panel.g",{id: selected, path:"overview"})                            
+                                }
                             }
                         }
                     });

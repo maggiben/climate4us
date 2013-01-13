@@ -18,7 +18,7 @@
         <!-- CUSTOM FONT -->
         <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Comfortaa:400,300">
         <!-- INCLUDE STYLES -->
-        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/violet/jquery-ui-1.9.2.custom.css" />
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.css" />
         <!-- CODEMIRROR THEMES -->
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.themes/monokai.css" />
@@ -504,7 +504,18 @@
                             <label for="station_name_{{id}}">Station Name</label>
                             <input type="text" id="station_name_{{id}}" name="name" value="{{ name }}" />
                         </p>
-                        <p class="submit"><button><span>Save these Settings</span></button></p>
+                        <p class="text">
+                        <label for="equalizer">Graphic EQ</label>
+                            <div id="equalizer">
+                              <span id="1" >88</span>
+                              <span id="2" >77</span>
+                              <span id="3" >55</span>
+                              <span id="4" >33</span>
+                              <span id="5" >40</span>
+                              <span id="6" >45</span>
+                              <span id="7" >70</span>
+                            </div>
+                        <p class="submit" style="clear: both"><button><span>Save these Settings</span></button></p>
                     </div>
                 </div>
                 <div class="toolbar bottom submit edit">
