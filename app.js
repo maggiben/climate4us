@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : app.js                                                    //
 // @summary      : main application module                                   //
-// @version      : 0.1.2                                                     //
+// @version      : 0.1.3                                                     //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //
