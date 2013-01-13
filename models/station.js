@@ -31,7 +31,6 @@ var mongoose = require('mongoose'),
 
 var Station = new Schema({
     name: { type: String, required: true, trim: true },
-    id: Number,
     type: String,
     country: String,
     state: String,

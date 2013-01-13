@@ -148,7 +148,9 @@ exports.create = function (request, response, next) {
 exports.update = function (request, response, next) {
     
     response.contentType('application/json');
-    Subscription.findByIdAndUpdate({_id : request.params.id}, request.body, updateSubscription);
+    console.log(JSON.stringify(request.body));
+
+    Subscription.findById(request.params.id, updateSubscription);//findByIdAndUpdate({_id : request.params.id}, request.body, updateSubscription);
     
     function updateSubscription (error, subscription) {
         if (error) {
@@ -160,10 +162,31 @@ exports.update = function (request, response, next) {
             return next(error);
         } 
         else {
+            // is Ok
             console.log(JSON.stringify(request.body));
         }
-        var subscriptionJSON = JSON.stringify(subscription);
-        return response.send(subscriptionJSON);
+        subscription.name = request.body.name || subscription.name;
+        subscription.type = request.body.type || subscription.type;
+        //subscription.magic = request.body.magic || subscription.magic;
+        //subscription.created
+        subscription.lastUpdate = new Date();
+        subscription.lastAccess = new Date();
+        //subscription.isReady 
+        subscription.stations = request.body.stations || subscription.stations;
+        subscription.order = request.body.order || subscription.order;
+        subscription.selected = request.body.selected || subscription.selected;
+
+        subscription.save(onSaved);
+
+        function onSaved(error, station) {
+            if (error) {
+                console.log(error);
+                return next(error);
+            }
+            console.log("onSaved");
+            var subscriptionJSON = JSON.stringify(subscription);
+            return response.send(subscriptionJSON);
+        }
     }
 };
 

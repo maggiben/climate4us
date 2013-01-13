@@ -679,14 +679,14 @@ span.overflow {
 				margin:0 0 0 1px;
 				position:relative;
 				&.weekend span {
-					background-image:url("../images/bar_we-b7bf98937443a42e13912c2611365b24.png")
+					background-image:url("../images/bar_we.png")
 				}
 				span {
 					position:absolute;
 					bottom:0;
 					left:0;
 					width:7px;
-					background:url("../images/bar-d5032d652e2258258446adf3c31fc149.png") repeat bottom left;
+					background:url("../images/bar.png") repeat bottom left;
 					text-indent:-9999px;
 					overflow:hidden;
 				};
@@ -942,7 +942,7 @@ a.back {
 	/* -moz-box-shadow:inset rgba(255,255,255,0.25) 0 1px 0,inset rgba(0,0,0,0.1) -1px -1px 0; */
 	/* box-shadow:inset rgba(255,255,255,0.25) 0 1px 0,inset rgba(0,0,0,0.1) -1px -1px 0; */
     box-shadow inset rgba(255,255,255,0.25) 0 1px 0,inset rgba(0,0,0,0.1) -1px -1px 0;
-	text-shadow:#ccc 0 1px 0;
+	text-shadow:#FFFFFF 0 1px 0;
 	overflow:auto
 }
 #data div.nav h2 {
@@ -1293,7 +1293,7 @@ span.technology span.other {
 	background-clip:padding-box
 }
 #site_content table td.bar div.bar_holder div.visitors,#site_content table td.bar div.bar_holder div.views {
-	background:url("../images/bar-d5032d652e2258258446adf3c31fc149.png") top left
+	background:url("../images/bar.png") top left
 }
 #site_content table td.vertical-bar-holder {
 	padding-right:1px
@@ -1411,7 +1411,7 @@ span.technology span.other {
 	background-image:linear-gradient(top,#e69f76,#df814b)
 }
 #site_content table td.weekend div.bar_holder div.visitors,#site_content table td.weekend div.bar_holder div.views {
-	background:url("../images/bar_we-b7bf98937443a42e13912c2611365b24.png") top left
+	background:url("../images/bar_we.png") top left
 }
 #site_content table tr:nth-child(even),#site_content table tr.odd {
 	background:rgba(0,102,204,0.05)
@@ -1526,7 +1526,7 @@ span.technology span.other {
 	background-clip:padding-box
 }
 #site_content div.charts div.bar div.visitors,#site_content div.charts div.bar div.views {
-	background:url("../images/bar-d5032d652e2258258446adf3c31fc149.png") bottom left
+	background:url("../images/bar.png") bottom left
 }
 #site_content div.charts div.bar div.date {
 	text-align:center;
@@ -1538,7 +1538,7 @@ span.technology span.other {
 	line-height:1
 }
 #site_content div.charts div.weekend div.visitors,#site_content div.charts div.weekend div.views {
-	background:url("../images/bar_we-b7bf98937443a42e13912c2611365b24.png") bottom left
+	background:url("../images/bar_we.png") bottom left
 }
 #site_content div.charts:hover div.bar {
 	opacity:0.6
@@ -3221,97 +3221,17 @@ dialog .cdn input:focus { outline: none; }
 .ui-progressbar .ui-progressbar-value { 
 	background-image: url(../images/ui.theme.smoothness/pbar-ani.gif); 
 }
-
-.notification { 
-	border: 1px solid rgba(15,15,15,0.4); 
-	border-bottom-color: rgba(15,15,15,0.6);
-	-webkit-border-radius: 5px; 
-	color: rgba(255,255,255,0.7);
-	text-shadow: 0 -1px 0 rgba(0,0,0,1);
-	font: 11px/1.4 "Lucida Sans","Lucida Grande", Lucida, sans;
-	background:-webkit-gradient(linear, left top, left bottom, from(rgba(15,15,15,0.75)), to(rgba(15,15,15,0.95)) );
-	-webkit-box-shadow: 0 0 15px rgba(255,255,255,0.3);
-	-webkit-transition: all 0.2s linear;
-	-webkit-animation-name: flash; 
-  	-webkit-animation-duration: 1s; 
-  	-webkit-animation-iteration-count: 1; 
-}
-.notification>div{
-	-webkit-border-radius: 5px; 
-	-webkit-box-shadow: 0 1px 8px rgba(0,0,0,0.8);
-	background:url(images/glow.png) center -1px no-repeat;
-  	border: 1px solid rgba(255,255,255,0.12);	
-  	border-top-color: rgba(255,255,255,0.35);
-  	border-bottom-color: rgba(255,255,255,0);
-}
-.notification>div>div{
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.1)), to(rgba(255,255,255,0)), color-stop(0.3, rgba(255,255,255,0.05)), color-stop(0.3, rgba(255,255,255,0)) );
-	padding: 8px 10px;
-	-webkit-border-radius: 3px;
-	overflow: hidden;
-}
-.notification:hover{
-	border-color: rgba(0,0,0,1);
-}
-.notification:hover>div{
-	-webkit-animation-name: pulse; 
-  	-webkit-animation-duration: 2s; 
-  	-webkit-animation-iteration-count: infinite; 
-}
-.title{
-	color: rgba(255,255,255,0.9);	
-	font-size: 12px;
-	margin: 0 0 2px 0;
-	padding: 0 0 0 48px;
-	-webkit-transition: all 0.2s linear;
-}
-.icon{
-	float: left;
-	margin: 0 10px 0 0;
-	display: block;
-	text-align: center;
-	line-height: 36px;
-	width: 36px;
-	height: 36px;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	background-position: center center;
-	background: none !important;
-	-webkit-border-radius:4px;
-}
-.icon img{
-	max-width: 36px;
-	max-height: 36px;	
-	vertical-align: middle;
-	margin: 0;
-	padding: 0;
-	float: left;
-	
-}
-.message{
-	padding: 0 0 0 48px;
-	margin: 0;
+/* JQUERY UI OVERRIDES AND WIDGETS */
+#equalizer span {
+    height:120px; float:left; margin:13px;
 }
 
-@-webkit-keyframes flash {
-  from {
-    -webkit-box-shadow: 0 0 15px rgba(255,255,255,0.3);
-  }
-  50% {
-  	-webkit-box-shadow: 0 0 15px rgba(255,255,255,0.6);
-  }
-  to { 
-    -webkit-box-shadow: 0 0 15px rgba(255,255,255,0.3);
-  }
+.healthStateIconClass.running {
+  background: url("/images/ui-sprite.png") 0px -279px;
 }
-
-@-webkit-keyframes pulse {
-  from {
-  }
-  50% {
-  	-webkit-box-shadow: 0 0 50px rgba(255,255,255,0.5);
-  }
-  to { 
-	-webkit-box-shadow: 0 0 20px rgba(255,255,255,0.15);
-  }
+.healthStateIconClass.stopped {
+  background: url("/images/ui-sprite.png") 0px -294px;
+}
+.healthStateIconClass.incomplete {
+  background: url("/images/ui-sprite.png") 0px -309px;
 }

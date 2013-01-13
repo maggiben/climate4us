@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // @file         : application.js                                            //
 // @summary      : client side application                                   //
-// @version      : 0.15                                                      //
+// @version      : 0.16                                                      //
 // @project      : Node.JS + Express boilerplate for cloud9 and appFog       //
 // @description  :                                                           //
 // @author       : Benjamin Maggi                                            //
@@ -154,11 +154,17 @@ $(document).ready(function() {
                     low_temperature: 0.00
                 }
             ],
-            last_7_days: [ {temperature_size: '25px'}, {temperature_size: '25px'} ]
         },
         setup: function (options) {
             var options = $.extend({}, this.properties, options);
             var that = this;
+            this.properties.last_7_days = [ {temperature_size: Math.floor(Math.random() * 25) + "px", humidity_size: Math.floor(Math.random() * 12)+ "px"}, 
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"} ];            
             that.id = options._id;
             $.ajax({
                 url: "/station/getbyid/" + options._id,
@@ -176,23 +182,24 @@ $(document).ready(function() {
                 }
             });
         },
-        update: function (a) {
+        update: function(properties, callback) {
             var that = this;
+            var properties = $.extend({}, this.properties, properties);
+            console.log("subscription update");
             $.ajax({
-                url: "/station/update/" + that.id,
-                type: "post",
+                url: "/station/update/" + properties._id,
                 dataType: "json",
-                data: that,
-                success: function(data, textStatus, jqXHR) {
-                    console.log("data back: " + JSON.stringify(data));
+                type: "PUT",
+                data: properties,
+                success: function (data, textStatus, jqXHR) {
+                    callback(data);
                 },
                 error: function (jqXHR, status, error) {
+                    var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
                 },
-                complete: function () {                                
-                }
             });
-        },        
+        },    
         // getters
         getTemperature: function () { 
             return this.temperature; 
@@ -211,7 +218,13 @@ $(document).ready(function() {
         },
         // setters
         setTemperature: function (temperature) {
-            this.temperature = temperature; 
+            var that = this;
+            that.update({temperature: { value: temperature, unit: 'C'}}, onUpdate);
+            function onUpdate(data)
+            {
+                that.properties.temperature = data.temperature;
+                console.log("setTemperature update ok! result: " + JSON.stringify(data));
+            };            
         },
         setPressure: function (pressure) { 
             this.pressure = pressure; 
@@ -460,10 +473,10 @@ $(document).ready(function() {
         },
         setSelected: function(_id) {
             var that = this;
-            that.update({_id: _id}, onUpdate);
+            that.update({selected: _id}, onUpdate);
             function onUpdate(data)
             {
-                that.selected = data._id;
+                that.properties.selected = data._id;
                 console.log("subscription update ok! result: " + data);
             };
         },
@@ -518,6 +531,7 @@ $(document).ready(function() {
             }
             $("div.site.current").removeClass("current");
             station.addClass("current");
+            MyApp.subscription.setSelected(data.id);
             $("#data").html(ich.site_data_template(MyApp.subscription.getStationById(data.id))); 
             $("body").addClass("view-nav");
         });
@@ -533,7 +547,7 @@ $(document).ready(function() {
             switch (data.path) {
                 case "overview":
                     console.log("[overview]");
-                    $("#site_content").html(ich.overview_template(MyApp.subscription.getStationById(data.id)));
+                    $("#site_content").html(ich.overview_template(MyApp.subscription.getStationById(data.id))).hide().fadeIn(250);
                     var placeholder = $("#placeholder");
                     var options = {
                         lines: { show: true },
@@ -564,10 +578,38 @@ $(document).ready(function() {
                     break;
                 case "settings":
                     console.log("[settings]");
-                    $("#site_content").html(ich.station_settings_template(MyApp.subscription.getStationById(data.id)));
+                    $("#site_content").html(ich.station_settings_template(MyApp.subscription.getStationById(data.id))).hide().fadeIn(100);
+                    /*
+                    $("#s50f0ddfba8d82b016700000f").children().fadeOut(500).promise().then(function() {
+                         $("#s50f0ddfba8d82b016700000f").empty();
+                    });
+                    */
+                    $( "#equalizer > span" ).each(function() {
+                        // read initial values from markup and remove that
+                        var value = parseInt( $( this ).text(), 10 );
+                        $(this).data("index", 7-$(this).attr("id"));
+                        var org = MyApp.subscription.getStationById(data.id);
+
+                        var temperature = org.last_7_days[$(this).data("index")].temperature_size;
+                        value = parseInt( temperature, 10 );
+
+                        $( this ).empty().slider({
+                            value: value,
+                            range: "min",
+                            animate: true,
+                            orientation: "vertical",
+                            slide: function( event, ui ) {
+                                var bar = $("#s" + data.id).find(".graph > ul > li > span.temperature")[$(this).data("index")];
+                                var max = parseInt($("#s" + data.id).find(".graph > ul").css("height"), 10);
+                                var delta = (max / 100) * ui.value;
+                                console.log(delta)
+                                $(bar).animate({height: delta + "px"}, 0);
+                            }
+                        });
+                    });
                     break;
                 case "sensors":
-                    $("#site_content").html(ich.station_sensors_template(MyApp.subscription.getStationById(data.id)));
+                    $("#site_content").html(ich.station_sensors_template(MyApp.subscription.getStationById(data.id))).hide().fadeIn(100);
                     var temperature_gauge = new JustGage({
                       id: "temperature.gauge", 
                       value: getRandomInt(0, 100), 
@@ -591,7 +633,7 @@ $(document).ready(function() {
                     }, 2500);
                     break;
                 case "terminal":
-                    $("#site_content").html(ich.station_terminal_template(MyApp.subscription.getStationById(data.id)));
+                    $("#site_content").html(ich.station_terminal_template(MyApp.subscription.getStationById(data.id))).hide().fadeIn(100);
                     $(function($, undefined) {
                         $('#terminal').terminal( function(command, term) {
                             if (command !== '') {
@@ -626,7 +668,7 @@ $(document).ready(function() {
                     });
                     break;
                 case "srcedit":
-                    $("#site_content").html(ich.station_srceditor_template(MyApp.subscription.getStationById(data.id)));
+                    $("#site_content").html(ich.station_srceditor_template(MyApp.subscription.getStationById(data.id))).hide().fadeIn(100);
                     var editor = CodeMirror.fromTextArea(document.getElementById("code_editor"), {
                         lineNumbers: true,
                         theme: 'monokai'
@@ -702,7 +744,7 @@ $(document).ready(function() {
             b.data("text") === undefined && b.data("text", b.text()), 
             b.text("Creating..."), 
             $.ajax({
-                url: "/clients",
+                url: "/clientsX",
                 dataType: "json",
                 type: "post",
                 data: {
@@ -768,7 +810,7 @@ $(document).ready(function() {
         ///////////////////////////////////////////////////////////////////////
         // Subscription Routes                                               //
         ///////////////////////////////////////////////////////////////////////
-        this.post('#/subscription/new', function () {
+        this.post('#/subscription/create', function () {
             var that = this;
             var a = $(this.target).removeErrors();
             var b = a.find(".submit button span");
@@ -814,6 +856,37 @@ $(document).ready(function() {
                 //$.scrollTo("#s" + station._id, 800);
                 $("body").removeClass("adding");
                 a.removeErrors();
+            });
+        });
+        this.put('#/station/update/:id', function() {
+            var that = this;
+            console.log("targent: " + this.params);
+            var a = $(this.target).removeErrors(), 
+            button = a.find("button span");
+            clearTimeout(button.data("timeout")), 
+            button.data("text") === undefined && button.data("text", button.text()), 
+            button.text("Updating..."),
+            $.ajax({
+                url: "/station/update/" + that.params.id,
+                dataType: "json",
+                type: "PUT",
+                data: {name: that.target.name }, //MyApp.subscription.getStationById(this.params.id),
+                success: function(data, textStatus, jqXHR) {
+
+                },
+                error: function (jqXHR, status, error) {
+                    console.log("station/update/error");
+                    console.log(error);
+                    a.displayErrors({name: ["Could not update"]});
+                    console.log(button.text(button.data("text")));
+                },    
+                complete: function() {
+                    button.text("Created"), 
+                    setTimeout(function() {
+                        button.text(button.data("text"));
+                        a.removeErrors();
+                    }, 2e3);
+                }
             });
         });
         this.post('#/stationXX', function () {
@@ -862,12 +935,17 @@ $(document).ready(function() {
             }), !1;
         });
         this.get("#/station/:id/:path", function () {
+            var that = this;
             console.log(this.params)
             console.log("sammy route: #/station/%s/%s", this.params.id, this.params.path);
+            // this fails here if reload but stuff is not loaded
             var station = MyApp.subscription.getStationById(this.params.id);//stations[this.params.id];
             console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
-            this.trigger("show_panel.g", this.params); 
-            MyApp.meldSidebar();
+            $("#site_content").children().fadeOut(200).promise().then(function() {
+                         $("#site_content").empty();
+                        that.trigger("show_panel.g", that.params); 
+                        MyApp.meldSidebar();
+            });
         });
         this.get('#/station/:id/code/:tab', function () {
             alert("caca");
@@ -907,7 +985,7 @@ $(document).ready(function() {
     });
     $(function() {
         window.sammyApp = app;
-        app.run();
+        //app.run();
     });
 
 })(window.jQuery || window.Zepto);
