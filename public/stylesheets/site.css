@@ -3430,3 +3430,12 @@ dialog .cdn input:focus {
   float: left;
   margin: 13px;
 }
+.healthStateIconClass.running {
+  background: url("/images/ui-sprite.png") 0px -279px;
+}
+.healthStateIconClass.stopped {
+  background: url("/images/ui-sprite.png") 0px -294px;
+}
+.healthStateIconClass.incomplete {
+  background: url("/images/ui-sprite.png") 0px -309px;
+}

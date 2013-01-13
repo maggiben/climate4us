@@ -94,14 +94,20 @@
             function gotUser(account)
             {
                 
-                $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow');       
-                $( "#progressbar" ).progressbar({
-                    value: 0
-                });
-
-                that.user.subscriptions.forEach(function(_id) {
-                    that.getSubscription({_id: _id, callback: gotSubscription});
-                });
+                if(that.user.subscriptions.length > 0)
+                {
+                    $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow');       
+                    $( "#progressbar" ).progressbar({
+                        value: 0
+                    });
+                    that.user.subscriptions.forEach(function(_id) {
+                        that.getSubscription({_id: _id, callback: gotSubscription});
+                    });
+                }
+                else {
+                    $("body").addClass("add_subscription");
+                    return;
+                }
                 function gotSubscription(subscription) {
                     console.log("subscription")
                     MyApp.subscriptions[subscription._id] = new Subscription({_id: subscription._id, callback: onInit});

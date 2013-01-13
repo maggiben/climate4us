@@ -810,7 +810,7 @@ $(document).ready(function() {
         ///////////////////////////////////////////////////////////////////////
         // Subscription Routes                                               //
         ///////////////////////////////////////////////////////////////////////
-        this.post('#/subscription/new', function () {
+        this.post('#/subscription/create', function () {
             var that = this;
             var a = $(this.target).removeErrors();
             var b = a.find(".submit button span");
