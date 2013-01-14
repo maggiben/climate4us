@@ -47,9 +47,12 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/raphael.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/markerclusterer.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/distancewidget.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/infobubble.js"></script>
         <!-- SOCKET.IO -->
-        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="javascripts/data.json"></script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script>
         <!-- <script type="text/javascript" charset="utf-8" src="javascripts/subscription.js"></script> -->
         <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script>
@@ -111,7 +114,7 @@
                             <input type="text" name="name" id="new_name" />
                         </p>
                         <p class="text">
-                            <label for="new_event_type">Event Type</label>
+                            <label for="new_event_type">Event</label>
                             <!-- <input type="text" name="type" id="new_type" /> -->
                             <select id="new_event_type">
                                 <option value="0" data-imagesrc="images/markers/anniversary.png" data-description="An Aniversary event">Aniversary</option>
@@ -129,6 +132,10 @@
                         <p class="text">
                             <label for="new_location">Where</label>
                             <input type="text" name="location" id="new_location" />
+                        </p>
+                        <p class="text">
+                            <label for="new_radius">Radius</label>
+                            <div id="new_radius" style="width: 255px; margin: 15px;left: 75px;"></div>
                         </p>
                         <div id="map_canvas" style="width:100%;height:250px;border: 1px solid #4D2722;"></div>
                     </div>
@@ -193,10 +200,19 @@
         </div>
         <!-- TEMPLATES -->
         <script type="text/html" id="infobubble_template">
-            <div style="width: 180px;height:80px;overflow:hidden;">
+            <div style="width:233px;height:245px;overflow:hidden;background: url(/images/tooltip_bkg.png) 0px 0px no-repeat;background-position: 0px 0px;padding-left: 0px">
                 <h2>{{name}}</h2>
-                <input type="text" name="email" id="user_email" value="mail" />
-                <div id="slider"></div>
+                <a style="position: absolute; right: 1px; top: 1px; width: 21px; height: 21px; cursor: pointer; background-image: url(http://rlat.kew.org/images/editor/close_infowindow.png); background-position: 0px 0px; background-repeat: no-repeat no-repeat; "></a>
+    <p class="latitude" style="position: absolute; left: 26px; top: 14px; margin: 0px; line-height: normal; font-style: normal; font-variant: normal; font-weight: normal; font-size: 29px; font-family: Georgia; color: rgb(102, 102, 102); ">{{latitude_integer}}<sup style="color: rgb(102, 102, 102); font-style: normal; font-variant: normal; font-weight: normal; font-size: 15px; line-height: normal; font-family: Georgia; ">.{{latitude_fraction}}</sup>
+    </p>
+    <p class="longitude" style="position: absolute; left: 131px; top: 14px; margin: 0px; line-height: normal; font-style: normal; font-variant: normal; font-weight: normal; font-size: 29px; font-family: Georgia; color: rgb(102, 102, 102); ">{{longitude_integer}}<sup style="color: rgb(102, 102, 102); font-style: normal; font-variant: normal; font-weight: normal; font-size: 15px; line-height: normal; font-family: Georgia; ">.{{longitude_fraction}}</sup>
+    </p>
+    <p class="description" style="position: absolute; left: 24px; top: 97px; margin: 0px; font-style: normal; font-variant: normal; font-weight: normal; font-size: 11px; line-height: normal; font-family: Arial; color: rgb(102, 102, 102); "></p>
+    <p class="collector" style="position: absolute; left: 24px; top: 129px; margin: 0px; font-style: normal; font-variant: normal; font-weight: normal; font-size: 11px; line-height: normal; font-family: Arial; color: rgb(102, 102, 102); "></p>
+    <p class="precision" style="position: absolute; right: 22px; top: 157px; margin: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-size: 10px; line-height: normal; font-family: Arial; color: rgb(244, 169, 57); ">15KM</p>
+    <a style="position: absolute; left: 24px; bottom: 29px; width: 58px; height: 19px; cursor: pointer; background-image: url(http://rlat.kew.org/images/editor/info_delete.png); background-position: 0px 0px; background-repeat: no-repeat no-repeat; "></a>
+    <a class="hide_button_" style="position: absolute; left: 87px; bottom: 29px; width: 58px; height: 19px; cursor: pointer; background-image: url(http://rlat.kew.org/images/editor/info_hide.png); background-position: 0px 0px; background-repeat: no-repeat no-repeat; "></a>
+    <a style="position: absolute; right: 0px; bottom: 29px; width: 58px; height: 19px; cursor: pointer; background-image: url(http://rlat.kew.org/images/editor/edit_button.png); background-position: 0px 0px; background-repeat: no-repeat no-repeat; "></a>
             </div>
         </script>
         <script type="text/x-fernet" id="cpu">

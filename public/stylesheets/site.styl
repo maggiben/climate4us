@@ -13,6 +13,7 @@ $data_menu_text_shadow =  #F599E3 0 1px 0;
 $data_menu_border = 1px solid rgba(71, 0, 63, 0.7);
 $data_menu_background = rgba(255, 0, 255, 0.44);
 $status_color = #d30cd3; /* #750775; */
+$current_toolbar_button_bkg = #D355D3;
 
 $menu_data_current = rgba(186,186,186,0.8);
 
@@ -1133,7 +1134,7 @@ span.technology span.other {
 	left:0;
 	right:0;
 	z-index:9;
-	height:309px;
+	height:400px;
 	border-bottom:1px solid #ddd
 }
 #site_content #map {
@@ -1777,7 +1778,7 @@ div.toolbar ul.group_options li a:hover {
 	color:#333
 }
 div.toolbar ul.group_options li.current a {
-	background:#6F82A9;
+	background: $current_toolbar_button_bkg;
 	-webkit-box-shadow:inset rgba(0,0,0,0.6) 0 1px 1px;
 	color:#fff;
 	text-shadow:#222 0 1px 1px
@@ -3234,4 +3235,14 @@ dialog .cdn input:focus { outline: none; }
 }
 .healthStateIconClass.incomplete {
   background: url("/images/ui-sprite.png") 0px -309px;
+}
+
+#beta{
+	position:absolute;
+	top:11px;
+	right:11px;
+	width:80px;
+	height:80px;
+	background:url('/images/beta_version.png') no-repeat 0 0;
+	z-index:1000;
 }

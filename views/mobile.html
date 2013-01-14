@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>
+        </title>
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+        <link rel="stylesheet" href="my.css" />
+        <style>
+            .flowcontrol{ text-align:right;}
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
+        <!-- SOCKET.IO -->
+        <script type="text/javascript" charset="utf-8" src="/socket.io/socket.io.js"></script>
+        <!-- <script type="text/javascript" charset="utf-8" src="javascripts/fernet.js"></script> -->
+        <!-- <script type="text/javascript" charset="utf-8" src="javascripts/subscription.js"></script> -->
+        <!-- <script type="text/javascript" charset="utf-8" src="javascripts/application.js"></script> -->
+    </head>
+    <body>
+        <!-- Home -->
+        <div data-role="page" id="page1">
+            <div data-theme="a" data-role="header">
+                <h3 id="title">
+                    Gipsy
+                </h3>
+                            <div data-role="navbar" data-iconpos="left">
+                    <ul>
+                        <li>
+                            <a href="#page1" data-transition="fade" data-theme="" data-icon="plus">
+                                New
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#page1" data-transition="fade" data-theme="" data-icon="gear">
+                                Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#page1" data-transition="fade" data-theme="" data-icon="info">
+                                Status
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content">
+
+                <!-- 
+                <ul data-role="listview" data-divider-theme="a" data-inset="true">
+                    <li data-role="list-divider" role="heading">
+                        Stations
+                    </li>
+                    <li data-theme=""><img src="/images/social.media/twitter.png" alt="France" class="ui-li-icon"><a href="#page1" data-transition="slide">Name</a>
+                    </li>
+                </ul>
+                -->
+                <ul data-role="listview" data-inset="true">
+                    <li>
+                        <a href="index.html"><img src="/images/social.media/twitter.png" alt="France" class="ui-li-icon">France <span class="ui-li-count">4</span></a>
+                    </li>
+                    <li>
+                        <a href="index.html"><img src="/images/social.media/twitter.png" alt="France" class="ui-li-icon">France <span class="ui-li-count">4</span></a>
+                    </li>
+                    <li>
+                        <a href="index.html"><img src="/images/social.media/twitter.png" alt="France" class="ui-li-icon">France <span class="ui-li-count">4</span></a>
+                    </li>                                        
+                </ul>
+            </div>
+        </div>
+        <!-- TEMPLATES -->
+        <script type="text/html" id="station_preview_template">
+            <form action="">
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="username">
+                        </label>
+                        <input name="email" id="username" placeholder="email" value="" type="email">
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="password">
+                        </label>
+                        <input name="password" id="password" placeholder="password" value="" type="text">
+                    </fieldset>
+                </div>
+                <input type="submit" value="Submit">
+            </form>
+        </script> <!-- station_preview_template -->
+    </body>
+        <script>
+        // Listen for any attempts to call changePage().
+        $(document).on("pagebeforechange", function( event, data ) {
+            console.log("pagebeforechange")
+            // We only want to handle changePage() calls where the caller is
+            // asking us to load a page by URL.
+            if ( typeof data.toPage === "string" ) {
+                // We are being asked to load a page by URL, but we only
+                // want to handle URLs that request the data for a specific
+                // category.
+                var urlObj = $.mobile.path.parseUrl( data.toPage ),
+                    re = /^#category-item/;
+
+                    pageSelector = urlObj.hash.replace( /\?.*$/, "" );
+                    var $page = $( pageSelector );
+                    var $content = $page.children( ":jqmData(role=content)" );
+                    var $MyHtml = ich.station_preview_template({});
+                    $content.html($MyHtml).trigger('create');
+
+                    // Pages are lazily enhanced. We call page() on the page
+                    // element to make sure it is always enhanced before we
+                    // attempt to enhance the listview markup we just injected.
+                    // Subsequent calls to page() are ignored since a page/widget
+                    // can only be enhanced once.
+                    $page.page();
+                    // We don't want the data-url of the page we just modified
+                    // to be the url that shows up in the browser's location field,
+                    // so set the dataUrl option to the URL for the category
+                    // we just loaded.
+                    data.options.dataUrl = urlObj.href;
+                    //$.mobile.changePage("#"+data.pageId);                  
+                    // Now call changePage() and tell it to switch to
+                    // the page we just modified.
+                    $.mobile.changePage( $page, data.options );
+
+                    event.stopPropagation();
+                    event.preventDefault();
+                    /*
+                if ( u.hash.search(re) !== -1 ) {
+                    // We're being asked to display the items for a specific category.
+                    // Call our internal method that builds the content for the category
+                    // on the fly based on our in-memory category data structure.
+                    showCategory( u, data.options );
+
+                    // Make sure to tell changePage() we've handled this call so it doesn't
+                    // have to do anything.
+                    e.preventDefault();
+                }
+                */
+            }
+        });
+        </script>        
+
+</html>
