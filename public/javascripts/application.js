@@ -1261,12 +1261,16 @@ $(document).ready(function() {
                 position: latLng
             });
             google.maps.event.addListener(marker, 'click', function() {
+                var lat = this.getPosition().lat();
+                var lng = this.getPosition().lng();
+                var lati = parseInt(lat, 10);
+                var lngi = parseInt(lng, 10);
                 $(div).html(ich.infobubble_template({
                     name: 'none',
-                    latitude_integer: this.position.x,
-                    longitude_integer: this.position.y,
-                    latitude_fraction: 5543,
-                    longitude_fraction: 4332
+                    latitude_integer: lati,
+                    longitude_integer: lngi,
+                    latitude_fraction: (lng - lati).toFixed(4),
+                    longitude_fraction: (lat - lngi).toFixed(4)
                 }));
                 myBubble.setContent(div);
                 myBubble.setPosition(this.position);
