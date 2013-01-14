@@ -1093,6 +1093,10 @@ $(document).ready(function() {
             $.error('Method ' + method + ' does not exists.');
         }
     };
+    var distanceWidget;
+    var map;
+    var geocodeTimer;
+    var profileMarkers = [];
     var methods = {};
     //Set defauls for the control
     var defaults = {
@@ -1115,28 +1119,53 @@ $(document).ready(function() {
         console.log(JSON.stringify(options));
         
         var myLatlng = new google.maps.LatLng(options.latitude, options.longitude)
-        var image = 'images/markers/anniversary.png'  
         
         var map = new google.maps.Map(document.getElementById(options.id), options.mapOptions);
 
         var marker = makeMarker({
             position: myLatlng,
             map: map,
+            draggable: true,
             title: 'Galaconcert',
-            icon: image
+            icon: 'images/markers/anniversary.png' 
         });
+        distanceWidget = new DistanceWidget({
+            map: map,
+            distance: 5, // Starting distance in km.
+            maxDistance: 10, // Twitter has a max distance of 2500km.
+            color: '#2f0929',
+            activeColor: '#e97ad8',
+            fillColor: '#e97ad8',
+            fillOpacity: 0.25,
+            sizerIcon: new google.maps.MarkerImage('/images/radius-resize-off.png'),
+            activeSizerIcon: new google.maps.MarkerImage('/images/radius-resize.png'),
+            homeMarker: marker,
+        });
+        
+        google.maps.event.addListener(distanceWidget, 'distance_changed',  function() {
+            console.log("distance change");
+            //updateDistance();
+        });
+
+        google.maps.event.addListener(distanceWidget, 'position_changed', function() {
+            console.log("position change");
+        });
+
         var div = document.createElement('DIV');
-        $(div).html(ich.infobubble_template({name: 'none'}));
+        $(div).html(ich.infobubble_template({
+            name: 'none',
+            latitude_integer: -33,
+            longitude_integer: -22,
+            latitude_fraction: 5543,
+            longitude_fraction: 4332
+        }));
         var myBubble = makeBubble(map);
 
         google.maps.event.addListener(marker, 'click', function() {
             myBubble.setContent(div);
             myBubble.open(map, marker);
         });
-        google.maps.event.addListener(marker, 'click', function() {
-
-        });
-
+        google.maps.event.addDomListener(window, 'load', init);
     };
     //Public:
     methods.moveMarker = function (placeName, latlng){
