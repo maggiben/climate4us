@@ -1098,6 +1098,9 @@ $(document).ready(function() {
     var geocodeTimer;
     var profileMarkers = [];
     var methods = {};
+    var markers = [];
+    var marker = null;
+    var markerClusterer = null;
     //Set defauls for the control
     var defaults = {
         data: [],
@@ -1122,7 +1125,7 @@ $(document).ready(function() {
         
         var map = new google.maps.Map(document.getElementById(options.id), options.mapOptions);
 
-        var marker = makeMarker({
+        marker = makeMarker({
             position: myLatlng,
             map: map,
             draggable: true,
@@ -1148,7 +1151,7 @@ $(document).ready(function() {
         });
 
         google.maps.event.addListener(distanceWidget, 'position_changed', function() {
-            console.log("position change");
+            console.log("position change: " + distanceWidget.get('position'));            
         });
 
         var div = document.createElement('DIV');
@@ -1165,7 +1168,34 @@ $(document).ready(function() {
             myBubble.setContent(div);
             myBubble.open(map, marker);
         });
-        google.maps.event.addDomListener(window, 'load', init);
+
+        /*
+        for(key in photos.coords){
+        
+            console.log(photos.coords[key].lat)
+            var latLng = new google.maps.LatLng(photos.coords[key].lat,
+            photos.coords[key].lon)
+            marker2 = new google.maps.Marker({
+                position: latLng,
+                draggable: true,
+                icon: markerImage
+            });
+            markers.push(marker2);
+        }
+        */
+        for (var i = 0; i < 100; i++) {
+          var dataPhoto = data.photos[i];
+          var latLng = new google.maps.LatLng(dataPhoto.latitude,
+              dataPhoto.longitude);
+          console.log(dataPhoto)
+          var marker = new google.maps.Marker({
+            position: latLng
+          });
+          markers.push(marker);
+        }
+        markerClusterer = new MarkerClusterer(map, markers);
+
+        //google.maps.event.addDomListener(window, 'load', init);
     };
     //Public:
     methods.moveMarker = function (placeName, latlng){
@@ -1197,3 +1227,38 @@ $(document).ready(function() {
         });  
     };
 })(window.jQuery || window.Zepto);
+
+
+var photos = { 
+    coords: [
+        {lat: -34.96452516263702, lon: -58.96397539062502},
+        {lat: -34.96902672547199, lon: -58.96397539062502},
+        {lat: -34.960023352468966, lon: -58.94749589843752},
+        {lat: -34.905982343648894, lon: -58.85411210937502},
+        {lat: -34.8023042875639, lon: -58.65086503906252},
+        {lat: -34.76169906206186, lon: -58.54649492187502},
+        {lat: -34.76169906206186, lon: -58.53001542968752},
+        {lat: -34.76169906206186, lon: -58.52452226562502},
+        {lat: -34.75718613671073, lon: -58.50804277343752},
+        {lat: -34.752672964687044, lon: -58.49705644531252},
+        {lat: -34.748159546005304, lon: -58.49705644531252},
+        {lat: -34.71204331860662, lon: -58.48057695312502},
+        {lat: -34.66235774538773, lon: -58.45860429687502},
+        {lat: -34.65953380626876, lon: -58.459290942382836},
+        {lat: -34.65332080147123, lon: -58.462037524414086},
+        {lat: -34.63015913539299, lon: -58.47165056152346},
+        {lat: -34.619988555748066, lon: -58.47508378906252},
+        {lat: -34.618293337945516, lon: -58.47233720703127},
+        {lat: -34.617163173507606, lon: -58.47096391601565},
+        {lat: -34.60303481968669, lon: -58.45311113281252},
+        {lat: -34.59907844979453, lon: -58.44487138671877},
+        {lat: -34.59851323871041, lon: -58.442811450195336},
+        {lat: -34.59851323871041, lon: -58.44487138671877},
+        {lat: -34.59794802378006, lon: -58.44899125976565},
+        {lat: -34.596252355911965, lon: -58.46135087890627},
+        {lat: -34.596252355911965, lon: -58.4627241699219},
+        {lat: -34.596252355911965, lon: -58.46341081542971},
+        {lat: -34.596252355911965, lon: -58.46890397949221},
+        {lat: -34.596252355911965, lon: -58.46959062500002}
+        ]
+}
