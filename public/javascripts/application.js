@@ -1046,6 +1046,8 @@ $(document).ready(function() {
             }, 0);
         }
     }).val($.datepicker.formatDate('dd/m/yy', new Date()));
+    $("#new_radius").slider({range: "min", min: 1, max: 100, animate: true});
+
     $("li.live .status").text("off");
     $("html").removeClass("live");
     
@@ -1117,15 +1119,22 @@ $(document).ready(function() {
         
         var map = new google.maps.Map(document.getElementById(options.id), options.mapOptions);
 
-        var marker = new google.maps.Marker({
+        var marker = makeMarker({
             position: myLatlng,
             map: map,
             title: 'Galaconcert',
             icon: image
         });
+        var div = document.createElement('DIV');
+        $(div).html(ich.infobubble_template({name: 'none'}));
+        var myBubble = makeBubble(map);
+
         google.maps.event.addListener(marker, 'click', function() {
-            //infoBox.setContent(div);
-            //infoBox.open(map, marker);
+            myBubble.setContent(div);
+            myBubble.open(map, marker);
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+
         });
 
     };
@@ -1134,24 +1143,28 @@ $(document).ready(function() {
         //marker.setPosition(latlng);
         //infowindow.close();
     };
+    function makeMarker(options)
+    {
+        return new google.maps.Marker(options)
+    };
     //Private:
-    function makeBubble(map, index) {
+    function makeBubble(map) {
         return new InfoBubble({
             map: map,
-            content: '<div class="signin"><form action="/signin" method="post"><p class="phoneytext">Hello There</p></form></div>',
+            content: '',
             position: new google.maps.LatLng(-34.6036, -58.3817),
-            shadowStyle: 1,
+            shadowStyle: 0,
             padding: 0,
-            backgroundColor: 'rgb(57,57,57)',
+            backgroundColor: 'rgba(57,57,57,0.0)',
             borderRadius: 4,
             arrowSize: 10,
-            borderWidth: 1,
+            borderWidth: 0,
             borderColor: '#2c2c2c',
             disableAutoPan: true,
             hideCloseButton: true,
-            arrowPosition: 30,
-            backgroundClassName: 'signin',
-            arrowStyle: 2
+            arrowPosition: 50,
+            backgroundClassName: '',
+            arrowStyle: 0
         });  
     };
 })(window.jQuery || window.Zepto);

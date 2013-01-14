@@ -656,70 +656,225 @@ $(document).ready(function() {
 
 })(jQuery, window, document);
 
+///////////////////////////////////////////////////////////////////////////////
+// Google MAPS bindings                                                      //
+///////////////////////////////////////////////////////////////////////////////
 /*
-return [{
-    views:"9", 
-    people:"2", 
-    day:11, 
-    date:"January 11, 2013", 
-    views_size:"40px", 
-    people_size:"10px", 
-    weekend:false
-    }, 
-    {
-    views:"0", 
-    people:"0", 
-    day:10, 
-    date:"January 10, 2013", 
-    views_size:"1px", 
-    people_size:"1px", 
-    weekend:false
-    }, 
-    {
-    views:"0", 
-    people:"0", 
-    day:9, 
-    date:"January 9, 2013", 
-    views_size:"1px", 
-    people_size:"1px", 
-    weekend:false
-    }, 
-    {
-    views:"0", 
-    people:"0", 
-    day:8, 
-    date:"January 8, 2013", 
-    views_size:"1px", 
-    people_size:"1px", 
-    weekend:false
-    }, 
-    {
-    views:"0", 
-    people:"0", 
-    day:7, 
-    date:"January 7, 2013", 
-    views_size:"1px", 
-    people_size:"1px", 
-    weekend:false
-    }, 
-    {
-    views:"0", 
-    people:"0", 
-    day:6, 
-    date:"January 6, 2013", 
-    views_size:"1px", 
-    people_size:"1px", 
-    weekend:true
-    }, 
-    {
-    views:"0", 
-    people:"0", 
-    day:5, 
-    date:"January 5, 2013", 
-    views_size:"1px", 
-    people_size:"1px", 
-    weekend:true
-    }
-]
+$(document).ready(function() {
+    "use strict";
+    
+    $(function initialize() {
+        var distanceWidget;
+        var map;
+        var geocodeTimer;
+        var profileMarkers = [];
 
+        var myLatlng = new google.maps.LatLng(0, 0) //(-34.6036, -58.3817);
+        var image = 'images/markers/anniversary.png'
+        var myOptions = {
+          zoom: 1,
+          center: myLatlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        distanceWidget = new DistanceWidget({
+            map: map,
+            distance: 50, // Starting distance in km.
+            maxDistance: 2500, // Twitter has a max distance of 2500km.
+            color: '#000000',
+            activeColor: '#5599bb',
+            sizerIcon: new google.maps.MarkerImage('resize-off.png'),
+            activeSizerIcon: new google.maps.MarkerImage('resize.png')
+        });
+        
+        // google.maps.event.addListener(distanceWidget, 'distance_changed', updateDistance);
+        // google.maps.event.addListener(distanceWidget, 'position_changed', updatePosition);
+        var contentString = 
+            '<div id="infowindow">' +
+            'Galaconcert<br />' +
+            'Jaarbeurslaan 2-6<br />' +
+            '3690 Genk' +
+            '</div>'
+        ;
+        var infowindow = new google.maps.InfoWindow();
+        
+        
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'Galaconcert',
+            icon: image
+        });
+        var infowindow = new google.maps.InfoWindow(); 
+        
+        var input = document.getElementById('new_location');         
+        var autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ["geocode"]
+        });
+        autocomplete.bindTo('bounds', map); 
+        
+     
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            infowindow.close();
+            var place = autocomplete.getPlace();
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  
+            }
+            moveMarker(place.name, place.geometry.location);
+        });  
+        google.maps.event.addDomListener(window, 'load', init);
+        $(input).focusin(function () {
+            $(document).keypress(function (e) {
+                if (e.which == 13) {
+                     selectFirstResult();   
+                }
+            });
+        });
+        $(input).focusout(function () {
+            if(!$(".pac-container").is(":focus") && !$(".pac-container").is(":visible"))
+                selectFirstResult();
+        });
+        function updateDistance() {
+            var distance = distanceWidget.get('distance');
+            //$('#dist').html(distance.toFixed(2));
+        }
+        function selectFirstResult() {
+            infowindow.close();
+            $(".pac-container").hide();
+            var firstResult = $(".pac-container .pac-item:first").text();
+            console.log("selectFirstResult: " + firstResult)
+            
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({"address":firstResult }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var lat = results[0].geometry.location.lat(),
+                        lng = results[0].geometry.location.lng(),
+                        placeName = results[0].address_components[0].long_name,
+                        latlng = new google.maps.LatLng(lat, lng);
+                    
+                    moveMarker(placeName, latlng);
+                    $(input).val(firstResult);
+                }
+            });   
+        }
+        var div = document.createElement('DIV');
+        $(div).html(ich.infobubble_template({name: $(input).val()}));
+        google.maps.event.addListener(marker, 'click', function() {
+            //infowindow.setContent(contentString);
+            //infowindow.open(map, marker);
+            infoBubble2.setContent(div);
+            infoBubble2.open(map, marker);
+        });
+        
+        function moveMarker(placeName, latlng){
+            marker.setIcon(image);
+            marker.setPosition(latlng);
+            infowindow.close();
+            //infowindow.setContent(contentString);
+            infoBubble2.setContent(div);
+            //infowindow.open(map, marker);
+            //infoBubble2.open(map, marker);
+        }
+            
+        var infoBubble2 = new InfoBubble({
+          map: map,
+          content: '<div class="signin"><form action="/signin" method="post"><p class="phoneytext">Hello There</p></form></div>',
+          position: new google.maps.LatLng(-34.6036, -58.3817),
+          shadowStyle: 1,
+          padding: 0,
+          backgroundColor: 'rgb(57,57,57)',
+          borderRadius: 4,
+          arrowSize: 10,
+          borderWidth: 1,
+          borderColor: '#2c2c2c',
+          disableAutoPan: true,
+          hideCloseButton: true,
+          arrowPosition: 30,
+          backgroundClassName: 'signin',
+          arrowStyle: 2
+        });
+    });
+})
 */
+
+$(document).ready(function() {
+    // body...
+var distanceWidget;
+var map;
+var geocodeTimer;
+var profileMarkers = [];
+
+    function init() {
+        var mapDiv = document.getElementById('map_canvas');
+        var myLatlng = new google.maps.LatLng(-34.6036, -58.3817);
+        map = new google.maps.Map(mapDiv, {
+            center: myLatlng,
+            zoom: 14,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+    var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        draggable: true,
+        title: 'Move me!',
+        icon: 'images/markers/anniversary.png'
+    });
+    
+    distanceWidget = new DistanceWidget({
+        map: map,
+        distance: 5, // Starting distance in km.
+        maxDistance: 10, // Twitter has a max distance of 2500km.
+        color: '#2f0929',
+        activeColor: '#e97ad8',
+        fillColor: '#e97ad8',
+        fillOpacity: 0.25,
+        sizerIcon: new google.maps.MarkerImage('/images/radius-resize-off.png'),
+        activeSizerIcon: new google.maps.MarkerImage('/images/radius-resize.png'),
+        homeMarker: marker,
+    });
+    
+    google.maps.event.addListener(distanceWidget, 'distance_changed',  function() {
+        console.log("distance change");
+        updateDistance();
+    });
+
+    google.maps.event.addListener(distanceWidget, 'position_changed', function() {
+        console.log("position change");
+    });
+
+    map.fitBounds(distanceWidget.get('bounds'));
+
+    $("#new_radius").slider({
+        slide: function( event, ui ) {
+            console.log(ui.value)
+            distanceWidget.set('distance', ui.value);
+            map.fitBounds(distanceWidget.get('bounds'));
+        }
+    });
+  //updateDistance();
+  //updatePosition();
+  //addActions();
+}
+
+function updateDistance() {
+    var distance = distanceWidget.get('distance');
+    $("#new_radius").slider({value: distance})
+}
+
+function addActions() {
+}
+
+
+function clearMarkers() {
+    for (var i = 0, marker; marker = profileMarkers[i]; i++) {
+        marker.setMap(null);
+    }
+}
+
+
+
+google.maps.event.addDomListener(window, 'load', init);
+});
