@@ -147,7 +147,7 @@
                                 window.sammyApp.run();
                                 if(window.sammyApp.last_location[1] == '/')
                                 {
-                                    window.sammyApp.trigger("show_panel.g",{id: selected, path:"overview"})                            
+                                    window.sammyApp.trigger("show_panel.g",{id: selected, path: "overview"})
                                 }
                             }
                         }
@@ -295,6 +295,7 @@
                 */
         },
         meldSidebar: function () {
+            console.log("meldSidebar()")
             var a = $("#sites div.current"),
                 b = $("#data");
             $(window).scrollTop() == 0 ? $("#sites").removeClass("topcut") : $("#sites").addClass("topcut"), $("#sites").height() > b.outerHeight() ? $("#sites").addClass("bottomcut") : $("#sites").removeClass("bottomcut");
@@ -309,7 +310,7 @@
         },
         resize: function() {
             console.log("resize");
-            MyApp.meldSidebar();
+            this.meldSidebar();
         },
         formatNumber: function (a) {
             a += "";
@@ -438,32 +439,32 @@
 $(document).ready(function() {
     "use strict";
     console.log("starting sockets")
+    if (typeof io !== 'object') 
+    {
+        return false;
+    }
+
     var timer = null;
     var socket = io.connect('http://127.0.0.1:8080', {
         closeTimeout: 2000,
-        });
-    socket.on('news', function (data) {
-        console.log(data);
-        socket.emit('my other event', { message: 'data' });
     });
     socket.on('consoleio', function (data) {
         switch(data.message)
         {
             case 'heartbeat':
-                echo("[[b;#777;]heartbeat]")
+                //echo("[[b;#777;]heartbeat]")
                 break;
             case 'exec':
                 switch(data.io)
                 {
                     case 'stdout': 
-                        echo(data.result);
-                        console.log(data);
+                        //echo(data.result);
+                        //console.log(data);
                         break;
                     case 'stderr':
-                        echo("[[b;#f00;]" + data.result +"]");
-                        console.log(data.result);
-                        break;
-                    
+                        //echo("[[b;#f00;]" + data.result +"]");
+                        //console.log(data.result);
+                        break;        
                 }
                 break;
             default:
@@ -486,6 +487,7 @@ $(document).ready(function() {
         console.log("socket.connected");
         $("html").addClass("live");
         $("li.live .status").text("on");
+        /*
         timer = setInterval(function() {
             $(".indicator span").animate({backgroundColor:'##F511F5'})
             socket.emit('consoleio', { message: 'heartbeat' });
@@ -493,6 +495,7 @@ $(document).ready(function() {
                 $(".indicator span").animate({backgroundColor:'#750775'})
             }, 1000);
         }, 2000);
+        */
     });
     socket.on('disconnect', function() {
         console.log("socket.disconnected")
@@ -506,155 +509,6 @@ $(document).ready(function() {
     });
     MyApp.properties.socket = socket || {};
 });
-
-// the semi-colon before function invocation is a safety net against concatenated
-// scripts and/or other plugins which may not be closed properly.
-;(function ($, window, document, undefined) {
-
-    // undefined is used here as the undefined global variable in ECMAScript 3 is
-    // mutable (ie. it can be changed by someone else). undefined isn't really being
-    // passed in so we can ensure the value of it is truly undefined. In ES5, undefined
-    // can no longer be modified.
-
-    // window and document are passed through as local variable rather than global
-    // as this (slightly) quickens the resolution process and can be more efficiently
-    // minified (especially when both are regularly referenced in your plugin).
-
-    // Create the defaults once
-    var pluginName = "amaretto";
-    var defaults = {
-        VERSION: 1.5,
-        data: [],
-        magic: 911,
-        icon: 'images/markers/anniversary.png',
-        loggers: [],
-        properties: {
-            delay: 10,
-            reconnect: true,
-            socket: null,
-            stdinp: null,
-            stdout: null,
-            stderr: null
-        },
-        user: {
-            name: "", 
-            id: "", 
-            last_name: null, 
-            first_name: null, 
-            email: "",
-            subscriptions: [],
-            subscription: null
-        },
-        subscriptions: [],
-    };
-
-    // The actual plugin constructor
-    function Plugin(element, options) {
-        this.element = element;
-        // jQuery has an extend method which merges the contents of two or
-        // more objects, storing the result in the first object. The first object
-        // is generally empty as we don't want to alter the default options for
-        // future instances of the plugin
-        this.options = $.extend({}, defaults, options);
-        this._defaults = defaults;
-        this._name = pluginName;
-        this.init();
-    }
-
-    Plugin.prototype = {
-        init: function(options) {
-            var that = this;
-            this.getUser({callback: gotUser})
-            function gotUser(account)
-            {
-                console.log("account")
-                that.user.subscriptions.forEach(function(_id) {
-                    that.getSubscription({_id: _id, callback: gotSubscription});
-                });
-                function gotSubscription(subscription) {
-                    console.log("subscription")
-                    MyApp.subscriptions[subscription._id] = new Subscription({_id: subscription._id, callback: onInit});
-                    // Because we want one one
-                    // TODO REFACTOR TO SELECTED SUBSCRIPTION
-                    MyApp.subscription = MyApp.subscriptions[subscription._id];
-                }
-                function onInit(subscription)
-                {
-                    
-                    var queue = $.jqmq({
-                         // Next item will be processed only when queue.next() is called in callback.
-                        delay: 100,
-                        // Process queue items one-at-a-time.
-                        batch: 1,
-                        // For each queue item, execute this function, making an AJAX request. Only
-                        // continue processing the queue once the AJAX request's callback executes.
-                        callback: function( _id ) {
-                            var station = subscription.stations[_id];
-                            $("#sites").append(ich.site_template(station.properties));
-                            $("#s" + station.properties._id).html(ich.station_preview_template(station.properties)).hide().fadeIn(100);
-                        },
-                        // When the queue completes naturally, execute this function.
-                        complete: function(){
-                            var selected = MyApp.subscription.getSelected();
-                            window.sammyApp.trigger("show_panel.g",{id: selected, path:"overview"})
-                        }
-                    });
-                    subscription.order.forEach(function(_id) { queue.add(_id) });
-                }
-            }
-        },
-        yourOtherFunction: function () {
-            // some logic
-        },
-        getSubscription: function(options) {
-            console.log("fernet.getSubscription(%s)", options._id);
-            $.ajax({
-                url: "/subscription/getbyid/" + options._id,
-                type: "GET",
-                dataType: "json",
-                success: function (data, textStatus, jqXHR) {
-                    console.log(data);
-                    if($.isFunction(options.callback))
-                    {
-                        options.callback(data);
-                    }
-                },
-                error: function (jqXHR, status, error) {
-                    console.log(jqXHR.responseText);
-                },
-                complete: function () {
-                }
-            });
-        },
-        getUser: function(options) {
-            var that = this;
-            $.ajax({
-                url: "/account/getAccount",
-                type: "GET",
-                dataType: "json",
-                success: function (data, textStatus, jqXHR) {
-                    console.log(that.user)
-                    that.user = $.extend({}, that.options.user, data);
-                    options.callback(that.user);
-                },
-                error: function (jqXHR, status, error) {
-                    console.log(jqXHR.responseText);
-                },
-            });
-        },
-    };
-
-    // A really lightweight plugin wrapper around the constructor,
-    // preventing against multiple instantiations
-    $.fn[pluginName] = function (options) {
-        return this.each(function () {
-            if (!$.data(this, "plugin_" + pluginName)) {
-                $.data(this, "plugin_" + pluginName, new Plugin(this, options));
-            }
-        });
-    };
-
-})(jQuery, window, document);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Google MAPS bindings                                                      //
@@ -802,10 +656,11 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     // body...
-var distanceWidget;
-var map;
-var geocodeTimer;
-var profileMarkers = [];
+    return false;
+    var distanceWidget;
+    var map;
+    var geocodeTimer;
+    var profileMarkers = [];
 
     function init() {
         var mapDiv = document.getElementById('map_canvas');

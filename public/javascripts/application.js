@@ -506,6 +506,8 @@ $(document).ready(function() {
     ///////////////////////////////////////////////////////////////////////////
     var app = $.sammy(function() {
         //this.element_selector = '#main';
+
+        // Create new item
         this.bind("station.setup", function(e, data) {
             console.log("station.setup: " + JSON.stringify(data));
             var site = $("#s" + data.id);
@@ -522,6 +524,7 @@ $(document).ready(function() {
             $("#data").html(ich.site_data_template(data)); 
             $("body").addClass("view-nav");
         });
+        // Change current item
         this.bind("show_station.g", function(e, data) {
             console.log("show_station.g: " + JSON.stringify(data));
             var station = $("#s" + data.id);
@@ -936,15 +939,10 @@ $(document).ready(function() {
         });
         this.get("#/station/:id/:path", function () {
             var that = this;
-            console.log(this.params)
             console.log("sammy route: #/station/%s/%s", this.params.id, this.params.path);
-            // this fails here if reload but stuff is not loaded
-            var station = MyApp.subscription.getStationById(this.params.id);//stations[this.params.id];
-            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
             $("#site_content").children().fadeOut(200).promise().then(function() {
-                         $("#site_content").empty();
+                        $("#site_content").empty();
                         that.trigger("show_panel.g", that.params); 
-                        MyApp.meldSidebar();
             });
         });
         this.get('#/station/:id/code/:tab', function () {
@@ -1193,17 +1191,16 @@ $(document).ready(function() {
         width: 260,
         height: null,
         background: "#eee",
-        mapOptions: {
-            zoom: 8,
-            center: new google.maps.LatLng(0, 0),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
     };
     //Public methods 
     methods.init = function (options) {
         //Preserve the original defaults by passing an empty object as the target
         var options = $.extend({}, defaults, options);
         console.log(JSON.stringify(options));
+        if (typeof google !== 'object' && typeof google.maps !== 'object') 
+        {
+            return false;
+        }
         
         var myLatlng = new google.maps.LatLng(options.latitude, options.longitude)
         
