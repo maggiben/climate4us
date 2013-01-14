@@ -570,7 +570,7 @@ $(document).ready(function() {
                     var e = this;
                     $("#site_content").html(ich.live_data_template(this))
                     var options = {
-                        zoom: 8,
+                        zoom: 12,
                         center: new google.maps.LatLng(-34.6036, -58.3817),
                         mapTypeId: google.maps.MapTypeId.ROADMAP
                     };
@@ -1078,13 +1078,17 @@ $(document).ready(function() {
     });
 });
 
+///////////////////////////////////////////////////////////////////////////////
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
-// Google MAPS bindings                                                      //
+
 ///////////////////////////////////////////////////////////////////////////////
 ;(function($) {
     "use strict";
-    window.map = function (method) {
+    window.mapxxx = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
@@ -1117,6 +1121,86 @@ $(document).ready(function() {
     };
     //Public methods 
     methods.init = function (options) {
+        var options = $.extend({}, defaults, options);
+        var myLatlng = new google.maps.LatLng(options.latitude, options.longitude)
+        var map = new google.maps.Map(document.getElementById(options.id), options.mapOptions);
+
+        var markers = [];
+        for (var i = 0; i < 29; i++) {
+            var dataPhoto = photos.coords[i];
+            var latLng = new google.maps.LatLng(dataPhoto.lat,
+                dataPhoto.lon);
+            var marker = new google.maps.Marker({
+                position: latLng
+            });
+            markers.push(marker);
+        }
+        var markerCluster = new MarkerClusterer(map, markers);
+    }
+
+
+})(window.jQuery || window.Zepto);
+
+///////////////////////////////////////////////////////////////////////////////
+// Google MAPS bindings                                                      //
+///////////////////////////////////////////////////////////////////////////////
+;(function($) {
+    "use strict";
+    window.map = function (method) {
+        if (methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method ' + method + ' does not exists.');
+        }
+    };
+    var distanceWidget;
+    var map;
+    var geocodeTimer;
+    var profileMarkers = [];
+    var methods = {};
+    var markers = [];
+    var marker = null;
+    var markerClusterer = null;
+    var style = [{
+        url: '/images/markers/m1.png',
+        height: null,
+        width: null,
+        anchor: [0, 0],
+        textColor: '#ff00ff',
+        textSize: 10
+      }, {
+        url: '/images/markers/m2.png',
+        height: 45,
+        width: 45,
+        anchor: [24, 0],
+        textColor: '#ff0000',
+        textSize: 11
+      }, {
+        url: '/images/markers/m3.png',
+        height: 55,
+        width: 55,
+        anchor: [32, 0],
+        textColor: '#ffffff',
+        textSize: 12
+      }];
+    //Set defauls for the control
+    var defaults = {
+        data: [],
+        icon: 'images/markers/anniversary.png',
+        title: 'Feria',
+        width: 260,
+        height: null,
+        background: "#eee",
+        mapOptions: {
+            zoom: 8,
+            center: new google.maps.LatLng(0, 0),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+    };
+    //Public methods 
+    methods.init = function (options) {
         //Preserve the original defaults by passing an empty object as the target
         var options = $.extend({}, defaults, options);
         console.log(JSON.stringify(options));
@@ -1124,22 +1208,22 @@ $(document).ready(function() {
         var myLatlng = new google.maps.LatLng(options.latitude, options.longitude)
         
         var map = new google.maps.Map(document.getElementById(options.id), options.mapOptions);
-
+        setMapStyle(map);
         marker = makeMarker({
             position: myLatlng,
             map: map,
             draggable: true,
             title: 'Galaconcert',
-            icon: 'images/markers/anniversary.png' 
+            icon: '/images/markers/anniversary.png' 
         });
         distanceWidget = new DistanceWidget({
             map: map,
             distance: 5, // Starting distance in km.
             maxDistance: 10, // Twitter has a max distance of 2500km.
-            color: '#2f0929',
+            color: '#A727A7',
             activeColor: '#e97ad8',
             fillColor: '#e97ad8',
-            fillOpacity: 0.25,
+            fillOpacity: 0.45,
             sizerIcon: new google.maps.MarkerImage('/images/radius-resize-off.png'),
             activeSizerIcon: new google.maps.MarkerImage('/images/radius-resize.png'),
             homeMarker: marker,
@@ -1162,40 +1246,40 @@ $(document).ready(function() {
             latitude_fraction: 5543,
             longitude_fraction: 4332
         }));
-        var myBubble = makeBubble(map);
+        var myBubble = makeBubble(map, myLatlng);
 
         google.maps.event.addListener(marker, 'click', function() {
             myBubble.setContent(div);
             myBubble.open(map, marker);
         });
 
-        /*
-        for(key in photos.coords){
-        
-            console.log(photos.coords[key].lat)
-            var latLng = new google.maps.LatLng(photos.coords[key].lat,
-            photos.coords[key].lon)
-            marker2 = new google.maps.Marker({
-                position: latLng,
-                draggable: true,
-                icon: markerImage
+        for (var i = 0; i < 29; i++) {
+            var dataPhoto = photos.coords[i];
+            var latLng = new google.maps.LatLng(dataPhoto.lat,
+                dataPhoto.lon);
+            var marker = new google.maps.Marker({
+                position: latLng
             });
-            markers.push(marker2);
+            google.maps.event.addListener(marker, 'click', function() {
+                $(div).html(ich.infobubble_template({
+                    name: 'none',
+                    latitude_integer: this.position.x,
+                    longitude_integer: this.position.y,
+                    latitude_fraction: 5543,
+                    longitude_fraction: 4332
+                }));
+                myBubble.setContent(div);
+                myBubble.setPosition(this.position);
+                myBubble.open(map, this);
+            });
+            markers.push(marker);
         }
-        */
-        for (var i = 0; i < 100; i++) {
-          var dataPhoto = data.photos[i];
-          var latLng = new google.maps.LatLng(dataPhoto.latitude,
-              dataPhoto.longitude);
-          console.log(dataPhoto)
-          var marker = new google.maps.Marker({
-            position: latLng
-          });
-          markers.push(marker);
-        }
-        markerClusterer = new MarkerClusterer(map, markers);
+        var markerCluster = new MarkerClusterer(map, markers, {
+            maxZoom: null,
+            gridSize: null,
+            styles: null
+        });
 
-        //google.maps.event.addDomListener(window, 'load', init);
     };
     //Public:
     methods.moveMarker = function (placeName, latlng){
@@ -1207,11 +1291,11 @@ $(document).ready(function() {
         return new google.maps.Marker(options)
     };
     //Private:
-    function makeBubble(map) {
+    function makeBubble(map, position) {
         return new InfoBubble({
             map: map,
             content: '',
-            position: new google.maps.LatLng(-34.6036, -58.3817),
+            position: position,
             shadowStyle: 0,
             padding: 0,
             backgroundColor: 'rgba(57,57,57,0.0)',
@@ -1225,6 +1309,30 @@ $(document).ready(function() {
             backgroundClassName: '',
             arrowStyle: 0
         });  
+    };
+    function setMapStyle(map) {
+        var lightMapStyle = [{
+                featureType: "all",
+                elementType: "all",
+                stylers: [
+                    {hue: "#95386f"}, 
+                    {saturation: 0}, 
+                    {lightness: 0}, ]}, 
+                    {featureType: "road",elementType: "all",stylers: [{visibility: "on"}]}, 
+                    {featureType: "poi",elementType: "all",stylers: [{visibility: "off"}]}, 
+                    {featureType: "landscape",elementType: "all"}, 
+                    {featureType: "transit",elementType: "all",stylers: [{visibility: "off"}]}, 
+                    {featureType: "administrative.country",elementType: "all",stylers: [{visibility: "on"}]}, 
+                    {featureType: "administrative.province",elementType: "all",stylers: [{visibility: "on"}]}, 
+                    {featureType: "water",elementType: "all",stylers: [{visibility: "simplified"}, ]}];
+        var lightMapRoadsStyle = [{featureType: "all",elementType: "all",stylers: [{hue: "#95386f"}]}, {featureType: "road",elementType: "labels",stylers: [{visibility: "off"}, {saturation: -50}, {lightness: 0}, ]}, {featureType: "road",elementType: "geometry",stylers: [{visibility: "simplified"}, {saturation: -50}]}, {featureType: "administrative",elementType: "geometry",stylers: [{visibility: "off"}]}, {featureType: "transit",elementType: "all",stylers: [{visibility: "off"}]}, {featureType: "poi",elementType: "all",stylers: [{visibility: "off"}]}];
+        var lightMapOptions = {name: 'Light Map'};
+        var lightMapType = new google.maps.StyledMapType(lightMapStyle, lightMapOptions);
+        map.mapTypes.set('lightmap', lightMapType);
+        var lightMapRoadsOptions = {name: 'Light Map Roads'};
+        var lightMapRoadsType = new google.maps.StyledMapType(lightMapRoadsStyle, lightMapRoadsOptions);
+        map.mapTypes.set('lightmaproads', lightMapRoadsType);
+        map.setMapTypeId('lightmap');
     };
 })(window.jQuery || window.Zepto);
 
