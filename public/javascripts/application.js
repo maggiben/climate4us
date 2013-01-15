@@ -506,6 +506,8 @@ $(document).ready(function() {
     ///////////////////////////////////////////////////////////////////////////
     var app = $.sammy(function() {
         //this.element_selector = '#main';
+
+        // Create new item
         this.bind("station.setup", function(e, data) {
             console.log("station.setup: " + JSON.stringify(data));
             var site = $("#s" + data.id);
@@ -522,6 +524,7 @@ $(document).ready(function() {
             $("#data").html(ich.site_data_template(data)); 
             $("body").addClass("view-nav");
         });
+        // Change current item
         this.bind("show_station.g", function(e, data) {
             console.log("show_station.g: " + JSON.stringify(data));
             var station = $("#s" + data.id);
@@ -936,15 +939,10 @@ $(document).ready(function() {
         });
         this.get("#/station/:id/:path", function () {
             var that = this;
-            console.log(this.params)
             console.log("sammy route: #/station/%s/%s", this.params.id, this.params.path);
-            // this fails here if reload but stuff is not loaded
-            var station = MyApp.subscription.getStationById(this.params.id);//stations[this.params.id];
-            console.log("MyApp.subscription.stations[%s].name = %s", this.params.id, station.name);
             $("#site_content").children().fadeOut(200).promise().then(function() {
-                         $("#site_content").empty();
+                        $("#site_content").empty();
                         that.trigger("show_panel.g", that.params); 
-                        MyApp.meldSidebar();
             });
         });
         this.get('#/station/:id/code/:tab', function () {
@@ -1162,6 +1160,8 @@ $(document).ready(function() {
     var methods = {};
     var markers = [];
     var marker = null;
+    var homeMarker = null;
+    var placesService = null;
     var markerClusterer = null;
     var style = [{
         url: '/images/markers/m1.png',
@@ -1193,29 +1193,35 @@ $(document).ready(function() {
         width: 260,
         height: null,
         background: "#eee",
-        mapOptions: {
+            mapOptions: {
             zoom: 8,
             center: new google.maps.LatLng(0, 0),
             mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
+        }    
     };
     //Public methods 
     methods.init = function (options) {
         //Preserve the original defaults by passing an empty object as the target
         var options = $.extend({}, defaults, options);
         console.log(JSON.stringify(options));
-        
+        if (typeof google !== 'object' && typeof google.maps !== 'object') 
+        {
+            return false;
+        }
+
         var myLatlng = new google.maps.LatLng(options.latitude, options.longitude)
         
         var map = new google.maps.Map(document.getElementById(options.id), options.mapOptions);
         setMapStyle(map);
-        marker = makeMarker({
+        homeMarker = makeMarker({
             position: myLatlng,
             map: map,
             draggable: true,
-            title: 'Galaconcert',
-            icon: '/images/markers/anniversary.png' 
+            title: 'Your place',
+            icon: '/images/markers/home-2.png',
+            animation: 'bounce'
         });
+        //homeMarker.setAnimation(google.maps.Animation.BOUNCE)
         distanceWidget = new DistanceWidget({
             map: map,
             distance: 5, // Starting distance in km.
@@ -1226,7 +1232,7 @@ $(document).ready(function() {
             fillOpacity: 0.45,
             sizerIcon: new google.maps.MarkerImage('/images/radius-resize-off.png'),
             activeSizerIcon: new google.maps.MarkerImage('/images/radius-resize.png'),
-            homeMarker: marker,
+            homeMarker: homeMarker,
         });
         
         google.maps.event.addListener(distanceWidget, 'distance_changed',  function() {
@@ -1248,17 +1254,81 @@ $(document).ready(function() {
         }));
         var myBubble = makeBubble(map, myLatlng);
 
-        google.maps.event.addListener(marker, 'click', function() {
+        google.maps.event.addListener(homeMarker, 'click', function() {
             myBubble.setContent(div);
-            myBubble.open(map, marker);
+            myBubble.open(map, homeMarker);
         });
 
+        ////////////////////////////////////////////////////////////////////////
+        // Search for places
+        ////////////////////////////////////////////////////////////////////////
+        var request = {
+            location: myLatlng,
+            radius: '50000',          // TODO combine with framework
+            query: 'burgerking'
+        };
+
+        placesService = new google.maps.places.PlacesService(map);
+        placesService.textSearch(request, callback);
+        function callback(results, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    var place = results[i];
+                    var latLng = new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng());
+                    console.log("name: " + place.name + " lat: [" + place.geometry.location.lat() + "] lng: [" + place.geometry.location.lng() + "]");
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: latLng,
+                        title: place.name,
+                        icon: '/images/markers/theater.png'
+                    });
+                    console.log(marker)
+                    markers.push(marker);
+                }
+            }
+            var markerCluster = new MarkerClusterer(map, markers, {
+                maxZoom: null,
+                gridSize: null,
+                styles: null
+            });
+        }
+        ////////////////////////////////////////////////////////////////////////
+        /*
         for (var i = 0; i < 29; i++) {
             var dataPhoto = photos.coords[i];
-            var latLng = new google.maps.LatLng(dataPhoto.lat,
-                dataPhoto.lon);
+            var latLng = new google.maps.LatLng(dataPhoto.lat, dataPhoto.lon);
             var marker = new google.maps.Marker({
                 position: latLng
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+                var lat = this.getPosition().lat();
+                var lng = this.getPosition().lng();
+                var lati = parseInt(lat, 10);
+                var lngi = parseInt(lng, 10);
+                $(div).html(ich.infobubble_template({
+                    name: 'none',
+                    latitude_integer: lati,
+                    longitude_integer: lngi,
+                    latitude_fraction: (lng - lati).toFixed(4),
+                    longitude_fraction: (lat - lngi).toFixed(4)
+                }));
+                myBubble.setContent(div);
+                myBubble.setPosition(this.position);
+                myBubble.open(map, this);
+                
+            });
+            markers.push(marker);
+        }
+        */
+        /*
+        for (var i = 0; i < theaters.length; i++) {
+            var dataPhoto = theaters[i].coords;
+            var latLng = new google.maps.LatLng(dataPhoto.lat, dataPhoto.lng);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: latLng,
+                title: theaters[i].name,
+                icon: '/images/markers/theater.png'
             });
             google.maps.event.addListener(marker, 'click', function() {
                 var lat = this.getPosition().lat();
@@ -1278,11 +1348,14 @@ $(document).ready(function() {
             });
             markers.push(marker);
         }
+        */
+        /*
         var markerCluster = new MarkerClusterer(map, markers, {
             maxZoom: null,
             gridSize: null,
             styles: null
         });
+        */
 
     };
     //Public:
@@ -1290,6 +1363,17 @@ $(document).ready(function() {
         //marker.setPosition(latlng);
         //infowindow.close();
     };
+    methods.getPlaces = function(request, callback)
+    {
+        //var options = $.extend({}, defaults, options);
+        var req = {
+            location: pyrmont,
+            radius: '500',
+            query: 'teatros'
+        };
+        placesService = new google.maps.places.PlacesService(map);
+        placesService.textSearch(request, callback);
+    }
     function makeMarker(options)
     {
         return new google.maps.Marker(options)
@@ -1340,6 +1424,26 @@ $(document).ready(function() {
     };
 })(window.jQuery || window.Zepto);
 
+var theaters = [{name: "El Nacional", coords: {lat:-34.603726,lng:-58.380363999999986}},
+{name: "Cine teatro Opera", coords: {lat:-34.603588,lng:-58.378963}},
+{name: "Bar Metro", coords: {lat:-34.60227,lng:-58.382506000000035}},
+{name: "Gran Rex", coords: {lat:-34.603334,lng:-58.37890700000003}},
+{name: "Teatro Maipo", coords: {lat:-34.60301,lng:-58.378062}},
+{name: "Teatro Colon", coords: {lat:-34.601126,lng:-58.382780000000025}},
+{name: "Teatro cervantes", coords: {lat:-34.598982,lng:-58.38300800000002}},
+{name: "Nd Ateneo", coords: {lat:-34.597792,lng:-58.38009299999999}},
+{name: "Teatro del Globo", coords: {lat:-34.59679,lng:-58.383504000000016}},
+{name: "Cartelera Entradas Con Descuento", coords: {lat:-34.602368,lng:-58.378611999999976}},
+{name: "Teatro Avenida", coords: {lat:-34.609342,lng:-58.383758}},
+{name: "Teatro Coliseo", coords: {lat:-34.596777,lng:-58.38304800000003}},
+{name: "Lola Membrives", coords: {lat:-34.604005,lng:-58.38480900000002}},
+{name: "Liberarte, Bodega Cultural", coords: {lat:-34.604076,lng:-58.38871499999999}},
+{name: "Teatro Astral", coords: {lat:-34.604396,lng:-58.38993800000003}},
+{name: "Teatro Bululu", coords: {lat:-34.608689,lng:-58.38552200000004}},
+{name: "Galería Güemes", coords: {lat:-34.606131,lng:-58.37495000000001}},
+{name: "H P U Producciones Sa", coords: {lat:-34.603279,lng:-58.383722000000034}},
+{name: "Belisario Club de Cultura", coords: {lat:-34.604382,lng:-58.38976600000001}},
+{name: "Abm - Instituto de Educacion Superior (A793)", coords: {lat:-34.59679,lng:-58.383486000000005}}]
 
 var photos = { 
     coords: [
