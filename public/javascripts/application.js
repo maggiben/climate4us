@@ -610,6 +610,7 @@ $(document).ready(function() {
                             }
                         });
                     });
+                    $("#eventTags").tagit();
                     break;
                 case "sensors":
                     $("#site_content").html(ich.station_sensors_template(MyApp.subscription.getStationById(data.id))).hide().fadeIn(100);
@@ -1245,8 +1246,9 @@ $(document).ready(function() {
         });
 
         var div = document.createElement('DIV');
+        $(div).attr("id", "myBubble");
         $(div).html(ich.infobubble_template({
-            name: 'none',
+            precision: distanceWidget.get('distance'),
             latitude_integer: -33,
             longitude_integer: -22,
             latitude_fraction: 5543,
@@ -1255,17 +1257,28 @@ $(document).ready(function() {
         var myBubble = makeBubble(map, myLatlng);
 
         google.maps.event.addListener(homeMarker, 'click', function() {
+            map.setCenter(homeMarker.getPosition());
             myBubble.setContent(div);
+            homeMarker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function () { homeMarker.setAnimation(null); }, 2000);
             myBubble.open(map, homeMarker);
         });
-
+        google.maps.event.addListener(myBubble, 'domready', function() {
+            // Get the actual height of the InfoWindow
+            //e = $('#myBubble').parent().parent().parent();
+            //h = parseFloat(e.height());
+            //w = parseFloat(e.width());
+            // 233px;height:245px
+            // Move the map a little to the left and down
+            map.panBy(0, -245/2)
+        });
         ////////////////////////////////////////////////////////////////////////
-        // Search for places
+        // Search for places                                                  //
         ////////////////////////////////////////////////////////////////////////
         var request = {
             location: myLatlng,
             radius: '50000',          // TODO combine with framework
-            query: 'burgerking'
+            query: 'teatro'
         };
 
         placesService = new google.maps.places.PlacesService(map);
@@ -1292,34 +1305,6 @@ $(document).ready(function() {
                 styles: null
             });
         }
-        ////////////////////////////////////////////////////////////////////////
-        /*
-        for (var i = 0; i < 29; i++) {
-            var dataPhoto = photos.coords[i];
-            var latLng = new google.maps.LatLng(dataPhoto.lat, dataPhoto.lon);
-            var marker = new google.maps.Marker({
-                position: latLng
-            });
-            google.maps.event.addListener(marker, 'click', function() {
-                var lat = this.getPosition().lat();
-                var lng = this.getPosition().lng();
-                var lati = parseInt(lat, 10);
-                var lngi = parseInt(lng, 10);
-                $(div).html(ich.infobubble_template({
-                    name: 'none',
-                    latitude_integer: lati,
-                    longitude_integer: lngi,
-                    latitude_fraction: (lng - lati).toFixed(4),
-                    longitude_fraction: (lat - lngi).toFixed(4)
-                }));
-                myBubble.setContent(div);
-                myBubble.setPosition(this.position);
-                myBubble.open(map, this);
-                
-            });
-            markers.push(marker);
-        }
-        */
         /*
         for (var i = 0; i < theaters.length; i++) {
             var dataPhoto = theaters[i].coords;
@@ -1412,7 +1397,10 @@ $(document).ready(function() {
                     {featureType: "transit",elementType: "all",stylers: [{visibility: "off"}]}, 
                     {featureType: "administrative.country",elementType: "all",stylers: [{visibility: "on"}]}, 
                     {featureType: "administrative.province",elementType: "all",stylers: [{visibility: "on"}]}, 
-                    {featureType: "water",elementType: "all",stylers: [{visibility: "simplified"}, ]}];
+                    {featureType: "water",elementType: "all",stylers: [{visibility: "simplified"}
+                ]
+            }];
+
         var lightMapRoadsStyle = [{featureType: "all",elementType: "all",stylers: [{hue: "#95386f"}]}, {featureType: "road",elementType: "labels",stylers: [{visibility: "off"}, {saturation: -50}, {lightness: 0}, ]}, {featureType: "road",elementType: "geometry",stylers: [{visibility: "simplified"}, {saturation: -50}]}, {featureType: "administrative",elementType: "geometry",stylers: [{visibility: "off"}]}, {featureType: "transit",elementType: "all",stylers: [{visibility: "off"}]}, {featureType: "poi",elementType: "all",stylers: [{visibility: "off"}]}];
         var lightMapOptions = {name: 'Light Map'};
         var lightMapType = new google.maps.StyledMapType(lightMapStyle, lightMapOptions);
@@ -1423,58 +1411,3 @@ $(document).ready(function() {
         map.setMapTypeId('lightmap');
     };
 })(window.jQuery || window.Zepto);
-
-var theaters = [{name: "El Nacional", coords: {lat:-34.603726,lng:-58.380363999999986}},
-{name: "Cine teatro Opera", coords: {lat:-34.603588,lng:-58.378963}},
-{name: "Bar Metro", coords: {lat:-34.60227,lng:-58.382506000000035}},
-{name: "Gran Rex", coords: {lat:-34.603334,lng:-58.37890700000003}},
-{name: "Teatro Maipo", coords: {lat:-34.60301,lng:-58.378062}},
-{name: "Teatro Colon", coords: {lat:-34.601126,lng:-58.382780000000025}},
-{name: "Teatro cervantes", coords: {lat:-34.598982,lng:-58.38300800000002}},
-{name: "Nd Ateneo", coords: {lat:-34.597792,lng:-58.38009299999999}},
-{name: "Teatro del Globo", coords: {lat:-34.59679,lng:-58.383504000000016}},
-{name: "Cartelera Entradas Con Descuento", coords: {lat:-34.602368,lng:-58.378611999999976}},
-{name: "Teatro Avenida", coords: {lat:-34.609342,lng:-58.383758}},
-{name: "Teatro Coliseo", coords: {lat:-34.596777,lng:-58.38304800000003}},
-{name: "Lola Membrives", coords: {lat:-34.604005,lng:-58.38480900000002}},
-{name: "Liberarte, Bodega Cultural", coords: {lat:-34.604076,lng:-58.38871499999999}},
-{name: "Teatro Astral", coords: {lat:-34.604396,lng:-58.38993800000003}},
-{name: "Teatro Bululu", coords: {lat:-34.608689,lng:-58.38552200000004}},
-{name: "Galería Güemes", coords: {lat:-34.606131,lng:-58.37495000000001}},
-{name: "H P U Producciones Sa", coords: {lat:-34.603279,lng:-58.383722000000034}},
-{name: "Belisario Club de Cultura", coords: {lat:-34.604382,lng:-58.38976600000001}},
-{name: "Abm - Instituto de Educacion Superior (A793)", coords: {lat:-34.59679,lng:-58.383486000000005}}]
-
-var photos = { 
-    coords: [
-        {lat: -34.96452516263702, lon: -58.96397539062502},
-        {lat: -34.96902672547199, lon: -58.96397539062502},
-        {lat: -34.960023352468966, lon: -58.94749589843752},
-        {lat: -34.905982343648894, lon: -58.85411210937502},
-        {lat: -34.8023042875639, lon: -58.65086503906252},
-        {lat: -34.76169906206186, lon: -58.54649492187502},
-        {lat: -34.76169906206186, lon: -58.53001542968752},
-        {lat: -34.76169906206186, lon: -58.52452226562502},
-        {lat: -34.75718613671073, lon: -58.50804277343752},
-        {lat: -34.752672964687044, lon: -58.49705644531252},
-        {lat: -34.748159546005304, lon: -58.49705644531252},
-        {lat: -34.71204331860662, lon: -58.48057695312502},
-        {lat: -34.66235774538773, lon: -58.45860429687502},
-        {lat: -34.65953380626876, lon: -58.459290942382836},
-        {lat: -34.65332080147123, lon: -58.462037524414086},
-        {lat: -34.63015913539299, lon: -58.47165056152346},
-        {lat: -34.619988555748066, lon: -58.47508378906252},
-        {lat: -34.618293337945516, lon: -58.47233720703127},
-        {lat: -34.617163173507606, lon: -58.47096391601565},
-        {lat: -34.60303481968669, lon: -58.45311113281252},
-        {lat: -34.59907844979453, lon: -58.44487138671877},
-        {lat: -34.59851323871041, lon: -58.442811450195336},
-        {lat: -34.59851323871041, lon: -58.44487138671877},
-        {lat: -34.59794802378006, lon: -58.44899125976565},
-        {lat: -34.596252355911965, lon: -58.46135087890627},
-        {lat: -34.596252355911965, lon: -58.4627241699219},
-        {lat: -34.596252355911965, lon: -58.46341081542971},
-        {lat: -34.596252355911965, lon: -58.46890397949221},
-        {lat: -34.596252355911965, lon: -58.46959062500002}
-        ]
-}

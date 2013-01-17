@@ -182,6 +182,7 @@ app.post('/signin', function(req, res, next) {
             }
         });
         console.log("auth okay");
+        // redirect but pass route to client application
         return res.redirect('/');
     })(req, res, next);
 });
