@@ -18,6 +18,7 @@
         <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Comfortaa:400,300">
         <!-- INCLUDE STYLES -->
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/violet/jquery-ui-1.9.2.custom.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="stylesheets/jquery.tagit.css" />
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.css" />
         <!-- CODEMIRROR THEMES -->
         <link type="text/css" rel="stylesheet" media="all" href="stylesheets/codemirror.themes/monokai.css" />
@@ -33,6 +34,7 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.scrollTo.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.mousewheel.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.flot.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/tag-it.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.ui.map.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/ICanHaz.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/sammy.js"></script>
@@ -43,6 +45,7 @@
         <!-- Terminal PLUGIN -->
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.terminal-0.4.22.js"></script>
         <!-- Raphael PLUGIN -->     
+        <script type="text/javascript" charset="utf-8" src="javascripts/d3.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/raphael.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
         <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places,visualization&v=3.exp"></script>
@@ -198,18 +201,15 @@
         </div>
         <!-- TEMPLATES -->
         <script type="text/html" id="infobubble_template">
-            <div style="width:233px;height:245px;overflow:hidden;background: url(/images/tooltip_bkg.png) 0px 0px no-repeat;background-position: 0px 0px;padding-left: 0px">
-                <h2>{{name}}</h2>
-                <a style="position: absolute; right: 1px; top: 1px; width: 21px; height: 21px; cursor: pointer; background-image: url(http://rlat.kew.org/images/editor/close_infowindow.png); background-position: 0px 0px; background-repeat: no-repeat no-repeat; "></a>
-    <p class="latitude" style="position: absolute; left: 26px; top: 14px; margin: 0px; line-height: normal; font-style: normal; font-variant: normal; font-weight: normal; font-size: 29px; font-family: Georgia; color: rgb(102, 102, 102); ">{{latitude_integer}}<sup style="color: rgb(102, 102, 102); font-style: normal; font-variant: normal; font-weight: normal; font-size: 15px; line-height: normal; font-family: Georgia; ">.{{latitude_fraction}}</sup>
-    </p>
-    <p class="longitude" style="position: absolute; left: 131px; top: 14px; margin: 0px; line-height: normal; font-style: normal; font-variant: normal; font-weight: normal; font-size: 29px; font-family: Georgia; color: rgb(102, 102, 102); ">{{longitude_integer}}<sup style="color: rgb(102, 102, 102); font-style: normal; font-variant: normal; font-weight: normal; font-size: 15px; line-height: normal; font-family: Georgia; ">.{{longitude_fraction}}</sup>
-    </p>
-    <p class="description" style="position: absolute; left: 24px; top: 97px; margin: 0px; font-style: normal; font-variant: normal; font-weight: normal; font-size: 11px; line-height: normal; font-family: Arial; color: rgb(102, 102, 102); "></p>
-    <p class="collector" style="position: absolute; left: 24px; top: 129px; margin: 0px; font-style: normal; font-variant: normal; font-weight: normal; font-size: 11px; line-height: normal; font-family: Arial; color: rgb(102, 102, 102); "></p>
-    <p class="precision" style="position: absolute; right: 22px; top: 157px; margin: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-size: 10px; line-height: normal; font-family: Arial; color: rgb(244, 169, 57); ">15KM</p>
+            <div class="infoBubble">
+                <a class="close"></a>
+                <p class="latitude">{{latitude_integer}}<sup>.{{latitude_fraction}}</sup></p>
+                <p class="longitude">{{longitude_integer}}<sup>.{{longitude_fraction}}</sup></p>
+                <p class="description">Yore here right now</p>
+                <p class="collector">Current time and position</p>
+                <p class="precision">{{precision}}</p>
     <a style="position: absolute; left: 24px; bottom: 29px; width: 58px; height: 19px; cursor: pointer; background-image: url(http://rlat.kew.org/images/editor/info_delete.png); background-position: 0px 0px; background-repeat: no-repeat no-repeat; "></a>
-    <a class="hide_button_" style="position: absolute; left: 87px; bottom: 29px; width: 58px; height: 19px; cursor: pointer; background-image: url(http://rlat.kew.org/images/editor/info_hide.png); background-position: 0px 0px; background-repeat: no-repeat no-repeat; "></a>
+                <input type="button" value="hide" name="hide" class="hide">
     <a style="position: absolute; right: 0px; bottom: 29px; width: 58px; height: 19px; cursor: pointer; background-image: url(http://rlat.kew.org/images/editor/edit_button.png); background-position: 0px 0px; background-repeat: no-repeat no-repeat; "></a>
             </div>
         </script>
@@ -291,9 +291,10 @@
                 </ul>
             </div>
             <div id="map_wrapper">
-               
+            
             </div>
             <div class="toolbar bottom">
+            
             </div>
         </script> <!-- live_data_template -->
         <script id="clients_template" type="text/html">
@@ -519,6 +520,10 @@
                             <input type="text" id="station_name_{{id}}" name="name" value="{{ name }}" />
                         </p>
                         <p class="text">
+                            <label for="eventTags">Tags</label>
+                            <input type="text" class="eventTags" id="eventTags" value="" placeholder="search tags">
+                        </p>
+                        <p class="text">
                         <label for="equalizer">Graphic EQ</label>
                             <div id="equalizer">
                               <span id="1" >88</span>
@@ -529,6 +534,7 @@
                               <span id="6" >45</span>
                               <span id="7" >70</span>
                             </div>
+                        </p>
                         <p class="submit" style="clear: both"><button><span>Save these Settings</span></button></p>
                     </div>
                 </div>

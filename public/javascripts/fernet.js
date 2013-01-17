@@ -656,7 +656,6 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     // body...
-    return false;
     var distanceWidget;
     var map;
     var geocodeTimer;

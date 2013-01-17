@@ -3448,3 +3448,122 @@ dialog .cdn input:focus {
   background: url("/images/beta_version.png") no-repeat 0 0;
   z-index: 1000;
 }
+/* MAPS INFOBUBBLE */
+.infoBubble {
+  width: 233px;
+  height: 245px;
+  overflow: hidden;
+  background: url("/images/tooltip_bkg.png") 0px 0px no-repeat;
+  background-position: 0px 0px;
+  padding-left: 0px;
+}
+.infoBubble .latitude {
+  position: absolute;
+  left: 26px;
+  top: 14px;
+  margin: 0px;
+  line-height: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 29px;
+  color: #666;
+}
+.infoBubble .latitude sup {
+  color: #666;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: normal;
+}
+.infoBubble .longitude {
+  position: absolute;
+  left: 131px;
+  top: 14px;
+  margin: 0px;
+  line-height: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 29px;
+  color: #666;
+}
+.infoBubble .longitude sup {
+  color: #666;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: normal;
+}
+.infoBubble .close {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  width: 21px;
+  height: 21px;
+  cursor: pointer;
+  -webkit-background-image: url("http://rlat.kew.org/images/editor/close_infowindow.png");
+  -moz-background-image: url("http://rlat.kew.org/images/editor/close_infowindow.png");
+  -ms-background-image: url("http://rlat.kew.org/images/editor/close_infowindow.png");
+  -o-background-image: url("http://rlat.kew.org/images/editor/close_infowindow.png");
+  background-image: url("http://rlat.kew.org/images/editor/close_infowindow.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat no-repeat;
+}
+.infoBubble .hide {
+  position: absolute;
+  left: 87px;
+  bottom: 29px;
+  width: 58px;
+  height: 19px;
+  line-height: 18px;
+  cursor: pointer;
+}
+.infoBubble .description {
+  position: absolute;
+  left: 24px;
+  top: 97px;
+  margin: 0px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: normal;
+  color: #666;
+}
+.infoBubble p {
+  position: absolute;
+  margin: 0px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: normal;
+}
+.infoBubble .collector {
+  position: absolute;
+  left: 24px;
+  top: 129px;
+  margin: 0px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: normal;
+  color: #666;
+}
+.infoBubble .precision {
+  position: absolute;
+  right: 22px;
+  top: 157px;
+  margin: 0px;
+  font-weight: bold;
+  font-style: normal;
+  font-variant: normal;
+  font-size: 10px;
+  line-height: normal;
+  font-family: Arial;
+  color: #f4a939;
+}
