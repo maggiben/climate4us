@@ -31,6 +31,7 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.observable.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.ba-jqmq.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery-ui.js"></script>
+        <script type="text/javascript" charset="utf-8" src="javascripts/jquery.easing.1.3.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.scrollTo.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.mousewheel.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.flot.js"></script>
@@ -82,6 +83,7 @@
 				<li><a href="#/sign_out">Sign Out</a></li>
 				<li class="live">Live: <span class="status">off</span> <span class="indicator"><span></span></span></li>
 			</ul>
+            <a href="#/map" class="button map_view">Live events</a>
 		</header>
         <!-- MAIN -->
         <div id="main"></div>
@@ -476,8 +478,21 @@
             <div class="toolbar top">Overview for {{name}} <a href="#" class="live refresh"><span>Refresh</span></a></div>
             <div id="display_panel" class="display">
                 <div class="wrapper">
-                    <div id="placeholder" style="width:100%;height:240px;"></div>
-                    <div id="realtime" style="width:100%;height:240px;"></div>
+                    <div id="placeholder" style="padding: 0px;width:100%;height:240px;">
+                        <div id="realtime" style="width:100%;height:220px;"></div>
+                    </div>
+                    <div id="placeholder" style="margin: 1%; padding: 10px;width:18%;height:80px;float:left">
+                    <p style="color: #ccc">Temp</p>
+                    </div>
+                    <div id="placeholder" style="margin: 1%; padding: 10px;width:18%;height:80px;float:left">
+                    <p style="color: #ccc">Humidity</p>
+                    </div>
+                    <div id="placeholder" style="margin: 1%; padding: 10px;width:18%;height:80px;float:left">
+                    <p style="color: #ccc">Wind</p>
+                    </div>
+                    <div id="placeholder" style="margin: 1%; padding: 10px;width:18%;height:80px;float:left">
+                    <p style="color: #ccc">Pressure</p>
+                    </div>  
                     <p class="message"></p>
                 </div>
             </div>
@@ -653,19 +668,24 @@
         </script>
         <!-- GRAPH TMPL -->
         <!-- TEMPLATES -->
+        <!-- FULL SIZE MAP -->
+        <div id="full_map" class="showinfo">
+            <div class="toolbar top">
+                <h1>Gaug.es</h1>
+                <div class="show">
+                    <div class="buttons">
+                        <a href="#/" class="close button" title="Back to the Dashboard"><span>Back to the Dashboard</span></a>
+                        <a href="#" class="button lights" title="Toggle Light/Dark View"><span>Lights</span></a>
+                        <span class="flipswitch button"><a href="#" class="pins" title="Switch to Pins"><span>Pins</span></a><a href="#" class="blips" title="Switch to Blips"><span>Blips</span></a></span>
+                        <a href="#" class="button info" title="Toggle Extra Info for Pins"><span>Info</span></a>
+                    </div>
+                    <p>Live Events</p>
+                </div>
+            </div>
+            <div id="full_map_frame" style="height:0%;display:none;">
+                <div id="full_map_wrapperx" style="width:100%;height:100%;border: 1px solid #4D2722;"></div>
+            </div>
+        </div>
     </body>
     <!-- ANALITICS -->
-    <script type="text/javascript">
-      var _gauges = _gauges || [];
-      (function() {
-        var t   = document.createElement('script');
-        t.type  = 'text/javascript';
-        t.async = true;
-        t.id    = 'gauges-tracker';
-        t.setAttribute('data-site-id', '50ec5c5f613f5d35e2000009');
-        t.src = '//secure.gaug.es/track.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(t, s);
-      })();
-    </script>
 </html>
