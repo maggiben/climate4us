@@ -52,7 +52,7 @@
     }
 
     var MyApp = {
-        module: { 
+        module: {
             VERSION: "0.1.2.3",
             license: {},
             dependencies: {},
@@ -69,7 +69,7 @@
             code: {}
         },
         mousecoords: {
-            pageX: 0, 
+            pageX: 0,
             pageY: 0,
         },
         properties: {
@@ -81,10 +81,10 @@
             stderr: null,
         },
         user: {
-                name: "", 
-                id: "", 
-                last_name: null, 
-                first_name: null, 
+                name: "",
+                id: "",
+                last_name: null,
+                first_name: null,
                 email: "",
                 subscriptions: [],
                 subscription: null,
@@ -94,10 +94,10 @@
             this.getUser({callback: gotUser})
             function gotUser(account)
             {
-                
+
                 if(that.user.subscriptions.length > 0)
                 {
-                    $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow');       
+                    $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow');
                     $( "#progressbar" ).progressbar({
                         value: 0
                     });
@@ -118,7 +118,7 @@
                 }
                 function onInit(subscription)
                 {
-                    //hide("slide", { direction: "right" }, 'swing')  
+                    //hide("slide", { direction: "right" }, 'swing')
                     /*
                     $("#sites .notice").fadeOut(1000, function () {
                         $(this).remove();
@@ -170,7 +170,7 @@
                     //c.removeClass("loading")
                 },
                 complete: function () {
-                
+
                 },
             });
         },
@@ -208,9 +208,9 @@
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
                 },
-                complete: function () {                                
+                complete: function () {
                 }
-            });      
+            });
         },
         createSubscription: function(options, callback) {
             var that = this;
@@ -240,9 +240,9 @@
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
                 },
-                complete: function () {                                
+                complete: function () {
                 }
-            });    
+            });
         },
         reset: function () {},
         setUser: function (a) {
@@ -261,7 +261,7 @@
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
                 },
-            });    
+            });
         },
         signin: function(options) {
             var that = this;
@@ -270,7 +270,7 @@
                 type: "post",
                 dataType: "json",
                 data: {
-                    username: options.username, 
+                    username: options.username,
                     password: options.password
                 },
                 success: function(data, textStatus, jqXHR)
@@ -289,10 +289,10 @@
         },
         getSettings: function(a) {
                 /*
-                $("#sites div.current").removeClass("current"), 
-                $("#data").html(ich.account_template(Gauges.user)), 
-                $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
-                $("#site_content").html(ich.my_info_template(Gauges.user))  
+                $("#sites div.current").removeClass("current"),
+                $("#data").html(ich.account_template(Gauges.user)),
+                $('div.nav a[href="#/account"]').closest("li").addClass("current"),
+                $("#site_content").html(ich.my_info_template(Gauges.user))
                 */
         },
         meldSidebar: function () {
@@ -312,6 +312,61 @@
         resize: function() {
             console.log("resize");
             this.meldSidebar();
+        },
+        fullScreenMap: function() {
+            var options = {
+                zoom: 12,
+                center: new google.maps.LatLng(-34.6036, -58.3817),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            $("#full_map").fadeIn('slow'); //slideDown(500, 'easeOutBounce');
+            $("#full_map_frame").css('height', '100%');
+            //$("#full_map_wrapperx").hide();
+            //$("#full_map_wrapperx").css('opacity', 0);
+            $("#full_map_frame").slideDown(2000, 'easeOutBounce', function() {
+                // resize after animation stop
+                /*
+                if(!MyApp.full_map)
+                {
+                    MyApp.full_map = new window.map({id: "full_map_wrapperx", latitude: -34.6036, longitude: -58.3817, mapOptions: options});
+                    //$("#full_map_wrapperx").css('opacity', 0);
+                    google.maps.event.trigger(MyApp.full_map.mapa, "resize");
+                    google.maps.event.addListenerOnce(MyApp.full_map.mapa, 'idle', function(){
+                        // do something only the first time the map is loaded
+
+                        //google.maps.event.trigger(MyApp.full_map.mapa, "resize");
+                        google.maps.event.trigger(MyApp.full_map.mapa, "resize");
+                        MyApp.full_map.mapa.setCenter(MyApp.full_map.homeMarker.getPosition());
+                        google.maps.event.addListenerOnce(MyApp.full_map.mapa, 'bounds_changed', function() {
+                            $("#full_map_wrapperx").animate({opacity: 1}, 250);
+                        });
+                    });
+                }
+                */
+                if(!MyApp.full_map)
+                {
+                    MyApp.full_map = new window.map({id: "full_map_wrapperx", latitude: -34.6036, longitude: -58.3817, mapOptions: options});
+                }
+                else {
+
+                }
+               //$("#full_map_wrapperx").css('opacity', 0);
+                //google.maps.event.trigger(MyApp.full_map.mapa, "resize");
+                //MyApp.full_map.mapa.setCenter(MyApp.full_map.homeMarker.getPosition());
+                google.maps.event.addListenerOnce(MyApp.full_map.mapa, 'bounds_changed', function() {
+                    google.maps.event.trigger(MyApp.full_map.mapa, "resize");
+                    google.maps.event.addListenerOnce(MyApp.full_map.mapa, 'idle', function(){
+                        MyApp.full_map.mapa.setCenter(MyApp.full_map.homeMarker.getPosition());
+                        $("#full_map_wrapperx").animate({opacity: 1}, 1000);
+                    });
+                });
+                //google.maps.event.trigger(MyApp.full_map.mapa, "resize");
+            });
+            $(".close.button").on('click', function() {
+                $("#full_map_frame").slideUp(1000, 'easeOutBounce', function() {
+                    $("#full_map").fadeOut('slow');
+                });
+            });
         },
         formatNumber: function (a) {
             a += "";
@@ -357,7 +412,7 @@
                 return;
             }
             if (that.views[name]) {
-                console.error("Invalid name: " + name + "."); 
+                console.error("Invalid name: " + name + ".");
             } else if (that.views.code[name]) {
                 console.error("Template \"" + name + "  \" exists");
             } else {
@@ -376,7 +431,7 @@
             }
             that.views.code = {};
         },
-        
+
         // clears/grabs
         refresh: function () {
             that.clearAll();
@@ -384,13 +439,13 @@
         },
         // grabs views from the DOM and caches them.
         // Loop through and add views.
-        // Whitespace at beginning and end of all views inside <script> tags will 
-        // be trimmed. If you want whitespace around a partial, add it in the parent, 
+        // Whitespace at beginning and end of all views inside <script> tags will
+        // be trimmed. If you want whitespace around a partial, add it in the parent,
         // not the partial. Or do it explicitly using <br/> or &nbsp;
-        grabTemplates: function () {        
+        grabTemplates: function () {
             var that = this,
-                i, 
-                scripts = document.getElementsByTagName('script'), 
+                i,
+                scripts = document.getElementsByTagName('script'),
                 script,
                 length = scripts.length,
                 trash = [];
@@ -440,7 +495,7 @@
 $(document).ready(function() {
     "use strict";
     console.log("starting sockets")
-    if (typeof io !== 'object') 
+    if (typeof io !== 'object')
     {
         return false;
     }
@@ -458,14 +513,14 @@ $(document).ready(function() {
             case 'exec':
                 switch(data.io)
                 {
-                    case 'stdout': 
+                    case 'stdout':
                         //echo(data.result);
                         //console.log(data);
                         break;
                     case 'stderr':
                         //echo("[[b;#f00;]" + data.result +"]");
                         //console.log(data.result);
-                        break;        
+                        break;
                 }
                 break;
             default:
@@ -517,7 +572,7 @@ $(document).ready(function() {
 /*
 $(document).ready(function() {
     "use strict";
-    
+
     $(function initialize() {
         var distanceWidget;
         var map;
@@ -541,10 +596,10 @@ $(document).ready(function() {
             sizerIcon: new google.maps.MarkerImage('resize-off.png'),
             activeSizerIcon: new google.maps.MarkerImage('resize.png')
         });
-        
+
         // google.maps.event.addListener(distanceWidget, 'distance_changed', updateDistance);
         // google.maps.event.addListener(distanceWidget, 'position_changed', updatePosition);
-        var contentString = 
+        var contentString =
             '<div id="infowindow">' +
             'Galaconcert<br />' +
             'Jaarbeurslaan 2-6<br />' +
@@ -552,23 +607,23 @@ $(document).ready(function() {
             '</div>'
         ;
         var infowindow = new google.maps.InfoWindow();
-        
-        
+
+
         var marker = new google.maps.Marker({
             position: myLatlng,
             map: map,
             title: 'Galaconcert',
             icon: image
         });
-        var infowindow = new google.maps.InfoWindow(); 
-        
-        var input = document.getElementById('new_location');         
+        var infowindow = new google.maps.InfoWindow();
+
+        var input = document.getElementById('new_location');
         var autocomplete = new google.maps.places.Autocomplete(input, {
             types: ["geocode"]
         });
-        autocomplete.bindTo('bounds', map); 
-        
-     
+        autocomplete.bindTo('bounds', map);
+
+
         google.maps.event.addListener(autocomplete, 'place_changed', function() {
             infowindow.close();
             var place = autocomplete.getPlace();
@@ -576,15 +631,15 @@ $(document).ready(function() {
                 map.fitBounds(place.geometry.viewport);
             } else {
                 map.setCenter(place.geometry.location);
-                map.setZoom(17);  
+                map.setZoom(17);
             }
             moveMarker(place.name, place.geometry.location);
-        });  
+        });
         google.maps.event.addDomListener(window, 'load', init);
         $(input).focusin(function () {
             $(document).keypress(function (e) {
                 if (e.which == 13) {
-                     selectFirstResult();   
+                     selectFirstResult();
                 }
             });
         });
@@ -601,7 +656,7 @@ $(document).ready(function() {
             $(".pac-container").hide();
             var firstResult = $(".pac-container .pac-item:first").text();
             console.log("selectFirstResult: " + firstResult)
-            
+
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode({"address":firstResult }, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
@@ -609,11 +664,11 @@ $(document).ready(function() {
                         lng = results[0].geometry.location.lng(),
                         placeName = results[0].address_components[0].long_name,
                         latlng = new google.maps.LatLng(lat, lng);
-                    
+
                     moveMarker(placeName, latlng);
                     $(input).val(firstResult);
                 }
-            });   
+            });
         }
         var div = document.createElement('DIV');
         $(div).html(ich.infobubble_template({name: $(input).val()}));
@@ -623,7 +678,7 @@ $(document).ready(function() {
             infoBubble2.setContent(div);
             infoBubble2.open(map, marker);
         });
-        
+
         function moveMarker(placeName, latlng){
             marker.setIcon(image);
             marker.setPosition(latlng);
@@ -633,7 +688,7 @@ $(document).ready(function() {
             //infowindow.open(map, marker);
             //infoBubble2.open(map, marker);
         }
-            
+
         var infoBubble2 = new InfoBubble({
           map: map,
           content: '<div class="signin"><form action="/signin" method="post"><p class="phoneytext">Hello There</p></form></div>',
@@ -677,7 +732,7 @@ $(document).ready(function() {
         title: 'Move me!',
         icon: 'images/markers/anniversary.png'
     });
-    
+
     distanceWidget = new DistanceWidget({
         map: map,
         distance: 5, // Starting distance in km.
@@ -690,7 +745,7 @@ $(document).ready(function() {
         activeSizerIcon: new google.maps.MarkerImage('/images/radius-resize.png'),
         homeMarker: marker,
     });
-    
+
     google.maps.event.addListener(distanceWidget, 'distance_changed',  function() {
         console.log("distance change");
         updateDistance();

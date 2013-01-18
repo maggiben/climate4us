@@ -3,7 +3,7 @@
     <head>
         <title>climate4us</title>
         <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />        
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
         <meta charset="utf-8">
         <meta property="og:title"  name="title" content="laboratory">
         <meta property="og:url" content="http://html5.laboratory.com/">
@@ -45,7 +45,7 @@
         <script type="text/javascript" charset="utf-8" src="javascripts/mode/javascript.js"></script>
         <!-- Terminal PLUGIN -->
         <script type="text/javascript" charset="utf-8" src="javascripts/jquery.terminal-0.4.22.js"></script>
-        <!-- Raphael PLUGIN -->     
+        <!-- Raphael PLUGIN -->
         <script type="text/javascript" charset="utf-8" src="javascripts/d3.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/raphael.js"></script>
         <script type="text/javascript" charset="utf-8" src="javascripts/justgage.js"></script>
@@ -63,10 +63,10 @@
         <!-- Adobe Edge Web Fonts -->
         <!-- DEV VERSION -->
         <!--
-        
+
         Notes:
         vimeo tuts on node: http://vimeo.com/52691590
-        
+
         -->
         <!-- USER SCRIPTS -->
         <!-- USER SCRIPTS -->
@@ -131,7 +131,7 @@
                         <p class="text">
                             <label for="new_date">Date</label>
                             <input type="text" name="date" id="new_date" />
-                        </p>                        
+                        </p>
                         <p class="text">
                             <label for="new_location">Where</label>
                             <input type="text" name="location" id="new_location" />
@@ -243,7 +243,7 @@
                     <li><a href="#/account">My Profile</a></li>
                     <li><a href="#/account/plan">Plan &amp; Billing</a></li>
                     <li><a href="#/account/clients">API Keys</a></li>
-                    <li><a href="#/account/summaries">Email Summaries</a></li>        
+                    <li><a href="#/account/summaries">Email Summaries</a></li>
                 </ul>
             </div>
             <div id="site_content"></div>
@@ -285,7 +285,7 @@
             </form>
             <div class="toolbar bottom"></div>
         </script> <!-- my_info_template -->
-        
+
         <script id="live_data_template" type="text/html">
             <div class="toolbar top options">
                 <ul class="group_options">
@@ -293,10 +293,10 @@
                 </ul>
             </div>
             <div id="map_wrapper">
-            
+
             </div>
             <div class="toolbar bottom">
-            
+
             </div>
         </script> <!-- live_data_template -->
         <script id="clients_template" type="text/html">
@@ -386,7 +386,7 @@
                 </ul>
                 <a href="#/station/{{id}}{{^iphone}}/overview{{/iphone}}">View this Gauge</a>
             </div>
-        </script> <!-- station_preview_template -->        
+        </script> <!-- station_preview_template -->
         <script type="text/html" id="site_preview_template">
             <h2>{{ title }}</h2>
             {{#overview}}
@@ -478,8 +478,8 @@
             <div class="toolbar top">Overview for {{name}} <a href="#" class="live refresh"><span>Refresh</span></a></div>
             <div id="display_panel" class="display">
                 <div class="wrapper">
-                    <div id="placeholder" style="padding: 0px;width:100%;height:240px;">
-                        <div id="realtime" style="width:100%;height:220px;"></div>
+                    <div id="placeholder" style="padding: 0px;width:100%;height:320px;">
+                        <div id="realtime" style="width:100%;height:100%;"></div>
                     </div>
                     <div id="placeholder" style="margin: 1%; padding: 10px;width:18%;height:80px;float:left">
                     <p style="color: #ccc">Temp</p>
@@ -492,7 +492,7 @@
                     </div>
                     <div id="placeholder" style="margin: 1%; padding: 10px;width:18%;height:80px;float:left">
                     <p style="color: #ccc">Pressure</p>
-                    </div>  
+                    </div>
                     <p class="message"></p>
                 </div>
             </div>
@@ -532,11 +532,11 @@
                     <div class="wrapper">
                         <p class="text">
                             <label for="station_name_{{id}}">Station Name</label>
-                            <input type="text" id="station_name_{{id}}" name="name" value="{{ name }}" />
+                            <input type="text" class="entry" id="station_name_{{id}}" name="name" value="{{ name }}" />
                         </p>
                         <p class="text">
                             <label for="eventTags">Tags</label>
-                            <input type="text" class="eventTags" id="eventTags" value="" placeholder="search tags">
+                            <input type="text" class="entry" id="eventTags" value="" placeholder="search tags">
                         </p>
                         <p class="text">
                         <label for="equalizer">Graphic EQ</label>
@@ -628,7 +628,7 @@
                 </div>
                 <div class="toolbar bottom"></div>
             {{/technology_data}}
-        </script>        
+        </script>
         <script id="browser_support_template" class="partial" type="text/html">
             <div class="wrapper">
                 <div class="info">
@@ -683,6 +683,7 @@
                 </div>
             </div>
             <div id="full_map_frame" style="height:0%;display:none;">
+                <img src="/images/ajax-loader.gif" class="ajax-spinner"/>
                 <div id="full_map_wrapperx" style="width:100%;height:100%;border: 1px solid #4D2722;"></div>
             </div>
         </div>

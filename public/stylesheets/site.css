@@ -2031,6 +2031,16 @@ div.toolbar.bottom {
 .loading_indicator em {
   display: none;
 }
+.ajax-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -32px;
+/* -1 * image width / 2 */
+  margin-top: -32px;
+/* -1 * image height / 2 */
+  display: block;
+}
 body.adding #new_site {
   visibility: visible;
 }
@@ -2537,7 +2547,14 @@ form input:focus,
 form select:focus {
   outline: none;
 }
+/*
 #data form input {
+	-webkit-box-shadow:inset rgba(0,102,204,0.1) 0 0 10px;
+	-moz-box-shadow:inset rgba(0,102,204,0.1) 0 0 10px;
+	border:1px solid #ccc
+}
+*/
+#data form input.entry {
   -webkit-box-shadow: inset rgba(0,102,204,0.1) 0 0 10px;
   -moz-box-shadow: inset rgba(0,102,204,0.1) 0 0 10px;
   border: 1px solid #ccc;
@@ -3284,8 +3301,8 @@ dialog .cdn strong {
 /*
 	background-color: #7a7a7a;
 	background-image: -moz-linear-gradient(top, #7a7a7a, #5e5e5e);
-	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #7a7a7a),color-stop(1, #5e5e5e)); 
-	background-image: -webkit-linear-gradient(#7a7a7a, #5e5e5e); 
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #7a7a7a),color-stop(1, #5e5e5e));
+	background-image: -webkit-linear-gradient(#7a7a7a, #5e5e5e);
 	background-image: linear-gradient(top, #7a7a7a, #5e5e5e);
 	*/
   font-family: 'Comfortaa', cursive;
@@ -3477,7 +3494,7 @@ dialog .cdn input:focus {
 /***********************************************************************************
 FLOTR
 ************************************************************************************/
-#realtime {
+#placeholder {
   width: 900px;
   height: 500px;
   padding: 10px 5px 0 0;
@@ -3520,26 +3537,6 @@ FLOTR
   -ms-transform-origin: 0 0;
   -moz-transform-origin: 0 0;
   -webkit-transform-origin: 0 0;
-}
-#placeholder {
-  width: 900px;
-  height: 500px;
-  padding: 10px 5px 0 0;
-  margin: 15px auto 30px auto;
-  border: 1px solid #ddd;
-  background: #fff;
-  background: linear-gradient(#f6f6f6 0, #fff 50px);
-  background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
-  background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
-  background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
-  background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
-  -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  -o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  -ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 #full_map {
   position: fixed;
@@ -3699,7 +3696,7 @@ FLOTR
   left: 0;
   right: 0;
   bottom: 0;
-  background: #c3d3e0;
+  background: #dda5c6;
   overflow: hidden;
 }
 #full_map #full_map_wrapper {

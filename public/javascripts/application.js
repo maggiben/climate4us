@@ -36,14 +36,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {
     "use strict";
-    
+
     $.fn.displayErrors = function(a, b) {
         var c = this.removeErrors();
         c.parent().addClass("error");
         for (var key in a) {
             var d = b ? b + "[" + key + "]" : key;
             var e = a[key].join(", ");
-            console.log("a[%s] = %s", key, e);            
+            console.log("a[%s] = %s", key, e);
             var f = '<strong class="error_explanation">' + e + "</strong>";
             c.find('[name="' + d + '"]').addClass("error").closest("p").append(f);
         }
@@ -81,9 +81,9 @@ $(document).ready(function() {
     ///////////////////////////////////////////////////////////////////////////
     var Station = function(arg) {
         this.setup(arg);
-    };   
+    };
     $.extend(Station.prototype, {
-        module: { 
+        module: {
             VERSION: "0.11",
             license: {},
             dependencies: {},
@@ -108,37 +108,37 @@ $(document).ready(function() {
             overview: true,
             mine: true,
             temperature: {
-                value: 0, 
+                value: 0,
                 unit: 'C'
             },
             feelslike: {},
-            humidity: { 
-                value: 0, 
-                dewpoint: 0, 
-                unit: 'RH' 
+            humidity: {
+                value: 0,
+                dewpoint: 0,
+                unit: 'RH'
             },
-            wind: { 
-                value: 0, 
-                direction: 'SE', 
-                degrees: 150, 
-                unit: 'KMH' 
+            wind: {
+                value: 0,
+                direction: 'SE',
+                degrees: 150,
+                unit: 'KMH'
             },
-            rainfall: { 
-                value: 0, 
-                unit: 'MM' 
+            rainfall: {
+                value: 0,
+                unit: 'MM'
             },
-            pressure: { 
-                value: 0, 
-                unit: 'INHG', 
-                type: 'relative' 
-            }, 
-            visibility: { 
-                value: 0, 
-                unit: 'KM' 
+            pressure: {
+                value: 0,
+                unit: 'INHG',
+                type: 'relative'
             },
-            astronomy: { 
-                sunrise: "08:01", 
-                sunset: "16:42" 
+            visibility: {
+                value: 0,
+                unit: 'KM'
+            },
+            astronomy: {
+                sunrise: "08:01",
+                sunset: "16:42"
             },
             forecast:[
                 {
@@ -158,13 +158,13 @@ $(document).ready(function() {
         setup: function (options) {
             var options = $.extend({}, this.properties, options);
             var that = this;
-            this.properties.last_7_days = [ {temperature_size: Math.floor(Math.random() * 25) + "px", humidity_size: Math.floor(Math.random() * 12)+ "px"}, 
+            this.properties.last_7_days = [ {temperature_size: Math.floor(Math.random() * 25) + "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
-                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"} ];            
+                            {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"} ];
             that.id = options._id;
             $.ajax({
                 url: "/station/getbyid/" + options._id,
@@ -178,7 +178,7 @@ $(document).ready(function() {
                 error: function (jqXHR, status, error) {
                     console.log(jqXHR.responseText);
                 },
-                complete: function () {                                
+                complete: function () {
                 }
             });
         },
@@ -199,22 +199,22 @@ $(document).ready(function() {
                     console.log(jqXHR.responseText);
                 },
             });
-        },    
+        },
         // getters
-        getTemperature: function () { 
-            return this.temperature; 
+        getTemperature: function () {
+            return this.temperature;
         },
-        getPressure: function () { 
-            return this.pressure; 
+        getPressure: function () {
+            return this.pressure;
         },
-        getHumidity: function () { 
-            return this.humidity; 
+        getHumidity: function () {
+            return this.humidity;
         },
-        getWind:  function () { 
-            return this.wind; 
+        getWind:  function () {
+            return this.wind;
         },
-        getWindDirection:  function () { 
-            return this.wind.direction; 
+        getWindDirection:  function () {
+            return this.wind.direction;
         },
         // setters
         setTemperature: function (temperature) {
@@ -224,16 +224,16 @@ $(document).ready(function() {
             {
                 that.properties.temperature = data.temperature;
                 console.log("setTemperature update ok! result: " + JSON.stringify(data));
-            };            
+            };
         },
-        setPressure: function (pressure) { 
-            this.pressure = pressure; 
+        setPressure: function (pressure) {
+            this.pressure = pressure;
         },
-        setHumidity: function (humidity) { 
-            this.humidity = humidity; 
+        setHumidity: function (humidity) {
+            this.humidity = humidity;
         },
-        setWind:  function (wind) { 
-            this.wind = wind; 
+        setWind:  function (wind) {
+            this.wind = wind;
         },
     });
     ///////////////////////////////////////////////////////////////////////////
@@ -243,7 +243,7 @@ $(document).ready(function() {
         this.init(options);
     };
     $.extend(myApplication.prototype, {
-        module: { 
+        module: {
             VERSION: "0.10",
             license: {},
             dependencies: {},
@@ -314,7 +314,7 @@ $(document).ready(function() {
                         type: "GET",
                         dataType: "json",
                         success: function (data, textStatus, jqXHR) {
-                            that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =                   
+                            that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =
                             function onLoad(station) {
                                 console.log("data is back " + JSON.stringify(station.name));
                                 station.isReady = true;
@@ -346,7 +346,7 @@ $(document).ready(function() {
                     type: "GET",
                     dataType: "json",
                     success: function (data, textStatus, jqXHR) {
-                        that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =                   
+                        that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //that.stations[b[i]._id] =
                         function onLoad(station) {
                             station.isReady = true;
                             callback(station);
@@ -521,7 +521,7 @@ $(document).ready(function() {
 
             $("div.site.current").removeClass("current");
             site.addClass("current");
-            $("#data").html(ich.site_data_template(data)); 
+            $("#data").html(ich.site_data_template(data));
             $("body").addClass("view-nav");
         });
         // Change current item
@@ -535,7 +535,7 @@ $(document).ready(function() {
             $("div.site.current").removeClass("current");
             station.addClass("current");
             MyApp.subscription.setSelected(data.id);
-            $("#data").html(ich.site_data_template(MyApp.subscription.getStationById(data.id))); 
+            $("#data").html(ich.site_data_template(MyApp.subscription.getStationById(data.id)));
             $("body").addClass("view-nav");
         });
         this.bind("show_panel.g", function (e, data) {
@@ -545,25 +545,108 @@ $(document).ready(function() {
             var d = data == c.data("panel") ? $("#site_content div.display").scrollTop() : 0;
             b.trigger("show_station.g", data),
             c.data("panel", data);
-            $("#data div.nav li.current").removeClass("current"); 
+            $("#data div.nav li.current").removeClass("current");
             $('#data div.nav a[href="#/station/' + data.id + "/" + data.path + '"]').closest("li").addClass("current");
             switch (data.path) {
                 case "overview":
                     console.log("[overview]");
                     $("#site_content").html(ich.overview_template(MyApp.subscription.getStationById(data.id))).hide().fadeIn(250);
-                    var placeholder = $("#placeholder");
-                    var options = {
-                        lines: { show: true },
-                        points: { show: true },
-                        xaxis: { tickDecimals: 0, tickSize: 1 }
-                    };
-                    var data = [];
-                    var placeholder = $("#placeholder");
-                    
-                    $.plot(placeholder, data, options);
+                    $(function () {
+                        var container = '#realtime';
+                        // Determine how many data points to keep based on the placeholder's initial size;
+                        // this gives us a nice high-res plot while avoiding more than one point per pixel.
+                        var maximum = 1000;
+                        var data = [];
+                        function getRandomData() {
+                            if (data.length) {
+                                data = data.slice(1);
+                            }
+                            while (data.length < maximum) {
+                                var previous = data.length ? data[data.length - 1] : 50;
+                                var y = previous + Math.random() * 10 - 5;
+                                data.push(y < 0 ? 4 : y > 100 ? 100 : y);
+                            }
+                            // zip the generated y values with the x values
+                            var res = [];
+                            for (var i = 0; i < data.length; ++i) {
+                                res.push([i, data[i]])
+                            }
+                            return res;
+                        }
+                        var series = [{
+                            data: getRandomData(),
+                            lines: {
+                                fill: true,
+                                color: "#000",
+                                fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0 } ] }
+                            },
+                            color: "#D355D3",
+                        }];
+                        //
+                        var plot = $.plot(container, series, {
+                    		grid: {
+                    			borderWidth: 1,
+                    			minBorderMargin: 20,
+                    			labelMargin: 10,
+                    			backgroundColor: {
+                    				colors: ["#fff", "#DDA5C6"]
+                    			},
+                                borderColor: '#d30cd3',
+                    			hoverable: true,
+                    			mouseActiveRadius: 50,
+                    			margin: {
+                    				top: 8,
+                    				bottom: 20,
+                    				left: 20,
+                    			},
+                    			markings: function(axes) {
+                    				var markings = [];
+                    				var xaxis = axes.xaxis;
+                    				for (var x = Math.floor(xaxis.min); x < xaxis.max; x += xaxis.tickSize * 2) {
+                    					markings.push({ xaxis: { from: x, to: x + xaxis.tickSize }, color: "rgba(204, 102, 188, 0.2)" });
+                    				}
+                    				return markings;
+                    			}
+                    		},
+                    		yaxis: {
+                    			min: 0,
+                    			max: 110,
+                                color: '#9A338A',
+                    		},
+                            xaxis: {
+                                min: 0,
+                    			max: 1000,
+                                color: '#9A338A',
+                            },
+                    		legend: {
+                    			show: true,
+                                color: '#f00'
+                    		}
+                    	});
 
-                    data = [[1999, 3.0], [2000, 3.9], [2001, 2.0], [2002, 1.2], [2003, 1.3], [2004, 2.5], [2005, 2.0], [2006, 3.1], [2007, 2.9], [2008, 0.9], ];
-                    $.plot(placeholder, data, options);
+                    	// Create the demo X and Y axis labels
+
+                    	//var xaxisLabel = $("<div class='axisLabel xaxisLabel'></div>")
+                    	//	.text("")
+                    	//	.appendTo(container);
+
+                    	//var yaxisLabel = $("<div class='axisLabel yaxisLabel'></div>").text("Response Time (ms)").appendTo(container);
+
+                    	// Since CSS transforms use the top-left corner of the label as the transform origin,
+                    	// we need to center the y-axis label by shifting it down by half its width.
+                    	// Subtract 20 to factor the chart's bottom margin into the centering.
+
+                    	//yaxisLabel.css("margin-top", yaxisLabel.width() / 2 - 20);
+
+                    	// Update the random dataset at 25FPS for a smoothly-animating chart
+
+                    	setInterval(function updateRandom() {
+                    		series[0].data = getRandomData();
+                    		plot.setData(series);
+                    		plot.draw();
+                    	}, 40);
+
+                    });
                     break;
                 case "code":
                     console.log("[code]");
@@ -615,19 +698,19 @@ $(document).ready(function() {
                 case "sensors":
                     $("#site_content").html(ich.station_sensors_template(MyApp.subscription.getStationById(data.id))).hide().fadeIn(100);
                     var temperature_gauge = new JustGage({
-                      id: "temperature.gauge", 
-                      value: getRandomInt(0, 100), 
+                      id: "temperature.gauge",
+                      value: getRandomInt(0, 100),
                       min: -30,
                       max: 100,
                       title: "Temperature",
                       label: "C°"
                     });
                     var humidith_gauge = new JustGage({
-                      id: "humidity.gauge", 
-                      value: getRandomInt(0, 100), 
+                      id: "humidity.gauge",
+                      value: getRandomInt(0, 100),
                       min: 0,
                       max: 100,
-                      levelColors: ["#6996D3", "#0F4FA8", "#05316D"], 
+                      levelColors: ["#6996D3", "#0F4FA8", "#05316D"],
                       title: "Humidity",
                       label: "RH"
                     });
@@ -693,7 +776,7 @@ $(document).ready(function() {
             }, 500);
             //delete Gauges.sites[this.id]
         });
-        
+
         this.get(/\#\/sites\/(.*)/, function () {
             //this.redirect("#", "gauges", this.params.splat)
             alert(this.params.splat);
@@ -706,6 +789,7 @@ $(document).ready(function() {
         // Live Events FUll Map                                              //
         ///////////////////////////////////////////////////////////////////////
         this.get("#/map", function() {
+            /*
             var options = {
                 zoom: 12,
                 center: new google.maps.LatLng(-34.6036, -58.3817),
@@ -732,6 +816,8 @@ $(document).ready(function() {
                 center: new google.maps.LatLng(-34.6036, -58.3817),
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
+            */
+            MyApp.fullScreenMap();
             //if(!MyApp.full_map)
             //{
             //}
@@ -740,7 +826,7 @@ $(document).ready(function() {
         // Account Routes                                                    //
         ///////////////////////////////////////////////////////////////////////
         this.get("#/account", function() {
-            $("body").removeClass("adding"), 
+            $("body").removeClass("adding"),
             $.ajax({
                 url: "/subscription",
                 dataType: "json",
@@ -748,24 +834,24 @@ $(document).ready(function() {
                     //Gauges.subscription = new Subscription(a.subscription)
                 }
             });
-            $("#sites div.current").removeClass("current"), 
-            $("#data").html(ich.account_template(MyApp.user)), 
-            $('div.nav a[href="#/account"]').closest("li").addClass("current"), 
+            $("#sites div.current").removeClass("current"),
+            $("#data").html(ich.account_template(MyApp.user)),
+            $('div.nav a[href="#/account"]').closest("li").addClass("current"),
             $("#site_content").html(ich.my_info_template(MyApp.user))
         });
         this.get("#/account/clients", function() {
-            $("body").removeClass("adding"), 
-            $("#sites div.current").removeClass("current"), 
-            $("#data").html(ich.account_template(MyApp.user)), 
-            $('div.nav a[href="#/account/clients"]').closest("li").addClass("current"), 
-            $("#site_content").html(ich.clients_template(MyApp.user)), 
-            $("#site_content").find("input[title]").labelize(), 
+            $("body").removeClass("adding"),
+            $("#sites div.current").removeClass("current"),
+            $("#data").html(ich.account_template(MyApp.user)),
+            $('div.nav a[href="#/account/clients"]').closest("li").addClass("current"),
+            $("#site_content").html(ich.clients_template(MyApp.user)),
+            $("#site_content").find("input[title]").labelize(),
             MyApp.clients == null ? $.ajax({
                 url: "/clients",
                 dataType: "json",
                 type: "get",
                 success: function(data, textStatus, jqXHR) {
-                    MyApp.clients = data.clients, 
+                    MyApp.clients = data.clients,
                     $("#clients_list").removeClass("loading").html(ich.clients_list_template(MyApp))
                 },
                 error: function(jqXHR, status, error) {
@@ -776,11 +862,11 @@ $(document).ready(function() {
         this.post("#/account/clients", function() {
             console.log("targent: " + this.target);
             window.kaka = this.target;
-            var a = $(this.target).removeErrors(), 
+            var a = $(this.target).removeErrors(),
             b = a.find("button span");
-            clearTimeout(b.data("timeout")), 
-            b.data("text") === undefined && b.data("text", b.text()), 
-            b.text("Creating..."), 
+            clearTimeout(b.data("timeout")),
+            b.data("text") === undefined && b.data("text", b.text()),
+            b.text("Creating..."),
             $.ajax({
                 url: "/clientsX",
                 dataType: "json",
@@ -789,25 +875,25 @@ $(document).ready(function() {
                     description: this.params.description
                 },
                 success: function(b) {
-                    MyApp.clients == null && (MyApp.clients = []), 
-                    MyApp.clients.push(b.client), 
-                    a.find("input[type=text]").val("").blur(), 
+                    MyApp.clients == null && (MyApp.clients = []),
+                    MyApp.clients.push(b.client),
+                    a.find("input[type=text]").val("").blur(),
                     $("#clients_list").removeClass("loading").html(ich.clients_list_template(MyApp))
                 },
                 error: function (jqXHR, status, error) {
                     //var c = $.parseJSON(jqXHR);
                     console.log(jqXHR.responseText);
-                    //a.displayErrors("jqXHR.responseText"), 
+                    //a.displayErrors("jqXHR.responseText"),
                     a.displayErrors({description: ["Could not find that Email"]});
                     b.text(b.data("text"))
-                },    
+                },
                 /*error: function(c) {
-                    
+
                     var d = $.parseJSON(c.responseText);
                     a.displayErrors(d.errors), b.text(b.data("text"))
                 },*/
                 complete: function() {
-                    b.text("Created"), 
+                    b.text("Created"),
                     setTimeout(function() {
                         b.text(b.data("text"))
                     }, 2e3)
@@ -815,10 +901,10 @@ $(document).ready(function() {
             })
         });
         this.del("#/account/clients/:key", function() {
-            var a = $(this.target).removeErrors(), 
+            var a = $(this.target).removeErrors(),
             b = a.find("button span");
-            clearTimeout(b.data("timeout")), 
-            b.data("text") === undefined && b.data("text", b.text()), b.text("Removing"), 
+            clearTimeout(b.data("timeout")),
+            b.data("text") === undefined && b.data("text", b.text()), b.text("Removing"),
             $.ajax({
                 url: "/clients/" + this.params.key,
                 dataType: "json",
@@ -827,7 +913,7 @@ $(document).ready(function() {
                     MyApp.clients = $.compact($.map(MyApp.clients, function(b) {
                         if (b.key != a.client.key)
                             return b
-                    })), 
+                    })),
                     $("#clients_list").html(ich.clients_list_template(MyApp))
                 }
             })
@@ -853,7 +939,7 @@ $(document).ready(function() {
             var a = $(this.target).removeErrors();
             var b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
-            b.data("text") === undefined && b.data("text", b.text()); 
+            b.data("text") === undefined && b.data("text", b.text());
             b.text("Adding...");
             MyApp.createSubscription({
                 name: that.params.name,
@@ -876,7 +962,7 @@ $(document).ready(function() {
             var a = $(this.target).removeErrors();
             var b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
-            b.data("text") === undefined && b.data("text", b.text()); 
+            b.data("text") === undefined && b.data("text", b.text());
             b.text("Adding...");
             MyApp.subscription.addStation({
                 name: that.params.name,
@@ -889,7 +975,7 @@ $(document).ready(function() {
                 setTimeout(function () {
                     window.location.hash = "/station/" + station._id + "/code";
                     $.scrollTo("#s" + station._id, 800);
-                }, 400); 
+                }, 400);
                 console.log("onLoad id: " + station._id);
                 //$.scrollTo("#s" + station._id, 800);
                 $("body").removeClass("adding");
@@ -899,10 +985,10 @@ $(document).ready(function() {
         this.put('#/station/update/:id', function() {
             var that = this;
             console.log("targent: " + this.params);
-            var a = $(this.target).removeErrors(), 
+            var a = $(this.target).removeErrors(),
             button = a.find("button span");
-            clearTimeout(button.data("timeout")), 
-            button.data("text") === undefined && button.data("text", button.text()), 
+            clearTimeout(button.data("timeout")),
+            button.data("text") === undefined && button.data("text", button.text()),
             button.text("Updating..."),
             $.ajax({
                 url: "/station/update/" + that.params.id,
@@ -917,9 +1003,9 @@ $(document).ready(function() {
                     console.log(error);
                     a.displayErrors({name: ["Could not update"]});
                     console.log(button.text(button.data("text")));
-                },    
+                },
                 complete: function() {
-                    button.text("Created"), 
+                    button.text("Created"),
                     setTimeout(function() {
                         button.text(button.data("text"));
                         a.removeErrors();
@@ -932,13 +1018,13 @@ $(document).ready(function() {
             var a = $(this.target).removeErrors();
             var b = a.find(".submit button span");
             clearTimeout(b.data("timeout"));
-            b.data("text") === undefined && b.data("text", b.text()); 
+            b.data("text") === undefined && b.data("text", b.text());
             b.text("Adding...");
             $.ajax({
                 url: "/station/add",
                 type: "post",
                 dataType: "json",
-                data: { 
+                data: {
                     name: that.params.name,
                     type: that.params.type,
                     country: that.params.country,
@@ -946,7 +1032,7 @@ $(document).ready(function() {
                 success: function (data, textStatus, jqXHR) {
                     //console.log("server respose: " + JSON.stringify(b));
                     var c = data;
-                    // todo use getters instead of direct property access in this case the array 
+                    // todo use getters instead of direct property access in this case the array
                     MyApp.subscription.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad}); //
                     //properties.stations
                     function onLoad(station) {
@@ -955,7 +1041,7 @@ $(document).ready(function() {
                         setTimeout(function () {
                             window.location.hash = "/station/" + station._id + "/code";
                             $.scrollTo("#s" + station._id, 800);
-                        }, 400); 
+                        }, 400);
                         console.log("onLoad id: " + station._id);
                         //$.scrollTo("#s" + station._id, 800);
                         $("body").removeClass("adding");
@@ -977,7 +1063,7 @@ $(document).ready(function() {
             console.log("sammy route: #/station/%s/%s", this.params.id, this.params.path);
             $("#site_content").children().fadeOut(200).promise().then(function() {
                         $("#site_content").empty();
-                        that.trigger("show_panel.g", that.params); 
+                        that.trigger("show_panel.g", that.params);
             });
         });
         this.get('#/station/:id/code/:tab', function () {
@@ -987,12 +1073,12 @@ $(document).ready(function() {
             console.log("server respose: " + JSON.stringify(b));
             /*
             var a = MyApp.sites[this.params.id];
-            */        
-            //a.trigger("show_panel.g", ["code"]); 
+            */
+            //a.trigger("show_panel.g", ["code"]);
             $("#site_content div.panel").hide();
-            $("#site_content ul.group_options li").removeClass("current"); 
+            $("#site_content ul.group_options li").removeClass("current");
             $("#site_content div.panel." + this.params.tab).show();
-            $("#site_content ul.group_options li." + this.params.tab).addClass("current"); 
+            $("#site_content ul.group_options li." + this.params.tab).addClass("current");
             MyApp.meldSidebar();
         });
         this.get("#/deleting", function() {
@@ -1000,7 +1086,7 @@ $(document).ready(function() {
         this.del("#/station/remove/:id", function() {
             var that = this;
             var a = $(this.target).removeErrors(), b = a.find(".submit button span");
-            b.text("Deleting..."), window.location.hash = "/deleting", 
+            b.text("Deleting..."), window.location.hash = "/deleting",
             $.ajax({
                 url: "/station/remove/" + this.params.id,
                 dataType: "json",
@@ -1009,8 +1095,8 @@ $(document).ready(function() {
                     var station = data.station;
                     console.log("remove server respose: " + JSON.stringify(data));
                     //var c = Gauges.sites[b.id];
-                    that.trigger("station_teardown.g", that.params), 
-                    $("#data").html(ich.deleted_site_template(b)), 
+                    that.trigger("station_teardown.g", that.params),
+                    $("#data").html(ich.deleted_site_template(b)),
                     window.location.hash = "/"
                 }
         });
@@ -1030,7 +1116,7 @@ $(document).ready(function() {
 ///////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {
     "use strict";
-    
+
     ///////////////////////////////////////////////////////////////////////////
     // UI Events & UI transformations                                        //
     ///////////////////////////////////////////////////////////////////////////
@@ -1083,14 +1169,14 @@ $(document).ready(function() {
 
     $("li.live .status").text("off");
     $("html").removeClass("live");
-    
+
     $(window).scroll(function() {
         var a = $(window).height()
         , docHeight = $(document).height()
         , winScrollTop = $(window).scrollTop()
         , wrapper = $("#wrapper")
         , body = $("body");
-        
+
         if (wrapper.data("scrollTop") < winScrollTop) {
             $(document.body).height(docHeight - body.css("padding-top").replace("px", ""));
         }
@@ -1102,8 +1188,8 @@ $(document).ready(function() {
     });
     $(window).scroll(MyApp.meldSidebar).resize(MyApp.resize);
     $(function() {
-        //$("#new_site .tz").append(TZ.select("new_tz")), 
-        //$("body").hasClass("loading") ? MyApp.start() : auth.run(), 
+        //$("#new_site .tz").append(TZ.select("new_tz")),
+        //$("body").hasClass("loading") ? MyApp.start() : auth.run(),
         document.onmousemove = function(a) {
             window.MyApp.mousecoords.pageX = window.event ? window.event.clientX : a.pageX;
             window.MyApp.mousecoords.pageY = window.event ? window.event.clientY : a.pageY;
@@ -1152,7 +1238,7 @@ $(document).ready(function() {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         }
     };
-    //Public methods 
+    //Public methods
     methods.init = function (options) {
         var options = $.extend({}, defaults, options);
         var myLatlng = new google.maps.LatLng(options.latitude, options.longitude)
@@ -1232,20 +1318,20 @@ $(document).ready(function() {
             zoom: 8,
             center: new google.maps.LatLng(0, 0),
             mapTypeId: google.maps.MapTypeId.ROADMAP
-        }    
+        }
     };
-    //Public methods 
+    //Public methods
     methods.init = function (options) {
         //Preserve the original defaults by passing an empty object as the target
         var options = $.extend({}, defaults, options);
         console.log(JSON.stringify(options));
-        if (typeof google !== 'object' && typeof google.maps !== 'object') 
+        if (typeof google !== 'object' && typeof google.maps !== 'object')
         {
             return false;
         }
 
         var myLatlng = new google.maps.LatLng(options.latitude, options.longitude)
-        
+
         var map = new google.maps.Map(document.getElementById(options.id), options.mapOptions);
         setMapStyle(map);
         homeMarker = makeMarker({
@@ -1269,14 +1355,14 @@ $(document).ready(function() {
             activeSizerIcon: new google.maps.MarkerImage('/images/radius-resize.png'),
             homeMarker: homeMarker,
         });
-        
+
         google.maps.event.addListener(distanceWidget, 'distance_changed',  function() {
             console.log("distance change");
             //updateDistance();
         });
 
         google.maps.event.addListener(distanceWidget, 'position_changed', function() {
-            console.log("position change: " + distanceWidget.get('position'));            
+            console.log("position change: " + distanceWidget.get('position'));
         });
 
         var div = document.createElement('DIV');
@@ -1421,22 +1507,22 @@ $(document).ready(function() {
             arrowPosition: 50,
             backgroundClassName: '',
             arrowStyle: 0
-        });  
+        });
     };
     function setMapStyle(map) {
         var lightMapStyle = [{
                 featureType: "all",
                 elementType: "all",
                 stylers: [
-                    {hue: "#95386f"}, 
-                    {saturation: 0}, 
-                    {lightness: 0}, ]}, 
-                    {featureType: "road",elementType: "all",stylers: [{visibility: "on"}]}, 
-                    {featureType: "poi",elementType: "all",stylers: [{visibility: "off"}]}, 
-                    {featureType: "landscape",elementType: "all"}, 
-                    {featureType: "transit",elementType: "all",stylers: [{visibility: "off"}]}, 
-                    {featureType: "administrative.country",elementType: "all",stylers: [{visibility: "on"}]}, 
-                    {featureType: "administrative.province",elementType: "all",stylers: [{visibility: "on"}]}, 
+                    {hue: "#95386f"},
+                    {saturation: 0},
+                    {lightness: 0}, ]},
+                    {featureType: "road",elementType: "all",stylers: [{visibility: "on"}]},
+                    {featureType: "poi",elementType: "all",stylers: [{visibility: "off"}]},
+                    {featureType: "landscape",elementType: "all"},
+                    {featureType: "transit",elementType: "all",stylers: [{visibility: "off"}]},
+                    {featureType: "administrative.country",elementType: "all",stylers: [{visibility: "on"}]},
+                    {featureType: "administrative.province",elementType: "all",stylers: [{visibility: "on"}]},
                     {featureType: "water",elementType: "all",stylers: [{visibility: "simplified"}
                 ]
             }];
