@@ -562,7 +562,7 @@ $(document).ready(function() {
                     
                     $.plot(placeholder, data, options);
 
-                    data = [[1999, 3.0], [2000, 3.9], [2001, 2.0], [2002, 1.2], [2003, 1.3], [2004, 2.5], [2005, 2.0], [2006, 3.1], [2007, 2.9], [2008, 0.9]];
+                    data = [[1999, 3.0], [2000, 3.9], [2001, 2.0], [2002, 1.2], [2003, 1.3], [2004, 2.5], [2005, 2.0], [2006, 3.1], [2007, 2.9], [2008, 0.9], ];
                     $.plot(placeholder, data, options);
                     break;
                 case "code":
@@ -701,6 +701,40 @@ $(document).ready(function() {
         this.get("#/", function (a) {
             $("body").removeClass("no_cancel").removeClass("my_account");
             $.trim($("#data").html()) == "" && $("#sites div.site:first a").length > 0 && a.redirect($("#sites div.site:first a").attr("href"))
+        });
+        ///////////////////////////////////////////////////////////////////////
+        // Live Events FUll Map                                              //
+        ///////////////////////////////////////////////////////////////////////
+        this.get("#/map", function() {
+            var options = {
+                zoom: 12,
+                center: new google.maps.LatLng(-34.6036, -58.3817),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            if(!MyApp.full_map)
+            {
+                MyApp.full_map = new window.map({id: "full_map_wrapperx", latitude: -34.6036, longitude: -58.3817, mapOptions: options});
+            }
+            $("#full_map").fadeIn('slow'); //slideDown(500, 'easeOutBounce');
+            $("#full_map_frame").css('height', '100%');
+            $("#full_map_frame").slideDown(2000, 'easeOutBounce', function() {
+                // resize after animation stop
+                google.maps.event.trigger(MyApp.full_map.mapa, "resize");
+                MyApp.full_map.mapa.setCenter(MyApp.full_map.homeMarker.getPosition());
+            });
+            $(".close.button").on('click', function() {
+                $("#full_map_frame").slideUp(2000, 'easeOutBounce', function() {
+                    $("#full_map").fadeOut('slow');
+                });
+            });
+            var options = {
+                zoom: 12,
+                center: new google.maps.LatLng(-34.6036, -58.3817),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            //if(!MyApp.full_map)
+            //{
+            //}
         });
         ///////////////////////////////////////////////////////////////////////
         // Account Routes                                                    //
@@ -1341,7 +1375,13 @@ $(document).ready(function() {
             styles: null
         });
         */
-
+        return({
+            container: map.getDiv(),
+            homeMarker: homeMarker,
+            mapa: map,
+            distanceWidget: distanceWidget,
+            infoBubble: myBubble,
+        });
     };
     //Public:
     methods.moveMarker = function (placeName, latlng){

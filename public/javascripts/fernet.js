@@ -64,6 +64,7 @@
         connection_count: 0,
         subscription: {},
         subscriptions: [],
+        full_map: null,
         views: {
             code: {}
         },
