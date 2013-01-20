@@ -91,10 +91,10 @@
         },
         init: function(options) {
             var that = this;
-            this.getUser({callback: gotUser})
-            function gotUser(account)
-            {
-
+            var deferred = new jQuery.Deferred();
+            $.when(this.getUser())
+            .then(function(account) {
+                console.log("user id ok")
                 if(that.user.subscriptions.length > 0)
                 {
                     $("#sites").prepend(ich.stations_loader(this)).hide().fadeIn('slow');
@@ -155,7 +155,16 @@
                     });
                     subscription.order.forEach(function(_id) { queue.add(_id) });
                 }
-            }
+            })
+            .done(function(user) {
+                console.log(user);
+                eferred.resolve(user);
+            })
+            .fail(function(error) {
+                console.log("could not retreive user info")
+                deferred.reject(new Error(error));
+            });
+            return deferred.promise();
         },
         start: function(options) {
             var that = this;
@@ -174,9 +183,32 @@
                 },
             });
         },
-        getSubscription: function(options) {
+        getSubscriptionXXX: function(options) {
             var that = this;
             console.log("MyApp.getSubscription(%s)", options._id);
+            $.ajax({
+                url: "/subscription/getbyid/" + options._id,
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    if($.isFunction(options.callback))
+                    {
+                        options.callback(data);
+                    }
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                    $("body").addClass("add_subscription");
+                },
+                complete: function () {
+                }
+            });
+        },
+        getSubscription: function(options) {
+            console.log("MyApp.getSubscription(%s)", options._id);
+            var that = this;
+            var deferred = new jQuery.Deferred();
+            
             $.ajax({
                 url: "/subscription/getbyid/" + options._id,
                 type: "GET",
@@ -249,6 +281,22 @@
             //this.user = a.user, a.subscription && (this.subscription = new Subscription(a.subscription))
         },
         getUser: function(options) {
+            var that = this;
+            var deferred = new jQuery.Deferred();
+            $.ajax({url:"/account/getAccount"})
+            .then(function(data, textStatus, jqXHR) { 
+                that.user = $.extend({}, that.user, data);
+                return that.user;
+            })
+            .done(function(user) {
+                deferred.resolve(user);
+            })
+            .fail(function(jqXHR, status, error) {
+                deferred.reject(new Error(error));
+            });
+            return deferred.promise();
+        },
+        getUserXXX: function(options) {
             var that = this;
             $.ajax({
                 url: "/account/getAccount",
@@ -437,6 +485,24 @@
             that.clearAll();
             that.grabTemplates();
         },
+        getSystemData: function(options) {
+            /*
+            if (data.length) {
+                data = data.slice(1);
+            }
+            while (data.length < maximum) {
+                var previous = data.length ? data[data.length - 1] : 50;
+                var y = previous + Math.random() * 10 - 5;
+                data.push(y < 0 ? 4 : y > 100 ? 100 : y);
+            }
+            // zip the generated y values with the x values
+            var res = [];
+            for (var i = 0; i < data.length; ++i) {
+                res.push([i, data[i]])
+            }
+            return res;
+            */
+        },
         // grabs views from the DOM and caches them.
         // Loop through and add views.
         // Whitespace at beginning and end of all views inside <script> tags will
@@ -514,11 +580,11 @@ $(document).ready(function() {
                 switch(data.io)
                 {
                     case 'stdout':
-                        //echo(data.result);
+                        echo(data.result);
                         //console.log(data);
                         break;
                     case 'stderr':
-                        //echo("[[b;#f00;]" + data.result +"]");
+                        echo("[[b;#f00;]" + data.result +"]");
                         //console.log(data.result);
                         break;
                 }
@@ -543,15 +609,13 @@ $(document).ready(function() {
         console.log("socket.connected");
         $("html").addClass("live");
         $("li.live .status").text("on");
-        /*
         timer = setInterval(function() {
             $(".indicator span").animate({backgroundColor:'##F511F5'})
             socket.emit('consoleio', { message: 'heartbeat' });
             setTimeout(function() {
                 $(".indicator span").animate({backgroundColor:'#750775'})
-            }, 1000);
-        }, 2000);
-        */
+            }, 10000);
+        }, 20000);
     });
     socket.on('disconnect', function() {
         console.log("socket.disconnected")
@@ -569,147 +633,6 @@ $(document).ready(function() {
 ///////////////////////////////////////////////////////////////////////////////
 // Google MAPS bindings                                                      //
 ///////////////////////////////////////////////////////////////////////////////
-/*
-$(document).ready(function() {
-    "use strict";
-
-    $(function initialize() {
-        var distanceWidget;
-        var map;
-        var geocodeTimer;
-        var profileMarkers = [];
-
-        var myLatlng = new google.maps.LatLng(0, 0) //(-34.6036, -58.3817);
-        var image = 'images/markers/anniversary.png'
-        var myOptions = {
-          zoom: 1,
-          center: myLatlng,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
-        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-        distanceWidget = new DistanceWidget({
-            map: map,
-            distance: 50, // Starting distance in km.
-            maxDistance: 2500, // Twitter has a max distance of 2500km.
-            color: '#000000',
-            activeColor: '#5599bb',
-            sizerIcon: new google.maps.MarkerImage('resize-off.png'),
-            activeSizerIcon: new google.maps.MarkerImage('resize.png')
-        });
-
-        // google.maps.event.addListener(distanceWidget, 'distance_changed', updateDistance);
-        // google.maps.event.addListener(distanceWidget, 'position_changed', updatePosition);
-        var contentString =
-            '<div id="infowindow">' +
-            'Galaconcert<br />' +
-            'Jaarbeurslaan 2-6<br />' +
-            '3690 Genk' +
-            '</div>'
-        ;
-        var infowindow = new google.maps.InfoWindow();
-
-
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            title: 'Galaconcert',
-            icon: image
-        });
-        var infowindow = new google.maps.InfoWindow();
-
-        var input = document.getElementById('new_location');
-        var autocomplete = new google.maps.places.Autocomplete(input, {
-            types: ["geocode"]
-        });
-        autocomplete.bindTo('bounds', map);
-
-
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            infowindow.close();
-            var place = autocomplete.getPlace();
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);
-            }
-            moveMarker(place.name, place.geometry.location);
-        });
-        google.maps.event.addDomListener(window, 'load', init);
-        $(input).focusin(function () {
-            $(document).keypress(function (e) {
-                if (e.which == 13) {
-                     selectFirstResult();
-                }
-            });
-        });
-        $(input).focusout(function () {
-            if(!$(".pac-container").is(":focus") && !$(".pac-container").is(":visible"))
-                selectFirstResult();
-        });
-        function updateDistance() {
-            var distance = distanceWidget.get('distance');
-            //$('#dist').html(distance.toFixed(2));
-        }
-        function selectFirstResult() {
-            infowindow.close();
-            $(".pac-container").hide();
-            var firstResult = $(".pac-container .pac-item:first").text();
-            console.log("selectFirstResult: " + firstResult)
-
-            var geocoder = new google.maps.Geocoder();
-            geocoder.geocode({"address":firstResult }, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    var lat = results[0].geometry.location.lat(),
-                        lng = results[0].geometry.location.lng(),
-                        placeName = results[0].address_components[0].long_name,
-                        latlng = new google.maps.LatLng(lat, lng);
-
-                    moveMarker(placeName, latlng);
-                    $(input).val(firstResult);
-                }
-            });
-        }
-        var div = document.createElement('DIV');
-        $(div).html(ich.infobubble_template({name: $(input).val()}));
-        google.maps.event.addListener(marker, 'click', function() {
-            //infowindow.setContent(contentString);
-            //infowindow.open(map, marker);
-            infoBubble2.setContent(div);
-            infoBubble2.open(map, marker);
-        });
-
-        function moveMarker(placeName, latlng){
-            marker.setIcon(image);
-            marker.setPosition(latlng);
-            infowindow.close();
-            //infowindow.setContent(contentString);
-            infoBubble2.setContent(div);
-            //infowindow.open(map, marker);
-            //infoBubble2.open(map, marker);
-        }
-
-        var infoBubble2 = new InfoBubble({
-          map: map,
-          content: '<div class="signin"><form action="/signin" method="post"><p class="phoneytext">Hello There</p></form></div>',
-          position: new google.maps.LatLng(-34.6036, -58.3817),
-          shadowStyle: 1,
-          padding: 0,
-          backgroundColor: 'rgb(57,57,57)',
-          borderRadius: 4,
-          arrowSize: 10,
-          borderWidth: 1,
-          borderColor: '#2c2c2c',
-          disableAutoPan: true,
-          hideCloseButton: true,
-          arrowPosition: 30,
-          backgroundClassName: 'signin',
-          arrowStyle: 2
-        });
-    });
-})
-*/
-
 $(document).ready(function() {
     // body...
     var distanceWidget;
@@ -788,3 +711,177 @@ function clearMarkers() {
 
 google.maps.event.addDomListener(window, 'load', init);
 });
+
+
+(function(root, factory) {
+  'use strict';
+
+  if(typeof root.exports === 'function') {
+    // Node/CommonJS
+    root.exports.Mediator = factory();
+  } else if(typeof root.define === 'function' && root.define.amd) {
+    // AMD
+    root.define(factory());
+  } else {
+    // Browser global
+    root.Mediator = factory();
+  }
+}(this, function() {
+    "use strict";
+
+    var container = '#realtime';
+    // Determine how many data points to keep based on the placeholder's initial size;
+    // this gives us a nice high-res plot while avoiding more than one point per pixel.
+    var maximum = 250;
+    var data = [];
+    var times = [];
+    var date = new Date();
+    var timeUnitSize = {
+        "second": 1000,
+        "minute": 60 * 1000,
+        "hour": 60 * 60 * 1000,
+        "day": 24 * 60 * 60 * 1000,
+        "month": 30 * 24 * 60 * 60 * 1000,
+        "quarter": 3 * 30 * 24 * 60 * 60 * 1000,
+        "year": 365.2425 * 24 * 60 * 60 * 1000
+    };
+    function TimeChart() {
+        if ( !(this instanceof TimeChart) ) {
+            return new TimeChart();
+        } else {
+            this.container = container || "";
+            this._callbacks = [];
+            this.timer = null;
+            this.stopped = false;
+        }
+    };
+    function getRandomData() {
+        var deferred = new jQuery.Deferred();
+        if (data.length) {
+            data = data.slice(1);
+            times.shift();
+        }
+        while (data.length < maximum) {
+            var previous = data.length ? data[data.length - 1] : 50;
+            var y = previous + Math.random() * 10 - 5;
+            data.push(y < 0 ? 4 : y > 100 ? 100 : y);                            
+            date.setMinutes(date.getMinutes() + 1)
+            times.push(date.getTime());
+        }
+        // zip the generated y values with the x values
+        var res = [];
+        for (var i = 0; i < data.length; ++i) {
+            res.push([times[i], data[i]])
+        }
+        deferred.resolve(res);
+        deferred.promise();
+    }
+    TimeChart.prototype = {
+
+    }
+    var series = [{
+        data: getRandomData(),
+        lines: {
+            fill: true,
+            color: "#000",
+            fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0 } ] }
+        },
+        color: "#D355D3",
+    }];
+
+    var MyOptions = {
+        grid: {
+            borderWidth: 1,
+            minBorderMargin: 20,
+            labelMargin: 10,
+            backgroundColor: {
+                colors: ["#fff", "#DDA5C6"]
+            },
+            borderColor: '#d30cd3',
+            hoverable: true,
+            mouseActiveRadius: 50,
+            margin: {
+                top: 8,
+                bottom: 20,
+                left: 20,
+            },
+            markings: function(axes) {
+                var markings = [];
+                var xaxis = axes.xaxis;
+                var tick = timeUnitSize[xaxis.tickSize[1]] * xaxis.tickSize[0] ;
+                var then = new Date(times[0]);
+                var now = new Date(times[times.length - 1]);
+
+                for (var x = then.getTime(); x < now.getTime(); x += tick * 2) {
+                    
+                    var mils = 1000 - new Date(x).getMilliseconds()
+                    var secs = 60 - new Date(x).getSeconds();
+                    var mins = (60 - new Date(x).getMinutes()) % 30;
+                    var next = (60 - new Date(then).getMinutes());
+                    var unti = mils + ((secs -1) * 1000) + ((mins - 1) * 60 * 1000);
+                    if(next < 30){
+                        markings.push({
+                            xaxis: { 
+                                from: new Date(x).getTime() + (unti - tick), 
+                                to: new Date(x).getTime() + unti,
+                            }, 
+                            color: "rgba(204, 102, 188, 0.2)" 
+                        });
+                    } else {
+                        var unti = mils + ((secs -1) * 1000) + ((next - 1) * 60 * 1000);
+                        markings.push({
+                            xaxis: { 
+                                from: new Date(x).getTime() - ((tick * 2 ) - unti) - tick, 
+                                to: new Date(x).getTime() - ((tick * 2 ) - unti),
+                            }, 
+                            color: "rgba(204, 102, 188, 0.2)" 
+                        });
+                    }
+                }
+                return markings;
+            }
+        },
+        yaxis: {
+            min: 0,
+            max: 110,
+            color: '#9A338A',
+        },
+        xaxis: {
+            mode: "time",
+            timeformat: "%H:%M",
+            min: (new Date(times[0])).getTime(),
+            max: (new Date(times[times.length - 1])).getTime(),
+            minTickSize: [1, "minute"],
+            tickSize: [30, 'minute'],
+            color: '#9A338A',
+        },
+        legend: {
+            show: true,
+            color: '#f00'
+        }
+    };
+    var plot = $.plot(container, series, MyOptions);
+    setInterval(function updateRandom() {
+        
+        $.when(getRandomData()).then( function(data){
+            series[0].data = data;
+            var options = $.extend({}, MyOptions, {
+                xaxis: {
+                    mode: "time",
+                    timeformat: "%H:%M",
+                    min: (new Date(times[0])).getTime(),
+                    max: (new Date(times[times.length - 1])).getTime(),
+                    minTickSize: [1, "minute"],
+                    tickSize: [30, 'minute'],
+                    color: '#9A338A'
+                }
+            });
+        });
+        
+        var plot = $.plot(container, series, options);
+        plot.draw();
+    }, 1000);
+
+
+    return TimeChart;
+}));

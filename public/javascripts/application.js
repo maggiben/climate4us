@@ -338,7 +338,7 @@ $(document).ready(function() {
             });
             that.properties.order.forEach(function(_id) { queue.add(_id) });
         },
-        getAllStations: function(options, callback) {
+        getAllStationsXXX: function(options, callback) {
             var that = this;
             this.properties.order.forEach(function(_id) {
                 $.ajax({
@@ -359,6 +359,26 @@ $(document).ready(function() {
                     }
                 });
             });
+        },
+        getAllStations: function(options, callback) {
+            var that = this;
+            var deferred = new jQuery.Deferred();
+            this.properties.order.forEach(function(_id) {
+                $.when($.ajax("/station/getbyid/" + _id))
+                .then(function(data, textStatus, jqXHR) {
+                    that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: function(station){
+                        station.isReady = true;
+                        callback(station);
+                    }});
+                })
+                .fail(function(jqXHR, status, error){
+                    deferred.reject(new Error(error));
+                })
+                .done(function(data, textStatus, jqXHR){
+                    deferred.resolve(data);
+                });
+            });
+            deferred.promise();
         },
         listStations: function (a) {
             for (var key in this.properties.stations)
@@ -450,6 +470,34 @@ $(document).ready(function() {
             }), !1;
         },
         addStation: function(station, callback) {
+            var that = this;
+            var deferred = new jQuery.Deferred();
+            $.when($.ajax({
+                url: "/station/create",
+                type: "POST",
+                dataType: "json",
+                data: station,
+            }))
+            .then(function(data, textStatus, jqXHR) {
+                that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
+                function onLoad(station) {
+                    station.isReady = true;
+                    that.properties.order.push(station._id);
+                    var order = that.getOrder();
+                    that.setOrder(order);
+                    callback(station);
+                }
+            })
+            .done(function(data, textStatus, jqXHR){
+                deferred.resolve(data);
+            })
+            .fail(function(jqXHR, status, error){
+                deferred.reject(new Error(error));
+            })
+
+            deferred.promise();
+        },
+        addStationXXX: function(station, callback) {
             var that = this;
             $.ajax({
                 url: "/station/create",
@@ -555,21 +603,35 @@ $(document).ready(function() {
                         var container = '#realtime';
                         // Determine how many data points to keep based on the placeholder's initial size;
                         // this gives us a nice high-res plot while avoiding more than one point per pixel.
-                        var maximum = 1000;
+                        var maximum = 250;
                         var data = [];
+                        var times = [];
+                        var date = new Date();
+                        var timeUnitSize = {
+                            "second": 1000,
+                            "minute": 60 * 1000,
+                            "hour": 60 * 60 * 1000,
+                            "day": 24 * 60 * 60 * 1000,
+                            "month": 30 * 24 * 60 * 60 * 1000,
+                            "quarter": 3 * 30 * 24 * 60 * 60 * 1000,
+                            "year": 365.2425 * 24 * 60 * 60 * 1000
+                        };
                         function getRandomData() {
                             if (data.length) {
                                 data = data.slice(1);
+                                times.shift();
                             }
                             while (data.length < maximum) {
                                 var previous = data.length ? data[data.length - 1] : 50;
                                 var y = previous + Math.random() * 10 - 5;
-                                data.push(y < 0 ? 4 : y > 100 ? 100 : y);
+                                data.push(y < 0 ? 4 : y > 100 ? 100 : y);                            
+                                date.setMinutes(date.getMinutes() + 1)
+                                times.push(date.getTime());
                             }
                             // zip the generated y values with the x values
                             var res = [];
                             for (var i = 0; i < data.length; ++i) {
-                                res.push([i, data[i]])
+                                res.push([times[i], data[i]])
                             }
                             return res;
                         }
@@ -577,52 +639,96 @@ $(document).ready(function() {
                             data: getRandomData(),
                             lines: {
                                 fill: true,
-                                color: "#000",
                                 fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0 } ] }
                             },
                             color: "#D355D3",
                         }];
                         //
-                        var plot = $.plot(container, series, {
-                    		grid: {
-                    			borderWidth: 1,
-                    			minBorderMargin: 20,
-                    			labelMargin: 10,
-                    			backgroundColor: {
-                    				colors: ["#fff", "#DDA5C6"]
-                    			},
+                        var MyOptions = {
+                            grid: {
+                                borderWidth: 1,
+                                minBorderMargin: 20,
+                                labelMargin: 10,
+                                backgroundColor: {
+                                    colors: ["#FFFFFF", "#DDA5C6"]
+                                },
                                 borderColor: '#d30cd3',
-                    			hoverable: true,
-                    			mouseActiveRadius: 50,
-                    			margin: {
-                    				top: 8,
-                    				bottom: 20,
-                    				left: 20,
-                    			},
-                    			markings: function(axes) {
-                    				var markings = [];
-                    				var xaxis = axes.xaxis;
-                    				for (var x = Math.floor(xaxis.min); x < xaxis.max; x += xaxis.tickSize * 2) {
-                    					markings.push({ xaxis: { from: x, to: x + xaxis.tickSize }, color: "rgba(204, 102, 188, 0.2)" });
-                    				}
-                    				return markings;
-                    			}
-                    		},
-                    		yaxis: {
-                    			min: 0,
-                    			max: 110,
-                                color: '#9A338A',
-                    		},
-                            xaxis: {
+                                hoverable: true,
+                                mouseActiveRadius: 50,
+                                margin: {
+                                    top: 8,
+                                    bottom: 20,
+                                    left: 20,
+                                },
+                                markings: function(axes) {
+                                    var markings = [];
+                                    var xaxis = axes.xaxis;
+                                    var tick = timeUnitSize[xaxis.tickSize[1]] * xaxis.tickSize[0] ;
+                                    var then = new Date(times[0]);
+                                    var now = new Date(times[times.length - 1]);
+                                    var mils = 1000 - new Date(then).getMilliseconds()
+                                    var secs = 60 - new Date(then).getSeconds();
+                                    var mins = (60 - new Date(then).getMinutes()) % 30;
+                                    var next = (60 - new Date(then).getMinutes());
+                                    var unti = mils + ((secs -1) * 1000) + ((mins - 1) * 60 * 1000);
+
+                                    for (var x = then.getTime(); x < now.getTime(); x += tick * 2) {
+                                        
+                                        var mils = 1000 - new Date(x).getMilliseconds()
+                                        var secs = 60 - new Date(x).getSeconds();
+                                        var mins = (60 - new Date(x).getMinutes()) % 30;
+                                        var next = (60 - new Date(then).getMinutes());
+                                        var unti = mils + ((secs -1) * 1000) + ((mins - 1) * 60 * 1000);
+                                        //console.log("%s:%s:%s:%s", new Date(x).getHours(), mins, secs, mils)
+                                        if(next < 30){
+                                            markings.push({
+                                                xaxis: { 
+                                                    //from: new Date(x).getTime(),
+                                                    //to: new Date(x).getTime() + tick,
+                                                    from: new Date(x).getTime() + (unti - tick), 
+                                                    to: new Date(x).getTime() + unti,
+                                                }, 
+                                                color: "rgba(204, 102, 188, 0.2)" 
+                                            });
+                                        } else {
+                                            var unti = mils + ((secs -1) * 1000) + ((next - 1) * 60 * 1000);
+                                            markings.push({
+                                                xaxis: { 
+                                                    from: new Date(x).getTime() - ((tick * 2 ) - unti) - tick, 
+                                                    to: new Date(x).getTime() - ((tick * 2 ) - unti),
+                                                }, 
+                                                color: "rgba(204, 102, 188, 0.2)" 
+                                            });
+                                        }
+                                        //var tot = (mins)
+                                        //console.log("next: " + next + " from: " + (new Date(x).getTime() + (unti - tick)) + " to: " + (new Date(x).getTime() + unti) + " tot: " + tot)
+                                        //console.log(new Date(new Date(x).getTime() + (unti - tick)))
+                                    }
+                                    
+                                    //markings.push({ xaxis: { from: then.getTime(), to: then.getTime() + unti }, color: "rgba(204, 102, 188, 0.2)" });
+                                    return markings;
+                                }
+                            },
+                            yaxis: {
                                 min: 0,
-                    			max: 1000,
+                                max: 110,
                                 color: '#9A338A',
                             },
-                    		legend: {
-                    			show: true,
+                            xaxis: {
+                                mode: "time",
+                                timeformat: "%H:%M",
+                                min: (new Date(times[0])).getTime(),
+                                max: (new Date(times[times.length - 1])).getTime(),
+                                minTickSize: [1, "minute"],
+                                tickSize: [30, 'minute'],
+                                color: '#9A338A',
+                            },
+                            legend: {
+                                show: true,
                                 color: '#f00'
-                    		}
-                    	});
+                            }
+                        };
+                        //var plot = $.plot(container, series, MyOptions);
 
                     	// Create the demo X and Y axis labels
 
@@ -642,9 +748,22 @@ $(document).ready(function() {
 
                     	setInterval(function updateRandom() {
                     		series[0].data = getRandomData();
-                    		plot.setData(series);
+                    		//plot.setData(series);
+                            var options = $.extend({}, MyOptions, {
+                                xaxis: {
+                                    mode: "time",
+                                    timeformat: "%H:%M",
+                                    min: (new Date(times[0])).getTime(),
+                                    max: (new Date(times[times.length - 1])).getTime(),
+                                    minTickSize: [1, "minute"],
+                                    tickSize: [30, 'minute'],
+                                    color: '#9A338A'
+                                }
+                            });
+                            
+                            var plot = $.plot(container, series, options);
                     		plot.draw();
-                    	}, 40);
+                    	}, 1000);
 
                     });
                     break;
