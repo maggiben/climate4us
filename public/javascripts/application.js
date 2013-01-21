@@ -156,8 +156,9 @@ $(document).ready(function() {
             ],
         },
         setup: function (options) {
-            var options = $.extend({}, this.properties, options);
             var that = this;
+            var options = $.extend({}, this.properties, options);
+            var deferred = new jQuery.Deferred();
             this.properties.last_7_days = [ {temperature_size: Math.floor(Math.random() * 25) + "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
@@ -165,22 +166,25 @@ $(document).ready(function() {
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"},
                             {temperature_size: Math.floor(Math.random() * 25)+ "px", humidity_size: Math.floor(Math.random() * 12)+ "px"} ];
-            that.id = options._id;
             $.ajax({
                 url: "/station/getbyid/" + options._id,
                 type: "GET",
                 dataType: "json",
-                success: function (data, textStatus, jqXHR) {
-                    that.properties = $.extend({}, that.properties, data);
-                    that.properties.id = that.properties._id;
-                    options.onLoad(that.properties);
-                },
-                error: function (jqXHR, status, error) {
-                    console.log(jqXHR.responseText);
-                },
-                complete: function () {
-                }
+            })
+            .then(function (data, textStatus, jqXHR) {
+                that.properties = $.extend({}, that.properties, data);
+                that.properties.id = that.properties._id;
+                return that.properties;
+            })
+            .done(function (station) {
+                console.log("station setup complete")
+                deferred.resolve(station);
+            })
+            .fail(function (jqXHR, status, error) {
+                deferred.reject(new Error(error));
             });
+
+            return deferred.promise();
         },
         update: function(properties, callback) {
             var that = this;
@@ -269,10 +273,11 @@ $(document).ready(function() {
             selected: null
         },
         onSetup: null,
-        init: function (options) {
+        initXXX: function (options) {
             var that = this;
             //Preserve the original defaults by passing an empty object as the target
             var options = $.extend({}, this.properties, options);
+            var deferred = new jQuery.Deferred();
             $.ajax({
                 url: "/subscription/getbyid/" + options._id,
                 type: "GET",
@@ -294,11 +299,43 @@ $(document).ready(function() {
                 complete: function () {
                 }
             });
+            return deferred.promise();
+        },
+        init: function (options) {
+            var that = this;
+            //Preserve the original defaults by passing an empty object as the target
+            var options = $.extend({}, this.properties, options);
+            var deferred = new jQuery.Deferred();
+            $.ajax({
+                url: "/subscription/getbyid/" + options._id,
+                type: "GET",
+                dataType: "json",
+            })
+            .then(function(data, textStatus, jqXHR) { 
+                that.properties = $.extend({}, that.properties, data);
+                if(that.properties.order.length > 0) {
+                    $.when(that.setup(that.properties, options.callback))
+                    .then(function (stations){
+                        options.callback(stations);
+                        return stations;    
+                    })
+                } else {
+                    return that.properties;
+                }
+            })            
+            .done(function(subscription) {
+                deferred.resolve(subscription);
+            })
+            .fail(function(jqXHR, status, error) {
+                deferred.reject(new Error(error));
+            });            
+            return deferred.promise();
         },
         setup: function (properties, callback) {
             var that = this;
             var total = 100 / that.properties.order.length;
             var cnt = 1;
+            var deferred = new jQuery.Deferred();
             // Create a new queue.
             var queue = $.jqmq({
                  // Next item will be processed only when queue.next() is called in callback.
@@ -309,6 +346,28 @@ $(document).ready(function() {
                 // continue processing the queue once the AJAX request's callback executes.
                 callback: function( _id ) {
                     console.log("get: /station/getbyid/" + _id);
+                    $.ajax({url: "/station/getbyid/" + _id})
+                    .then(function(data, textStatus, jqXHR) {
+
+                        $.when(that.properties.stations[data._id] = new Station({_id: data._id, type: data.type})) //that.properties.stations[data._id] = new Station({_id: data._id, type: data.type, onLoad: onLoad});
+                        .then(function (){
+                            console.log("data is back " + JSON.stringify(that.properties.stations[data._id]));
+                            that.properties.stations[data._id].isReady = true;
+                            return that.properties.stations[data._id];
+                        })
+                        .done(function(station){
+                            console.log(station)
+                        });
+                    })
+                    .done(function(station) {
+                        deferred.notify(station);
+                        queue.next(false);
+                    })
+                    .fail(function(jqXHR, status, error) {
+                        deferred.notify(new Error(error));
+                        queue.next(true);
+                    });
+                    /*
                     $.ajax({
                         url: "/station/getbyid/" + _id,
                         type: "GET",
@@ -325,18 +384,21 @@ $(document).ready(function() {
                             }
                         },
                         error: function (jqXHR, status, error) {
+                            console.log("error retriving data")
                             console.log(jqXHR.responseText);
                             // If the request was unsuccessful, make another attempt.
                             queue.next(true);
                         },
                     });
+                    */
                 },
                 // When the queue completes naturally, execute this function.
-                complete: function(){
-                    callback(that.properties);
+                complete: function() {
+                    deferred.resolve(that.properties);
                 }
             });
             that.properties.order.forEach(function(_id) { queue.add(_id) });
+            return deferred.promise();
         },
         getAllStationsXXX: function(options, callback) {
             var that = this;

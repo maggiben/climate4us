@@ -212,20 +212,19 @@
         },
         removeStation: function(id, callback) {
             var that = this;
-            $.ajax({
-                url: "/station/remove/" + id,
-                type: "delete",
-                dataType: "json",
-                data: {},
-                success: function (data, textStatus, jqXHR) {
-                    delete that.properties.stations[data._id];
-                    console.log("removed id: " + JSON.stringify(data));
-                    callback(data);
-                },
-                error: function (jqXHR, status, error) {
-                    console.log(jqXHR.responseText);
-                }
+            var deferred = new jQuery.Deferred();
+            $.ajax({url: "/station/remove/" + id, type: "delete"})
+            .then(function(data, textStatus, jqXHR)) {
+                delete that.properties.stations[data._id];
+                return data;
+            })
+            .done(function(user) {
+                deferred.resolve(user);
+            })
+            .fail(function(jqXHR, status, error) {
+                deferred.reject(new Error(error));
             });
+            return deferred.promise();
         },
         addStation: function(station, callback) {
             var that = this;
@@ -262,6 +261,27 @@
             }
         },
         update: function(properties, callback) {
+            var that = this;
+            properties = $.extend({}, this.properties, properties);
+            var deferred = new jQuery.Deferred();
+            $.ajax({
+                url: "/subscription/update/" + properties._id,
+                dataType: "json",
+                type: "put",
+                data: properties
+            })
+            .then(function(data, textStatus, jqXHR) {
+                return data;
+            })
+            .done(function(data){
+                deferred.resolve(data);
+            })
+            .fail(function(jqXHR, status, error) {
+                deferred.reject(new Error(error));
+            });
+            return deferred.promise();
+        },
+        updateXXX: function(properties, callback) {
             var that = this;
             properties = $.extend({}, this.properties, properties);
             console.log("subscription update");

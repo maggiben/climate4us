@@ -102,7 +102,14 @@
                         value: 0
                     });
                     that.user.subscriptions.forEach(function(_id) {
-                        that.getSubscription({_id: _id, callback: gotSubscription});
+                        $.when(that.getSubscription({_id: _id, callback: gotSubscription}))
+                        .then(function(subscription){
+                            gotSubscription(subscription);
+                        })
+                        .fail(function(error){
+                            console.log("could not retreive user info")
+                            deferred.reject(new Error(error));
+                        });
                     });
                 }
                 else {
@@ -158,7 +165,7 @@
             })
             .done(function(user) {
                 console.log(user);
-                eferred.resolve(user);
+                deferred.resolve(user);
             })
             .fail(function(error) {
                 console.log("could not retreive user info")
@@ -209,23 +216,19 @@
             var that = this;
             var deferred = new jQuery.Deferred();
             
-            $.ajax({
-                url: "/subscription/getbyid/" + options._id,
-                type: "GET",
-                dataType: "json",
-                success: function (data, textStatus, jqXHR) {
-                    if($.isFunction(options.callback))
-                    {
-                        options.callback(data);
-                    }
-                },
-                error: function (jqXHR, status, error) {
-                    console.log(jqXHR.responseText);
-                    $("body").addClass("add_subscription");
-                },
-                complete: function () {
-                }
+            $.ajax({url: "/subscription/getbyid/" + options._id})
+            .then(function(data, textStatus, jqXHR) { 
+                //that.user = $.extend({}, that.user, data);
+                //that.subscriptions[subscription._id] = new Subscription({_id: subscription._id, callback: onInit});
+                return data;
+            })
+            .done(function(subscription) {
+                deferred.resolve(subscription);
+            })
+            .fail(function(jqXHR, status, error) {
+                deferred.reject(new Error(error));
             });
+            return deferred.promise();
         },
         setSubscription: function(_id) {
             var that = this;
@@ -283,7 +286,7 @@
         getUser: function(options) {
             var that = this;
             var deferred = new jQuery.Deferred();
-            $.ajax({url:"/account/getAccount"})
+            $.ajax({url: "/account/getAccount"})
             .then(function(data, textStatus, jqXHR) { 
                 that.user = $.extend({}, that.user, data);
                 return that.user;

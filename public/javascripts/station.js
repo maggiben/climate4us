@@ -31,7 +31,265 @@
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
+(function(root, factory) {
+  'use strict';
 
+	if(typeof root.exports === 'function') {
+	// Node/CommonJS
+	root.exports.Station = factory();
+	} else if(typeof root.define === 'function' && root.define.amd) {
+	// AMD
+	root.define(factory());
+	} else {
+	// Browser global
+	root.Station = factory();
+	}
+}(this, function() {
+
+    var Station = function(arg) {
+        this.init(arg);
+    };
+    $.extend(Station.prototype, {
+        module: {
+            VERSION: "0.11",
+            license: {},
+            dependencies: {},
+            author: "BM",
+        },
+        properties: {
+            name: '',
+            _id: 0,
+            type: '',
+            country: '',
+            state: '',
+            city: '',
+            latitude: 0,
+            longitude: 0,
+            magic: 1234,
+            sensors: [],
+            created: null,
+            lastUpdate: new Date(),
+            lastAccess: new Date(),
+            isReady: false,
+            overview: true,
+            mine: true,
+            temperature: {
+                value: 0,
+                unit: 'C'
+            },
+            feelslike: {},
+            humidity: {
+                value: 0,
+                dewpoint: 0,
+                unit: 'RH'
+            },
+            wind: {
+                value: 0,
+                direction: 'SE',
+                degrees: 150,
+                unit: 'KMH'
+            },
+            rainfall: {
+                value: 0,
+                unit: 'MM'
+            },
+            pressure: {
+                value: 0,
+                unit: 'INHG',
+                type: 'relative'
+            },
+            visibility: {
+                value: 0,
+                unit: 'KM'
+            },
+            astronomy: {
+                sunrise: "08:01",
+                sunset: "16:42"
+            },
+            forecast:[
+                {
+                    day: "Today",
+                    condition: "",
+                    high_temperature: 0.00,
+                    low_temperature: 0.00
+                },
+                {
+                    day: "Tomorrow",
+                    condition: "",
+                    high_temperature: 0.00,
+                    low_temperature: 0.00
+                }
+            ],
+        },
+        init: function (options) {
+            var that = this;
+            var deferred = new jQuery.Deferred();
+            var options = $.extend({}, this.properties, options);
+
+            that.id = options._id;
+            $.ajax({
+                url: "/station/getbyid/" + options._id,
+                type: "GET",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    that.properties = $.extend({}, that.properties, data);
+                    that.properties.id = that.properties._id;
+                    options.onLoad(that.properties);
+                },
+                error: function (jqXHR, status, error) {
+                    console.log(jqXHR.responseText);
+                },
+                complete: function () {
+                }
+            });
+        },
+        update: function(properties, callback) {
+            var that = this;
+            var properties = $.extend({}, this.properties, properties);
+            console.log("subscription update");
+            $.ajax({
+                url: "/station/update/" + properties._id,
+                dataType: "json",
+                type: "PUT",
+                data: properties,
+                success: function (data, textStatus, jqXHR) {
+                    callback(data);
+                },
+                error: function (jqXHR, status, error) {
+                    var c = $.parseJSON(jqXHR);
+                    console.log(jqXHR.responseText);
+                },
+            });
+        },
+        // getters
+        getTemperature: function () {
+            return this.temperature;
+        },
+        // setters
+        setTemperature: function (temperature) {
+            var that = this;
+            that.update({temperature: { value: temperature, unit: 'C'}}, onUpdate);
+            function onUpdate(data)
+            {
+                that.properties.temperature = data.temperature;
+                console.log("setTemperature update ok! result: " + JSON.stringify(data));
+            };
+        },
+    });
+
+	// Alias some common names for easy interop
+	Station.prototype.getTemperature = getTemperature;
+	Station.prototype.setTemperature = setTemperature;
+
+	// Finally, expose it all.
+	Station.Topic = Topic;
+	Station.getTemperature = getTemperature;
+	Station.version = "0.9.1";
+
+	return Station;
+}));
+
+///////////////////////////////////////////////////////////////////////////////
+// Transparent Store module user WebSockets and defaults to JSON             //
+///////////////////////////////////////////////////////////////////////////////
+(function(root, factory) {
+  'use strict';
+
+  if(typeof root.exports === 'function') {
+    // Node/CommonJS
+    root.exports.Store = factory();
+  } else if(typeof root.define === 'function' && root.define.amd) {
+    // AMD
+    root.define(factory());
+  } else {
+    // Browser global
+    root.Store = factory();
+  }
+}(this, function() {
+
+    var Store = function(arg) {
+        this.init(arg);
+    };
+    $.extend(Store.prototype, {
+    	module: {
+            VERSION: "0.1.0",
+            license: {licens: "MIT"},
+            dependencies: [['jQuery', '1.5'],["Mediator", "0.1"]],
+            author: "Benjamin Maggi",
+    	},
+		init: function(options) {
+            var that = this;
+
+        },
+        getData: function() {
+        	var that = this;
+        	var deferred = new jQuery.Deferred();
+        	$.when()
+        	.then(function(data, context){
+        		return data;
+        	})
+        	done(function(data){
+        		deferred.resolve(data);
+        	})
+        	.fail(function(error) {
+        		deferred.reject(new Error(error));
+        	})
+        	return deferred.promise();
+        },
+		setData: function() {
+        	var that = this;
+        	var deferred = new jQuery.Deferred();
+        	$.when()
+        	.then(function(result, context){
+        		return result;
+        	})
+        	done(function(result){
+        		deferred.resolve(result);
+        	})
+        	.fail(function(error) {
+        		deferred.reject(new Error(error));
+        	})
+        	return deferred.promise();
+        },
+        correlator: function()
+    });
+	// Module functions
+	 function setMediator( mediator ) {
+		if ( !(this.mediator instanceof mediator) ) {
+			return new mediator();
+		} else {
+		  this.namespace = namespace || "";
+		  this._callbacks = [];
+		  this.stopped = false;
+		}
+	}
+    /*
+    socket.on('disconnect', function() {
+        console.log("socket.disconnected")
+        clearTimeout(timer);
+        if(MyApp.properties.reconnect)
+        {
+            socket.socket.reconnect();
+        }
+        $("li.live .status").text("off");
+        $("html").removeClass("live");
+    });
+    */
+	// Alias some common names for easy interop
+	Store.prototype.get = getData;
+	Store.prototype.set = putData;
+	Store.prototype.put = putData;
+	Store.prototype.remove = deleteData;
+	Store.prototype.delete = deleteData;
+	Store.prototype.post = postData;
+
+	// Finally, expose it all.
+	Store.config = config;
+	Store.setMediator = setMediator
+	Store.getMediator = setMediator
+ 	Store.version = "0.1.0";
+	return Store;
+}));
 
 ///////////////////////////////////////////////////////////////////////////////
 // Basic Mediator module                                                     //
